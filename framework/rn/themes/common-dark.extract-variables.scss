@@ -1,4 +1,4 @@
-html.theme-dark {
+@mixin common-dark {
   --background: #141c28;
   --subtle: #1a2436;
   --muted: #222c3c;
@@ -25,31 +25,12 @@ html.theme-dark {
   --ring: #3b82f6;
 }
 
+html.theme-dark {
+  @include common-dark;
+}
+
 @media (prefers-color-scheme: dark) {
   html:not(.theme-light) {
-    --bg: #141c28;
-    --bg-subtle: #1a2436;
-    --bg-muted: #222c3c;
-
-    --text: #f0f3f7;
-    --text-muted: #94a3b8;
-    --text-subtle: #64748b;
-    --text-disabled: #334155;
-    --text-inverse: #0f172a;
-
-    --border: #2d3a4f;
-    --border-subtle: #222c3c;
-    --border-strong: #475569;
-
-    --card: #1a2436;
-    --card-border: #2d3a4f;
-
-    --modal: #1a2436;
-    --modal-overlay: rgba(0, 0, 0, 0.7);
-
-    --surface: #1a2436;
-    --surface-raised: #222c3c;
-
-    --ring: #3b82f6;
+    @include common-dark;
   }
 }

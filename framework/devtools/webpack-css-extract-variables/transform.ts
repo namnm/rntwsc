@@ -1,16 +1,19 @@
 import * as csstree from 'css-tree'
+import * as sass from 'sass'
 
 import { jsonSafe } from '@/shared/json-safe'
 import type { StrMap } from '@/shared/ts-utils'
 
-export const cssVariablesFilenameRegex = /\.extract-variables\.css$/
+export const cssExtractVariablesRegex = /\.extract-variables\.s?css$/
 
-export const transformCssVariables = (src: string) => {
-  const vars = extractCssVariables(src)
-  return `export default ${jsonSafe(vars)}`
+export const transformCssExtractVariables = (src: string, filename: string) => {
+  if (filename.endsWith('.scss')) {
+    src = sass.compileString(src).css
+  }
+  return `export default ${jsonSafe(toJs(src))}`
 }
 
-const extractCssVariables = (src: string): StrMap<string> => {
+const toJs = (src: string): StrMap<string> => {
   const ast = csstree.parse(src)
   const vars: StrMap<string> = {}
 

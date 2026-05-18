@@ -5,7 +5,7 @@ import '#/polyfill/server'
 import type { PropsWithChildren } from 'react'
 
 import '../tailwind.css'
-import '@/rn/themes/all.css'
+import '@/rn/themes/all.scss'
 
 import { useDarkModeUser } from '@/rn/core/dark-mode'
 import { useCurrentLangUntyped } from '@/rn/core/i18n'
