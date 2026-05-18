@@ -13,7 +13,7 @@ overrides:
   react-native-worklets: 0.8.3
 
 patchedDependencies:
-  eslint-plugin-import: 32c7d1c3eb4cf325054c716a73f77d1e34039216ec6c26c6d0b21546cee1f86f
+  eslint-plugin-import: 7f5c1b3ac0419b772c3abd1152f946a5f6c8f5ebf558cb49b732215630c2f48b
   eslint-plugin-react: 24ed0c82b63c09560e6a640404cb8b5769455a704db5068d2ac54d9c68e9b43e
   react-native-web: d0c41018d8159836f439aba99b69de866a9868fb3aa5ddcee797432271138b50
 
@@ -302,7 +302,7 @@ importers:
         version: 10.3.0(jiti@2.6.1)
       eslint-plugin-import:
         specifier: 2.32.0
-        version: 2.32.0(patch_hash=32c7d1c3eb4cf325054c716a73f77d1e34039216ec6c26c6d0b21546cee1f86f)(@typescript-eslint/parser@8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3))(eslint@10.3.0(jiti@2.6.1))
+        version: 2.32.0(patch_hash=7f5c1b3ac0419b772c3abd1152f946a5f6c8f5ebf558cb49b732215630c2f48b)(@typescript-eslint/parser@8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3))(eslint@10.3.0(jiti@2.6.1))
       eslint-plugin-prefer-arrow:
         specifier: 1.2.3
         version: 1.2.3(eslint@10.3.0(jiti@2.6.1))
@@ -9218,7 +9218,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(patch_hash=32c7d1c3eb4cf325054c716a73f77d1e34039216ec6c26c6d0b21546cee1f86f)(@typescript-eslint/parser@8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3))(eslint@10.3.0(jiti@2.6.1)):
+  eslint-plugin-import@2.32.0(patch_hash=7f5c1b3ac0419b772c3abd1152f946a5f6c8f5ebf558cb49b732215630c2f48b)(@typescript-eslint/parser@8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3))(eslint@10.3.0(jiti@2.6.1)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
