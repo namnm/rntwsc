@@ -29,5 +29,6 @@
     "baseline-browser-mapping": "latest",
     "cross-env": "10.1.0",
     "postcss-rename": "0.8.1"
-  }
+  },
+  "ignoreTsc": true
 }
