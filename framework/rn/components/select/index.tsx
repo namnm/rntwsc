@@ -1,58 +1,52 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { Drawer } from '@/rn/components/drawer'
 import { Dropdown } from '@/rn/components/dropdown'
-import type { InputCva } from '@/rn/components/input/input-cva'
 import { inputCva } from '@/rn/components/input/input-cva'
 import { Span } from '@/rn/components/text'
+import { Input } from '@/rn/core/components/input'
 import { Pressable } from '@/rn/core/components/pressable'
 import { View } from '@/rn/core/components/view'
 import { useWindowDimensions } from '@/rn/core/responsive/use-window-dimensions'
-import type { ClassName } from '@/rn/core/tw/class-name'
-import { cva } from '@/rn/core/tw/cva'
 import { useControllableState } from '@/rn/core/utils/use-controllable-state'
 import { Check } from '@/rn/svg-icons/check'
 import { ChevronBottom } from '@/rn/svg-icons/chevron-bottom'
-import type { MultipleProps, SingleProps } from '@/shared/ts-utils'
 
-const selectCva = cva({
-  classNames: {
-    trigger: 'flex-row items-center',
-    label: 'flex-1',
-    placeholder: 'flex-1',
-    titleBar: 'border-b border-gray-100 px-4 py-3 dark:border-gray-800',
-    titleText: 'font-semibold text-gray-800 transition dark:text-white',
-    item: 'flex-row items-center justify-between border-b border-gray-100 px-4 py-3 dark:border-gray-800',
-    itemActive: 'dark:bg-primary/10 bg-primary-50',
-    itemLabel: 'text-sm text-gray-800 dark:text-white',
-    itemLabelActive: 'font-medium text-primary',
-    itemCheck: 'text-primary',
-    doneBar: 'border-t border-gray-100 px-4 py-3 dark:border-gray-800',
-    doneBtn: 'items-center rounded-lg bg-primary py-2',
-    doneBtnLabel: 'text-sm font-semibold text-white',
-  },
-  attributes: {
-    size: {
-      sm: { trigger: 'gap-1' },
-      md: { trigger: 'gap-1.5' },
-      lg: { trigger: 'gap-2' },
-    },
-  },
-})
+import type { SelectItem, SelectProps } from './select-cva'
+import { selectCva } from './select-cva'
+import { useSelectItems } from './use-select-items'
 
-export type SelectItem = { value: string; label: string }
+export type { SelectItem, SelectItems, SelectProps } from './select-cva'
 
-type BaseProps = Omit<InputCva, 'active'> & {
-  items: SelectItem[]
-  placeholder?: string
-  title?: string
-  doneLabel?: string
-  className?: ClassName
+// --- pure helpers ---
+
+type Segment = { text: string; hl: boolean }
+
+const buildSegments = (label: string, ranges: [number, number][]): Segment[] => {
+  if (ranges.length === 0) return [{ text: label, hl: false }]
+  const segs: Segment[] = []
+  let cursor = 0
+  for (const [start, end] of ranges) {
+    if (cursor < start) segs.push({ text: label.slice(cursor, start), hl: false })
+    segs.push({ text: label.slice(start, end), hl: true })
+    cursor = end
+  }
+  if (cursor < label.length) segs.push({ text: label.slice(cursor), hl: false })
+  return segs
 }
 
-export type SelectProps = (SingleProps | MultipleProps) & BaseProps
+// For local filter: single contiguous match. For remote: use item.highlight ranges.
+const getSegments = (item: SelectItem, query: string, isRemote: boolean): Segment[] => {
+  if (isRemote) return buildSegments(item.label, item.highlight || [])
+  if (!query) return [{ text: item.label, hl: false }]
+  const idx = item.label.toLowerCase().indexOf(query.toLowerCase())
+  if (idx === -1) return [{ text: item.label, hl: false }]
+  return buildSegments(item.label, [[idx, idx + query.length]])
+}
+
+// --- component ---
 
 export const Select = ({
   multiple,
@@ -65,56 +59,67 @@ export const Select = ({
   title,
   doneLabel = 'Done',
   invalid,
+  searchable,
+  searchPlaceholder = 'Search...',
+  onSearch,
   value,
   defaultValue,
   onChange,
   className,
 }: SelectProps) => {
-  const [open, setOpen] = useState(false)
-  const [referenceEl, setReferenceEl] = useState<any>(null)
-  const setRef = useCallback((el: any) => setReferenceEl(el), [])
+  const [active, setActive] = useState(false)
+  const [query, setQuery] = useState('')
+  const [reference, setReference] = useState<any>(null)
+  const setRef = useCallback((el: any) => setReference(el), [])
+
+  const { resolvedItems, loading, handleOpen: openItems } = useSelectItems(items)
+
   const [state, setState] = useControllableState<string | string[]>({
     value: value as any,
-    defaultValue: defaultValue || (multiple ? [] : ''),
+    defaultValue: defaultValue ?? (multiple ? [] : ''),
     onChange: onChange as any,
   })
 
   const dimensions = useWindowDimensions()
   const useDropdown = dimensions && dimensions.width >= 640
+  const isSearchable = searchable || !!onSearch
 
-  const fieldCn = inputCva({
-    appearance,
-    size,
-    shape,
-    disabled,
-    invalid,
-    active: open,
-  })
-  const cn = selectCva({ size })
+  const itemMap = useMemo(
+    () => new Map(resolvedItems.map(i => [i.value, i.label])),
+    [resolvedItems],
+  )
+  const selectedSet = useMemo(() => {
+    if (!multiple) return new Set(state ? [state as string] : [])
+    return new Set(Array.isArray(state) ? (state as string[]) : [])
+  }, [multiple, state])
 
-  const triggerLabel = (() => {
-    if (!multiple) {
-      return items.find(i => i.value === (state as string))?.label || ''
-    }
+  const triggerLabel = useMemo(() => {
+    if (!multiple) return itemMap.get(state as string) || ''
     const arr = Array.isArray(state) ? state : []
-    if (arr.length === 0) {
-      return ''
-    }
-    const itemMap = new Map(items.map(i => [i.value, i]))
-    return arr.map(v => itemMap.get(v)?.label || v).join(', ')
-  })()
+    if (arr.length === 0) return ''
+    return arr.map(v => itemMap.get(v) || v).join(', ')
+  }, [multiple, state, itemMap])
 
-  const isSelected = (itemValue: string) => {
-    if (!multiple) {
-      return state === itemValue
-    }
-    return Array.isArray(state) && state.includes(itemValue)
+  const filteredItems = useMemo(() => {
+    if (!isSearchable || onSearch || !query) return resolvedItems
+    const lower = query.toLowerCase()
+    return resolvedItems.filter(i => i.label.toLowerCase().includes(lower))
+  }, [isSearchable, onSearch, query, resolvedItems])
+
+  const handleOpen = () => {
+    setActive(true)
+    openItems()
+  }
+
+  const handleClose = () => {
+    setActive(false)
+    setQuery('')
   }
 
   const handleSelect = (item: SelectItem) => {
     if (!multiple) {
       setState(item.value)
-      setOpen(false)
+      handleClose()
       return
     }
     setState(prev => {
@@ -125,12 +130,75 @@ export const Select = ({
     })
   }
 
+  const fieldCn = inputCva({ appearance, size, shape, disabled, invalid, active })
+  const cn = selectCva({ size })
+
+  const renderItemLabel = (item: SelectItem, sel: boolean) => {
+    const segments = getSegments(item, query, !!onSearch)
+    const hasHighlight = segments.some(s => s.hl)
+    return (
+      <Span className={[cn.itemLabel, sel && cn.itemLabelActive]}>
+        {hasHighlight
+          ? segments.map((seg, i) =>
+              seg.hl
+                ? <Span key={i} className={cn.itemLabelHighlight}>{seg.text}</Span>
+                : seg.text,
+            )
+          : item.label}
+      </Span>
+    )
+  }
+
+  const titleJsx = !useDropdown && title && (
+    <View className={cn.titleBar}>
+      <Span className={cn.titleText}>{title}</Span>
+    </View>
+  )
+  const searchJsx = isSearchable && (
+    <View className={cn.searchBar}>
+      <Input
+        className={cn.searchInput}
+        value={query}
+        onChangeText={text => { setQuery(text); onSearch?.(text) }}
+        placeholder={searchPlaceholder}
+        autoCorrect={false}
+        autoCapitalize='none'
+      />
+    </View>
+  )
+  const itemsJsx = loading ? (
+    <Span className={cn.statusText}>Loading...</Span>
+  ) : filteredItems.length === 0 ? (
+    <Span className={cn.statusText}>No results</Span>
+  ) : (
+    filteredItems.map(item => {
+      const sel = selectedSet.has(item.value)
+      return (
+        <Pressable
+          key={item.value}
+          onPress={() => handleSelect(item)}
+          className={[cn.item, sel && cn.itemActive]}
+        >
+          {renderItemLabel(item, sel)}
+          {sel && <Check className={cn.itemCheck} />}
+        </Pressable>
+      )
+    })
+  )
+  const doneBtnJsx = multiple && (
+    <View className={cn.doneBar}>
+      <Pressable className={cn.doneBtn} onPress={handleClose}>
+        <Span className={cn.doneBtnLabel}>{doneLabel}</Span>
+      </Pressable>
+    </View>
+  )
+
   return (
     <>
       <Pressable
         ref={setRef}
         disabled={disabled}
-        onPress={() => setOpen(true)}
+        onPress={handleOpen}
         className={[fieldCn.container, cn.trigger, className]}
         renderToHardwareTextureAndroid={disabled}
         shouldRasterizeIOS={disabled}
@@ -146,72 +214,21 @@ export const Select = ({
         </Span>
         <ChevronBottom className={fieldCn.chevron} />
       </Pressable>
-
-      {useDropdown ? (
-        <Dropdown
-          open={open}
-          onClose={() => setOpen(false)}
-          reference={referenceEl}
-        >
-          <Dropdown.ScrollView>
-            {items.map(item => {
-              const sel = isSelected(item.value)
-              return (
-                <Pressable
-                  key={item.value}
-                  onPress={() => handleSelect(item)}
-                  className={[cn.item, sel && cn.itemActive]}
-                >
-                  <Span className={[cn.itemLabel, sel && cn.itemLabelActive]}>
-                    {item.label}
-                  </Span>
-                  {sel && <Check className={cn.itemCheck} />}
-                </Pressable>
-              )
-            })}
-          </Dropdown.ScrollView>
-          {multiple && (
-            <View className={cn.doneBar}>
-              <Pressable className={cn.doneBtn} onPress={() => setOpen(false)}>
-                <Span className={cn.doneBtnLabel}>{doneLabel}</Span>
-              </Pressable>
-            </View>
-          )}
-        </Dropdown>
-      ) : (
-        <Drawer
-          value={open}
-          onChange={setOpen}
-          contentContainerClassName='pb-8'
-        >
-          {title && (
-            <View className={cn.titleBar}>
-              <Span className={cn.titleText}>{title}</Span>
-            </View>
-          )}
-          {items.map(item => {
-            const sel = isSelected(item.value)
-            return (
-              <Pressable
-                key={item.value}
-                onPress={() => handleSelect(item)}
-                className={[cn.item, sel && cn.itemActive]}
-              >
-                <Span className={[cn.itemLabel, sel && cn.itemLabelActive]}>
-                  {item.label}
-                </Span>
-                {sel && <Check className={cn.itemCheck} />}
-              </Pressable>
-            )
-          })}
-          {multiple && (
-            <View className={cn.doneBar}>
-              <Pressable className={cn.doneBtn} onPress={() => setOpen(false)}>
-                <Span className={cn.doneBtnLabel}>{doneLabel}</Span>
-              </Pressable>
-            </View>
-          )}
-        </Drawer>
+      {!disabled && (
+        useDropdown ? (
+          <Dropdown open={active} onClose={handleClose} reference={reference}>
+            {searchJsx}
+            <Dropdown.ScrollView>{itemsJsx}</Dropdown.ScrollView>
+            {doneBtnJsx}
+          </Dropdown>
+        ) : (
+          <Drawer value={active} onChange={setActive} contentContainerClassName='pb-8'>
+            {titleJsx}
+            {searchJsx}
+            {itemsJsx}
+            {doneBtnJsx}
+          </Drawer>
+        )
       )}
     </>
   )
