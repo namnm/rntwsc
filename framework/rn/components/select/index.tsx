@@ -1,13 +1,17 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { Drawer } from '@/rn/components/drawer'
 import { Dropdown } from '@/rn/components/dropdown'
 import { inputCva } from '@/rn/components/input/input-cva'
-import type { SelectItem, SelectProps } from '@/rn/components/select/select-cva'
+import type {
+  ItemsFn,
+  SearchStrategy,
+  SelectItem,
+  SelectProps,
+} from '@/rn/components/select/select-cva'
 import { selectCva } from '@/rn/components/select/select-cva'
-import { useSelectItems } from '@/rn/components/select/use-select-items'
 import { Span } from '@/rn/components/text'
 import { Input } from '@/rn/core/components/input'
 import { Pressable } from '@/rn/core/components/pressable'
@@ -24,6 +28,8 @@ export type {
 } from '@/rn/components/select/select-cva'
 
 // --- pure helpers ---
+
+// -- segments --
 
 type Segment = { text: string; hl: boolean }
 
@@ -49,12 +55,72 @@ const buildSegments = (
   return segs
 }
 
-// Splits query into tokens, matches each token against the prefix of a distinct word
-// in label. Returns sorted highlight ranges on match, null on miss.
-// "a b" matches "Apple Banana" -> [[0,1],[6,7]], skips non-prefix words.
-const matchQuery = (
+const mergeRanges = (ranges: [number, number][]): [number, number][] => {
+  const sorted = [...ranges].sort((a, b) => a[0] - b[0])
+  const merged: [number, number][] = []
+  for (const [start, end] of sorted) {
+    const last = merged[merged.length - 1]
+    if (last && start <= last[1]) {
+      last[1] = Math.max(last[1], end)
+    } else {
+      merged.push([start, end])
+    }
+  }
+  return merged
+}
+
+// -- search matching --
+
+// Tries to match each char of token against the first char of a distinct word.
+// Modifies usedWords in-place only on success.
+// "usa" on "United States of America" -> [[0,1],[7,8],[17,18]]
+const tryAcronym = (
+  label: string,
+  words: [number, number][],
+  token: string,
+  usedWords: Set<number>,
+): [number, number][] | null => {
+  const tempUsed = new Set(usedWords)
+  const ranges: [number, number][] = []
+  for (const char of token) {
+    let found = false
+    for (let i = 0; i < words.length; i++) {
+      if (tempUsed.has(i)) {
+        continue
+      }
+      if (label[words[i][0]].toLowerCase() === char) {
+        ranges.push([words[i][0], words[i][0] + 1])
+        tempUsed.add(i)
+        found = true
+        break
+      }
+    }
+    if (!found) {
+      return null
+    }
+  }
+  for (const i of tempUsed) {
+    usedWords.add(i)
+  }
+  return ranges
+}
+
+const DEFAULT_STRATEGIES: SearchStrategy[] = [
+  'word-prefix',
+  'acronym',
+  'contains',
+  'value',
+]
+
+// Per token: tries enabled strategies in priority order (word-prefix > acronym > contains).
+// All tokens must match. Ranges from all strategies are merged.
+// "a b"  on "United States"           -> word-prefix [[0,1],[7,8]]
+// "usa"  on "United States of America" -> acronym [[0,1],[7,8],[17,18]]
+// "an b" on "Apple Banana"            -> "an" contains [[7,9]], "b" word-prefix [[6,7]] -> [[6,9]]
+const matchLabel = (
   label: string,
   query: string,
+  s: Set<SearchStrategy>,
 ): [number, number][] | null => {
   const tokens = query.trim().split(/\s+/).filter(Boolean)
   if (tokens.length === 0) {
@@ -66,29 +132,63 @@ const matchQuery = (
   while ((m = re.exec(label)) !== null) {
     words.push([m.index, m.index + m[0].length])
   }
+  const usedWords = new Set<number>()
   const ranges: [number, number][] = []
-  const used = new Set<number>()
   for (const token of tokens) {
     const lower = token.toLowerCase()
-    let found = false
-    for (let i = 0; i < words.length; i++) {
-      if (used.has(i)) {
-        continue
-      }
-      if (
-        label.slice(words[i][0], words[i][1]).toLowerCase().startsWith(lower)
-      ) {
-        ranges.push([words[i][0], words[i][0] + token.length])
-        used.add(i)
-        found = true
-        break
+    let matched = false
+    if (s.has('word-prefix')) {
+      for (let i = 0; i < words.length; i++) {
+        if (usedWords.has(i)) {
+          continue
+        }
+        if (
+          label.slice(words[i][0], words[i][1]).toLowerCase().startsWith(lower)
+        ) {
+          usedWords.add(i)
+          ranges.push([words[i][0], words[i][0] + token.length])
+          matched = true
+          break
+        }
       }
     }
-    if (!found) {
+    if (!matched && s.has('acronym') && token.length > 1) {
+      const acronymRanges = tryAcronym(label, words, lower, usedWords)
+      if (acronymRanges) {
+        ranges.push(...acronymRanges)
+        matched = true
+      }
+    }
+    if (!matched && s.has('contains')) {
+      const idx = label.toLowerCase().indexOf(lower)
+      if (idx !== -1) {
+        ranges.push([idx, idx + token.length])
+        matched = true
+      }
+    }
+    if (!matched) {
       return null
     }
   }
-  return ranges.sort((a, b) => a[0] - b[0])
+  return mergeRanges(ranges)
+}
+
+// Returns label highlight ranges, [] (no highlight) if matched via value, or null on miss.
+const matchItem = (
+  item: SelectItem,
+  query: string,
+  s: Set<SearchStrategy>,
+): [number, number][] | null => {
+  const labelRanges = matchLabel(item.label, query, s)
+  if (labelRanges !== null) {
+    return labelRanges
+  }
+  if (s.has('value')) {
+    const valueS = new Set(s)
+    valueS.delete('value')
+    return matchLabel(item.value, query, valueS) !== null ? [] : null
+  }
+  return null
 }
 
 // For local filter or remote with defaultHighlightSearch: word-prefix token matching.
@@ -98,14 +198,15 @@ const getSegments = (
   query: string,
   isRemote: boolean,
   defaultHighlightSearch: boolean,
+  s: Set<SearchStrategy>,
 ): Segment[] => {
   if (isRemote && !defaultHighlightSearch) {
-    return buildSegments(item.label, item.highlight || [])
+    return buildSegments(item.label, mergeRanges(item.highlight || []))
   }
   if (!query) {
     return [{ text: item.label, hl: false }]
   }
-  const ranges = matchQuery(item.label, query)
+  const ranges = matchItem(item, query, s)
   if (!ranges || ranges.length === 0) {
     return [{ text: item.label, hl: false }]
   }
@@ -124,9 +225,12 @@ export const Select = ({
   placeholder = 'Select an option',
   title,
   doneLabel = 'Done',
+  loadingLabel = 'Loading...',
+  emptyLabel = 'No results',
   invalid,
   searchable,
   searchPlaceholder = 'Search...',
+  searchStrategies = DEFAULT_STRATEGIES,
   onSearch,
   defaultHighlightSearch = false,
   value,
@@ -134,26 +238,71 @@ export const Select = ({
   onChange,
   className,
 }: SelectProps) => {
+  // -- open state --
+
   const [active, setActive] = useState(false)
   const [query, setQuery] = useState('')
   const [reference, setReference] = useState<any>(null)
   const setRef = useCallback((el: any) => setReference(el), [])
 
-  const {
-    resolvedItems,
-    loading,
-    handleOpen: openItems,
-  } = useSelectItems(items)
+  useEffect(() => {
+    if (disabled) {
+      setActive(false)
+      setQuery('')
+    }
+  }, [disabled])
+
+  // -- async items --
+
+  const [asyncItems, setAsyncItems] = useState<SelectItem[]>([])
+  const [loading, setLoading] = useState(false)
+  const requestIdRef = useRef(0)
+
+  const isItemsFn = typeof items === 'function'
+  const resolvedItems = isItemsFn ? asyncItems : (items as SelectItem[])
+
+  const openItems = () => {
+    if (!isItemsFn) {
+      return
+    }
+    const id = ++requestIdRef.current
+    const result = (items as ItemsFn)()
+    if (result instanceof Promise) {
+      setLoading(true)
+      result
+        .then(data => {
+          if (id === requestIdRef.current) {
+            setAsyncItems(data)
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          if (id === requestIdRef.current) {
+            setLoading(false)
+          }
+        })
+    } else {
+      setAsyncItems(result)
+    }
+  }
+
+  // -- value state --
 
   const [state, setState] = useControllableState<string | string[]>({
     value: value as any,
-    defaultValue: defaultValue ?? (multiple ? [] : ''),
+    defaultValue: defaultValue || (multiple ? [] : ''),
     onChange: onChange as any,
   })
+
+  // -- derived --
 
   const dimensions = useWindowDimensions()
   const useDropdown = dimensions && dimensions.width >= 640
   const isSearchable = searchable || !!onSearch
+  const strategySet = useMemo(
+    () => new Set(searchStrategies),
+    [searchStrategies],
+  )
 
   const itemMap = useMemo(
     () => new Map(resolvedItems.map(i => [i.value, i.label])),
@@ -181,8 +330,10 @@ export const Select = ({
     if (!isSearchable || onSearch || !query) {
       return resolvedItems
     }
-    return resolvedItems.filter(i => matchQuery(i.label, query) !== null)
-  }, [isSearchable, onSearch, query, resolvedItems])
+    return resolvedItems.filter(i => matchItem(i, query, strategySet) !== null)
+  }, [isSearchable, onSearch, query, resolvedItems, strategySet])
+
+  // -- handlers --
 
   const handleOpen = () => {
     setActive(true)
@@ -208,6 +359,8 @@ export const Select = ({
     })
   }
 
+  // -- styles --
+
   const fieldCn = inputCva({
     appearance,
     size,
@@ -218,12 +371,15 @@ export const Select = ({
   })
   const cn = selectCva({ size })
 
+  // -- fragments --
+
   const renderItemLabel = (item: SelectItem, sel: boolean) => {
     const segments = getSegments(
       item,
       query,
       !!onSearch,
       defaultHighlightSearch,
+      strategySet,
     )
     const hasHighlight = segments.some(s => s.hl)
     return (
@@ -264,9 +420,9 @@ export const Select = ({
     </View>
   )
   const itemsJsx = loading ? (
-    <Span className={cn.statusText}>Loading...</Span>
+    <Span className={cn.statusText}>{loadingLabel}</Span>
   ) : filteredItems.length === 0 ? (
-    <Span className={cn.statusText}>No results</Span>
+    <Span className={cn.statusText}>{emptyLabel}</Span>
   ) : (
     filteredItems.map(item => {
       const sel = selectedSet.has(item.value)
@@ -320,8 +476,8 @@ export const Select = ({
           </Dropdown>
         ) : (
           <Drawer
-            value={active}
-            onChange={setActive}
+            open={active}
+            onClose={handleClose}
             contentContainerClassName='pb-8'
           >
             {titleJsx}

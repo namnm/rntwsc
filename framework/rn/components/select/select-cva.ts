@@ -34,6 +34,8 @@ export const selectCva = cva({
   },
 })
 
+export type SearchStrategy = 'word-prefix' | 'acronym' | 'contains' | 'value'
+
 // [start, end) ranges to highlight in item.label - provided by server for remote search
 export type SelectItem = {
   value: string
@@ -48,8 +50,11 @@ type BaseProps = Omit<InputCva, 'active'> & {
   placeholder?: string
   title?: string
   doneLabel?: string
+  loadingLabel?: string
+  emptyLabel?: string
   searchable?: boolean
   searchPlaceholder?: string
+  searchStrategies?: SearchStrategy[]
   onSearch?: (query: string) => void
   defaultHighlightSearch?: boolean
   className?: ClassName

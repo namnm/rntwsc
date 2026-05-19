@@ -51,8 +51,8 @@ export const DrawerPage = () => {
         <Drawer
           key={side}
           side={side}
-          value={open === side}
-          onChange={v => !v && setOpen(null)}
+          open={open === side}
+          onClose={() => setOpen(null)}
         >
           <View className='gap-4 px-4 pt-2 pb-8'>
             <Span className='text-foreground text-lg font-semibold transition'>

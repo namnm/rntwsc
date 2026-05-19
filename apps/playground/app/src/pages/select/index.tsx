@@ -25,6 +25,19 @@ const fruits: SelectItem[] = [
   { value: 'grape', label: 'Grape' },
 ]
 
+const countries: SelectItem[] = [
+  { value: 'us', label: 'United States of America' },
+  { value: 'gb', label: 'United Kingdom' },
+  { value: 'au', label: 'Australia' },
+  { value: 'nz', label: 'New Zealand' },
+  { value: 'za', label: 'South Africa' },
+  { value: 'kr', label: 'South Korea' },
+  { value: 'ae', label: 'United Arab Emirates' },
+  { value: 'pg', label: 'Papua New Guinea' },
+  { value: 'tt', label: 'Trinidad and Tobago' },
+  { value: 'bo', label: 'Bolivia (Plurinational State)' },
+]
+
 const fetchFruits = () =>
   new Promise<SelectItem[]>(resolve => setTimeout(() => resolve(fruits), 1200))
 
@@ -32,12 +45,12 @@ export const SelectPage = () => {
   const padding = useSafeAreaPadding()
   const [controlled, setControlled] = useState('banana')
   const [multi, setMulti] = useState<string[]>(['banana', 'cherry'])
-  const [remoteItems, setRemoteItems] = useState<SelectItem[]>(fruits)
+  const [remoteItems, setRemoteItems] = useState<SelectItem[]>(countries)
 
   const handleRemoteSearch = useCallback((query: string) => {
     const lower = query.toLowerCase()
     setRemoteItems(
-      fruits
+      countries
         .filter(f => f.label.toLowerCase().includes(lower))
         .map(f => {
           const idx = f.label.toLowerCase().indexOf(lower)
@@ -163,18 +176,21 @@ export const SelectPage = () => {
             <Span className='text-foreground text-lg font-semibold transition'>
               search (local filter)
             </Span>
+            <Span className='text-foreground text-xs transition'>
+              try: "uni", "so ko", "new z", "and"
+            </Span>
             <Select
-              items={fruits}
+              items={countries}
               searchable
-              title='Search fruits'
-              placeholder='Select a fruit..'
+              title='Search countries'
+              placeholder='Select a country..'
             />
             <Select
               multiple
-              items={fruits}
+              items={countries}
               searchable
-              title='Search fruits (multiple)'
-              placeholder='Select fruits..'
+              title='Search countries (multiple)'
+              placeholder='Select countries..'
             />
           </View>
 
@@ -183,14 +199,13 @@ export const SelectPage = () => {
               search (remote + highlight)
             </Span>
             <Span className='text-foreground text-xs transition'>
-              onSearch updates items from outside, server returns highlight
-              ranges
+              server returns highlight ranges, try: "united", "south"
             </Span>
             <Select
               items={remoteItems}
               onSearch={handleRemoteSearch}
-              title='Search fruits'
-              placeholder='Select a fruit..'
+              title='Search countries'
+              placeholder='Select a country..'
             />
           </View>
 
