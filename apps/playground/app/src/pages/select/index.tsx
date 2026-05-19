@@ -43,9 +43,10 @@ export const SelectPage = () => {
           const idx = f.label.toLowerCase().indexOf(lower)
           return {
             ...f,
-            highlight: query.length > 0
-              ? [[idx, idx + query.length] as [number, number]]
-              : undefined,
+            highlight:
+              query.length > 0
+                ? [[idx, idx + query.length] as [number, number]]
+                : undefined,
           }
         }),
     )
@@ -182,7 +183,8 @@ export const SelectPage = () => {
               search (remote + highlight)
             </Span>
             <Span className='text-foreground text-xs transition'>
-              onSearch updates items from outside, server returns highlight ranges
+              onSearch updates items from outside, server returns highlight
+              ranges
             </Span>
             <Select
               items={remoteItems}

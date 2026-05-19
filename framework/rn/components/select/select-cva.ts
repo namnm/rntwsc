@@ -19,7 +19,8 @@ export const selectCva = cva({
     itemLabelActive: 'font-medium text-primary',
     itemLabelHighlight: 'bg-yellow-200 dark:bg-yellow-800/40',
     itemCheck: 'text-primary',
-    statusText: 'px-4 py-6 text-center text-sm text-gray-400 dark:text-gray-600',
+    statusText:
+      'px-4 py-6 text-center text-sm text-gray-400 dark:text-gray-600',
     doneBar: 'border-t border-gray-100 px-4 py-3 dark:border-gray-800',
     doneBtn: 'items-center rounded-lg bg-primary py-2',
     doneBtnLabel: 'text-sm font-semibold text-white',
@@ -34,7 +35,11 @@ export const selectCva = cva({
 })
 
 // [start, end) ranges to highlight in item.label - provided by server for remote search
-export type SelectItem = { value: string; label: string; highlight?: [number, number][] }
+export type SelectItem = {
+  value: string
+  label: string
+  highlight?: [number, number][]
+}
 export type ItemsFn = () => SelectItem[] | Promise<SelectItem[]>
 export type SelectItems = SelectItem[] | ItemsFn
 
@@ -46,6 +51,7 @@ type BaseProps = Omit<InputCva, 'active'> & {
   searchable?: boolean
   searchPlaceholder?: string
   onSearch?: (query: string) => void
+  defaultHighlightSearch?: boolean
   className?: ClassName
 }
 

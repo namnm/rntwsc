@@ -1,6 +1,10 @@
 import { useState } from 'react'
 
-import type { ItemsFn, SelectItem, SelectItems } from './select-cva'
+import type {
+  ItemsFn,
+  SelectItem,
+  SelectItems,
+} from '@/rn/components/select/select-cva'
 
 export const useSelectItems = (items: SelectItems) => {
   const [asyncItems, setAsyncItems] = useState<SelectItem[]>([])
@@ -10,7 +14,9 @@ export const useSelectItems = (items: SelectItems) => {
   const resolvedItems = isItemsFn ? asyncItems : (items as SelectItem[])
 
   const handleOpen = () => {
-    if (!isItemsFn) return
+    if (!isItemsFn) {
+      return
+    }
     const result = (items as ItemsFn)()
     if (result instanceof Promise) {
       setLoading(true)
