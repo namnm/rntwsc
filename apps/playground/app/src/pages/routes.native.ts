@@ -9,7 +9,7 @@ import { DatePickerPage } from '#/pages/date-picker'
 import { DrawerPage } from '#/pages/drawer'
 import { FormPage } from '#/pages/form'
 import { HomePage } from '#/pages/home'
-import { TextInputPage } from '#/pages/input'
+import { TextInputPage } from '#/pages/text-input'
 import { ModalPage } from '#/pages/modal'
 import { RadioPage } from '#/pages/radio'
 import {
@@ -24,7 +24,7 @@ import {
   rDrawer,
   rForm,
   rHome,
-  rInput,
+  rTextInput,
   rModal,
   rRadio,
   rSelect,
@@ -44,7 +44,7 @@ export const routesNative = {
   [rButtonGroup]: ButtonGroupPage,
   [rButtonToggleGroup]: ButtonToggleGroupPage,
   [rAlert]: AlertPage,
-  [rInput]: TextInputPage,
+  [rTextInput]: TextInputPage,
   [rSwitch]: SwitchPage,
   [rCheckbox]: CheckboxPage,
   [rRadio]: RadioPage,
