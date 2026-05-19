@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 
 import { Checkbox } from '@/rn/components/checkbox'
 import { DatePicker } from '@/rn/components/date-picker'
-import { Field, Form } from '@/rn/components/form'
+import { FormField, Form } from '@/rn/components/form'
 import { TextInput } from '@/rn/components/input'
 import { RadioGroup } from '@/rn/components/radio'
 import { Select } from '@/rn/components/select'
@@ -74,7 +74,7 @@ export const FormPage = () => {
 
           <Form form={form} className='gap-5'>
             {/* text input */}
-            <Field<RegisterForm> name='name' label='Full Name' required>
+            <FormField<RegisterForm> name='name' label='Full Name' required>
               {({ value, onChange, invalid }) => (
                 <TextInput
                   value={value}
@@ -83,10 +83,10 @@ export const FormPage = () => {
                   placeholder='Enter your full name'
                 />
               )}
-            </Field>
+            </FormField>
 
             {/* text input with pattern validation */}
-            <Field<RegisterForm>
+            <FormField<RegisterForm>
               name='email'
               label='Email'
               required
@@ -107,10 +107,10 @@ export const FormPage = () => {
                   autoCapitalize='none'
                 />
               )}
-            </Field>
+            </FormField>
 
             {/* date picker */}
-            <Field<RegisterForm> name='birthdate' label='Birth Date'>
+            <FormField<RegisterForm> name='birthdate' label='Birth Date'>
               {({ value, onChange, invalid }) => (
                 <DatePicker
                   value={value}
@@ -119,10 +119,10 @@ export const FormPage = () => {
                   placeholder='Select birth date'
                 />
               )}
-            </Field>
+            </FormField>
 
             {/* radio group - each item is a pressable row with radio + label */}
-            <Field<RegisterForm> name='gender' label='Gender' required>
+            <FormField<RegisterForm> name='gender' label='Gender' required>
               {({ value, onChange }) => (
                 <RadioGroup
                   value={value}
@@ -139,10 +139,10 @@ export const FormPage = () => {
                   ))}
                 </RadioGroup>
               )}
-            </Field>
+            </FormField>
 
             {/* select */}
-            <Field<RegisterForm>
+            <FormField<RegisterForm>
               name='favoriteFood'
               label='Favorite Food'
               required
@@ -157,10 +157,10 @@ export const FormPage = () => {
                   title='Favorite Food'
                 />
               )}
-            </Field>
+            </FormField>
 
             {/* checkbox */}
-            <Field<RegisterForm> name='newsletter' label='Newsletter'>
+            <FormField<RegisterForm> name='newsletter' label='Newsletter'>
               {({ value, onChange }) => (
                 <View className='flex-row items-center gap-3'>
                   <Checkbox checked={value} onChange={onChange} />
@@ -171,10 +171,10 @@ export const FormPage = () => {
                   </Pressable>
                 </View>
               )}
-            </Field>
+            </FormField>
 
             {/* switch */}
-            <Field<RegisterForm> name='notifications' label='Notifications'>
+            <FormField<RegisterForm> name='notifications' label='Notifications'>
               {({ value, onChange }) => (
                 <View className='flex-row items-center justify-between'>
                   <Span className='text-sm text-gray-700 transition dark:text-gray-300'>
@@ -183,7 +183,7 @@ export const FormPage = () => {
                   <Switch value={value} onChange={onChange} />
                 </View>
               )}
-            </Field>
+            </FormField>
 
             {/* submit */}
             <Pressable
