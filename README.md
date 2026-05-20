@@ -201,6 +201,7 @@ const MyComponent = () => <View className={classNameStringFromSomeWhere} />
 - Support viewport width height:
   - `<property>-[<number>vw]`
   - `<property>-[<number>vh]`
+  - `<property>-screen`
 - Support basic calc:
   - `<property>-[calc(<expr>)]`
   - Supported operators: + - \* /

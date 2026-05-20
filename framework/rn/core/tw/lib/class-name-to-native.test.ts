@@ -39,40 +39,45 @@ describe('classNameToNative', () => {
   // simple vw vh
   it('w-[10vw]', () =>
     e('w-[10vw]', {
-      calc: { v: 10, ty: 'vw' },
+      calc: { v: 10, unit: 'vw' },
       keys: ['width'],
     }))
   it('h-[10vh]', () =>
     e('h-[10vh]', {
-      calc: { v: 10, ty: 'vh' },
+      calc: { v: 10, unit: 'vh' },
       keys: ['height'],
+    }))
+  it('w-[33.333333333333336vw]', () =>
+    e('w-[33.333333333333336vw]', {
+      calc: { v: 33.333333333333336, unit: 'vw' },
+      keys: ['width'],
     }))
 
   // calc arbitrary values
   it('w-[calc(100vw-20px)]', () =>
     e('w-[calc(100vw-20px)]', {
-      calc: { l: { v: 100, ty: 'vw' }, r: { v: 20 }, op: '-' },
+      calc: { l: { v: 100, unit: 'vw' }, r: { v: 20 }, op: '-' },
       keys: ['width'],
     }))
   it('h-[calc(100vh+20px)]', () =>
     e('h-[calc(100vh+20px)]', {
-      calc: { l: { v: 100, ty: 'vh' }, r: { v: 20 }, op: '+' },
+      calc: { l: { v: 100, unit: 'vh' }, r: { v: 20 }, op: '+' },
       keys: ['height'],
     }))
   it('w-[calc(100vw*2)] mul', () =>
     e('w-[calc(100vw*2)]', {
-      calc: { l: { v: 100, ty: 'vw' }, r: { v: 2 }, op: '*' },
+      calc: { l: { v: 100, unit: 'vw' }, r: { v: 2 }, op: '*' },
       keys: ['width'],
     }))
   it('w-[calc(100vw/2)] div', () =>
     e('w-[calc(100vw/2)]', {
-      calc: { l: { v: 100, ty: 'vw' }, r: { v: 2 }, op: '/' },
+      calc: { l: { v: 100, unit: 'vw' }, r: { v: 2 }, op: '/' },
       keys: ['width'],
     }))
   it('w-[calc(100vw-20px+10px)] left-assoc', () =>
     e('w-[calc(100vw-20px+10px)]', {
       calc: {
-        l: { l: { v: 100, ty: 'vw' }, r: { v: 20 }, op: '-' },
+        l: { l: { v: 100, unit: 'vw' }, r: { v: 20 }, op: '-' },
         r: { v: 10 },
         op: '+',
       },
@@ -81,7 +86,7 @@ describe('classNameToNative', () => {
   it('w-[calc(100vw-2*20px)] mul precedence', () =>
     e('w-[calc(100vw-2*20px)]', {
       calc: {
-        l: { v: 100, ty: 'vw' },
+        l: { v: 100, unit: 'vw' },
         r: { l: { v: 2 }, r: { v: 20 }, op: '*' },
         op: '-',
       },
@@ -89,12 +94,12 @@ describe('classNameToNative', () => {
     }))
   it('w-[calc(100vw_-_20px)] underscore', () =>
     e('w-[calc(100vw_-_20px)]', {
-      calc: { l: { v: 100, ty: 'vw' }, r: { v: 20 }, op: '-' },
+      calc: { l: { v: 100, unit: 'vw' }, r: { v: 20 }, op: '-' },
       keys: ['width'],
     }))
   it('mt-[calc(100vw-20px)] non-dimension prop', () =>
     e('mt-[calc(100vw-20px)]', {
-      calc: { l: { v: 100, ty: 'vw' }, r: { v: 20 }, op: '-' },
+      calc: { l: { v: 100, unit: 'vw' }, r: { v: 20 }, op: '-' },
       keys: ['marginTop'],
     }))
 

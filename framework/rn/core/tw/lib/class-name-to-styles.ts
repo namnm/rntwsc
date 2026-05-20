@@ -151,13 +151,13 @@ const caclRecursive = (
     }
     return l / r
   }
-  const { v, ty } = calc
-  if (!ty) {
+  const { v, unit } = calc
+  if (!unit) {
     return v
   }
   if (!dimensions) {
     return undefined
   }
-  const d = ty === 'vw' ? dimensions.width : dimensions.height
+  const d = unit === 'vw' ? dimensions.width : dimensions.height
   return (v * d) / 100
 }

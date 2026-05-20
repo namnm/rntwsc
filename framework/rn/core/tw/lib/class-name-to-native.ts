@@ -17,6 +17,7 @@ import type {
 import {
   classNameCalc,
   classNameCalcKeys,
+  classNameCalcScreens,
 } from '@/rn/core/tw/lib/class-name-calc'
 import {
   animationMap,
@@ -389,8 +390,8 @@ extraTwrnc.push(options => {
       .split('_')
       .filter(v => v)
       .map(v => {
-        const ty = v.slice(-2)
-        if (ty !== 'px' && ty !== 'fr') {
+        const unit = v.slice(-2)
+        if (unit !== 'px' && unit !== 'fr') {
           return onUnknown(className)
         }
         const n = Number(v.slice(0, -2))
@@ -398,7 +399,7 @@ extraTwrnc.push(options => {
           return onUnknown(className)
         }
         return {
-          [ty]: n,
+          [unit]: n,
         }
       })
     if (!tracks.length) {
@@ -712,14 +713,26 @@ extraTwrnc.push(options => {
 })
 
 // simple vw vh
+// and screen utils such as: w-screen = 100vw
 extraTwrnc.push(options => {
   const { className, onUnknown } = options
-  const re = /-\[(\d+)(vw|vh)\]$/
+  const screen = classNameCalcScreens[className]
+  if (screen) {
+    const { unit, key } = screen
+    return {
+      calc: {
+        v: 100,
+        unit,
+      },
+      keys: [key],
+    }
+  }
+  const re = /-\[(\d+(?:\.\d+)?)(vw|vh)\]$/
   const matches = re.exec(className)
   if (!matches) {
     return
   }
-  const [, n, ty] = matches
+  const [, n, unit] = matches
   const v = Number(n)
   if (n !== v.toString()) {
     return onUnknown(className)
@@ -727,7 +740,7 @@ extraTwrnc.push(options => {
   return {
     calc: {
       v,
-      ty,
+      unit,
     },
     keys: classNameCalcKeys({
       ...options,

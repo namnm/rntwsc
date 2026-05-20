@@ -1,11 +1,12 @@
 import type { ClassNameCalc } from '@/rn/core/tw/class-name'
 import type { ExtraTwrncOptions } from '@/rn/core/tw/lib/class-name-to-native'
+import type { StrMap } from '@/shared/ts-utils'
 
 type CalcToken =
   | {
       k: 'value'
       v: number
-      ty?: 'vw' | 'vh'
+      unit?: 'vw' | 'vh'
     }
   | {
       k: 'op'
@@ -28,12 +29,12 @@ export const classNameCalc = (input: string): ClassNameCalc | undefined => {
     pos++
     return {
       v: t.v,
-      ty: t.ty,
+      unit: t.unit,
     }
   }
 
-  // parse mul
-  const mul = (): ClassNameCalc | undefined => {
+  // parse mul and div
+  const mulDiv = (): ClassNameCalc | undefined => {
     let l = atom()
     if (!l) {
       return undefined
@@ -57,9 +58,9 @@ export const classNameCalc = (input: string): ClassNameCalc | undefined => {
     return l
   }
 
-  // parse add
-  const add = (): ClassNameCalc | undefined => {
-    let l = mul()
+  // parse add and sub
+  const addSub = (): ClassNameCalc | undefined => {
+    let l = mulDiv()
     if (!l) {
       return undefined
     }
@@ -69,7 +70,7 @@ export const classNameCalc = (input: string): ClassNameCalc | undefined => {
         break
       }
       pos++
-      const r = mul()
+      const r = mulDiv()
       if (!r) {
         return undefined
       }
@@ -82,7 +83,7 @@ export const classNameCalc = (input: string): ClassNameCalc | undefined => {
     return l
   }
 
-  const res = add()
+  const res = addSub()
   return pos === tokens.length ? res : undefined
 }
 
@@ -103,7 +104,7 @@ const classNameCalcTokenize = (expr: string): CalcToken[] | undefined => {
         tokens.push({
           k: 'value',
           v,
-          ty: unit,
+          unit,
         })
         i += 2
       } else if (unit === 'px') {
@@ -161,3 +162,13 @@ export const classNameCalcKeys = ({
   }
   return keys
 }
+
+export const classNameCalcScreens: StrMap<{ unit: 'vw' | 'vh'; key: string }> =
+  {
+    'w-screen': { unit: 'vw', key: 'width' },
+    'h-screen': { unit: 'vh', key: 'height' },
+    'min-w-screen': { unit: 'vw', key: 'minWidth' },
+    'min-h-screen': { unit: 'vh', key: 'minHeight' },
+    'max-w-screen': { unit: 'vw', key: 'maxWidth' },
+    'max-h-screen': { unit: 'vh', key: 'maxHeight' },
+  }

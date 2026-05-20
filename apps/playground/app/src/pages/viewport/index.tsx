@@ -13,18 +13,10 @@ const DemoBox = ({
   label: string
   className: string
 }) => (
-  <View className='gap-1'>
-    <Span className='text-foreground font-mono text-xs transition'>
-      {label}
-    </Span>
-    <View
-      className={[
-        'bg-primary/20 h-12 items-center justify-center rounded',
-        className,
-      ]}
-    >
-      <Span className='text-primary text-xs transition'>{label}</Span>
-    </View>
+  <View
+    className={['bg-primary/20 h-12 justify-center rounded p-2', className]}
+  >
+    <Span className='text-primary text-xs transition'>{label}</Span>
   </View>
 )
 
@@ -49,7 +41,6 @@ export const ViewportPage = async () => {
             <DemoBox label='w-[25vw]' className='w-[25vw]' />
             <DemoBox label='w-[50vw]' className='w-[50vw]' />
             <DemoBox label='w-[75vw]' className='w-[75vw]' />
-            <DemoBox label='w-[100vw]' className='w-[100vw]' />
           </View>
 
           <View className='gap-3'>
@@ -72,7 +63,6 @@ export const ViewportPage = async () => {
             </Span>
             <DemoBox label='w-[calc(100vw/2)]' className='w-[calc(100vw/2)]' />
             <DemoBox label='w-[calc(100vw/3)]' className='w-[calc(100vw/3)]' />
-            <DemoBox label='w-[calc(100vw/4)]' className='w-[calc(100vw/4)]' />
           </View>
 
           <View className='gap-3'>

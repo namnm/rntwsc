@@ -108,7 +108,7 @@ export type ClassNameMetadata = Partial<{
 
 export type ClassNameCalcValue = {
   v: number
-  ty?: 'vw' | 'vh'
+  unit?: 'vw' | 'vh'
 }
 export type ClassNameCalcOperator = {
   l: ClassNameCalc
