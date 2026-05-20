@@ -15,6 +15,10 @@ import type {
   ClassNameWithVariable,
 } from '@/rn/core/tw/class-name'
 import {
+  classNameCalc,
+  classNameCalcKeys,
+} from '@/rn/core/tw/lib/class-name-calc'
+import {
   animationMap,
   transitionDurationDefault,
   transitionTimingFunctionDefault,
@@ -33,7 +37,6 @@ type Options = {
 const throwOnUnknown = (className: string) => {
   throw new Error(`Unknown or invalid class name ${className}`)
 }
-const space = /\s+/g
 
 export const classNameToNative = (options: Options): ClassNameNative => {
   const required: Required<Options> = {
@@ -46,9 +49,9 @@ export const classNameToNative = (options: Options): ClassNameNative => {
     return
   }
 
-  if (space.test(className)) {
+  if (/\s/.test(className)) {
     const style = className
-      .split(space)
+      .split(/\s+/g)
       .filter(s => s)
       .map(s => classNameToNative({ ...required, className: s }))
     return omitEmptyClassName(style)
@@ -185,8 +188,8 @@ const omitEmptyClassName = (className: ClassNameNative): ClassNameNative => {
   return omitEmptyObject(className)
 }
 
-type ExtraTwrncOptions = Required<Options>
-type ExtraTwrnc = (options: ExtraTwrncOptions) => any
+export type ExtraTwrncOptions = Required<Options>
+export type ExtraTwrnc = (options: ExtraTwrncOptions) => any
 const extraTwrnc: ExtraTwrnc[] = []
 
 const stripNative = [
@@ -662,7 +665,7 @@ extraTwrnc.push(options => {
   }
 })
 
-// alpha color
+// alpha with variable
 extraTwrnc.push(options => {
   const { className, onUnknown } = options
   const matches = /(.+)\/(\d+)$/.exec(className)
@@ -705,5 +708,53 @@ extraTwrnc.push(options => {
   }
   return {
     zIndex,
+  }
+})
+
+// simple vw vh
+extraTwrnc.push(options => {
+  const { className, onUnknown } = options
+  const re = /-\[(\d+)(vw|vh)\]$/
+  const matches = re.exec(className)
+  if (!matches) {
+    return
+  }
+  const [, n, ty] = matches
+  const v = Number(n)
+  if (n !== v.toString()) {
+    return onUnknown(className)
+  }
+  return {
+    calc: {
+      v,
+      ty,
+    },
+    keys: classNameCalcKeys({
+      ...options,
+      classNameToNative,
+      re,
+    }),
+  }
+})
+
+// calc arbitrary value, support: px, vw, vh
+extraTwrnc.push(options => {
+  const { className, onUnknown } = options
+  const re = /-\[calc\((.+)\)\]$/
+  const matches = re.exec(className)
+  if (!matches) {
+    return
+  }
+  const calc = classNameCalc(matches[1])
+  if (!calc) {
+    return onUnknown(className)
+  }
+  return {
+    calc,
+    keys: classNameCalcKeys({
+      ...options,
+      classNameToNative,
+      re,
+    }),
   }
 })
