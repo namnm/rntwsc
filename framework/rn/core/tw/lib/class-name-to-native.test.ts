@@ -36,15 +36,66 @@ describe('classNameToNative', () => {
   it('w-full', () => e('w-full', { width: '100%' }))
   it('h-10', () => e('h-10', { height: 40 }))
 
-  it('w-vw', () =>
+  // simple vw vh
+  it('w-[10vw]', () =>
     e('w-[10vw]', {
       calc: { v: 10, ty: 'vw' },
       key: 'width',
     }))
-  it('h-vh', () =>
+  it('h-[10vh]', () =>
     e('h-[10vh]', {
       calc: { v: 10, ty: 'vh' },
       key: 'height',
+    }))
+
+  // calc arbitrary values
+  it('w-[calc(100vw-20px)]', () =>
+    e('w-[calc(100vw-20px)]', {
+      calc: { l: { v: 100, ty: 'vw' }, r: { v: 20 }, op: '-' },
+      key: 'width',
+    }))
+  it('h-[calc(100vh+20px)]', () =>
+    e('h-[calc(100vh+20px)]', {
+      calc: { l: { v: 100, ty: 'vh' }, r: { v: 20 }, op: '+' },
+      key: 'height',
+    }))
+  it('w-[calc(100vw*2)] mul', () =>
+    e('w-[calc(100vw*2)]', {
+      calc: { l: { v: 100, ty: 'vw' }, r: { v: 2 }, op: '*' },
+      key: 'width',
+    }))
+  it('w-[calc(100vw/2)] div', () =>
+    e('w-[calc(100vw/2)]', {
+      calc: { l: { v: 100, ty: 'vw' }, r: { v: 2 }, op: '/' },
+      key: 'width',
+    }))
+  it('w-[calc(100vw-20px+10px)] left-assoc', () =>
+    e('w-[calc(100vw-20px+10px)]', {
+      calc: {
+        l: { l: { v: 100, ty: 'vw' }, r: { v: 20 }, op: '-' },
+        r: { v: 10 },
+        op: '+',
+      },
+      key: 'width',
+    }))
+  it('w-[calc(100vw-2*20px)] mul precedence', () =>
+    e('w-[calc(100vw-2*20px)]', {
+      calc: {
+        l: { v: 100, ty: 'vw' },
+        r: { l: { v: 2 }, r: { v: 20 }, op: '*' },
+        op: '-',
+      },
+      key: 'width',
+    }))
+  it('w-[calc(100vw_-_20px)] underscore', () =>
+    e('w-[calc(100vw_-_20px)]', {
+      calc: { l: { v: 100, ty: 'vw' }, r: { v: 20 }, op: '-' },
+      key: 'width',
+    }))
+  it('mt-[calc(100vw-20px)] non-dimension prop', () =>
+    e('mt-[calc(100vw-20px)]', {
+      calc: { l: { v: 100, ty: 'vw' }, r: { v: 20 }, op: '-' },
+      key: 'marginTop',
     }))
 
   it('rounded-lg', () => e('rounded-lg', { borderRadius: 8 }))

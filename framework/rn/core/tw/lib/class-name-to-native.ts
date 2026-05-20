@@ -14,6 +14,7 @@ import type {
   ClassNameSelector,
   ClassNameWithVariable,
 } from '@/rn/core/tw/class-name'
+import { parseCalcExpr } from '@/rn/core/tw/lib/class-name-calc'
 import {
   animationMap,
   transitionDurationDefault,
@@ -33,7 +34,6 @@ type Options = {
 const throwOnUnknown = (className: string) => {
   throw new Error(`Unknown or invalid class name ${className}`)
 }
-const space = /\s+/g
 
 export const classNameToNative = (options: Options): ClassNameNative => {
   const required: Required<Options> = {
@@ -46,9 +46,9 @@ export const classNameToNative = (options: Options): ClassNameNative => {
     return
   }
 
-  if (space.test(className)) {
+  if (/\s/.test(className)) {
     const style = className
-      .split(space)
+      .split(/\s+/g)
       .filter(s => s)
       .map(s => classNameToNative({ ...required, className: s }))
     return omitEmptyClassName(style)
@@ -737,6 +737,35 @@ extraTwrnc.push(options => {
       v,
       ty,
     },
+    key: keys[0],
+  }
+})
+
+// calc arbitrary value, support: px, vw, vh
+extraTwrnc.push(options => {
+  const { className, onUnknown } = options
+  const re = /-\[calc\((.+)\)\]$/
+  const matches = re.exec(className)
+  if (!matches) {
+    return
+  }
+  const calc = parseCalcExpr(matches[1])
+  if (!calc) {
+    return onUnknown(className)
+  }
+  const style = classNameToNative({
+    ...options,
+    className: className.replace(re, '-0'),
+  })
+  if (!style || Array.isArray(style)) {
+    return onUnknown(className)
+  }
+  const keys = Object.keys(style)
+  if (keys.length > 1) {
+    return onUnknown(className)
+  }
+  return {
+    calc,
     key: keys[0],
   }
 })
