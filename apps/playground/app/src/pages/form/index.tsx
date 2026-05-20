@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 
 import { Checkbox } from '@/rn/components/checkbox'
 import { DatePicker } from '@/rn/components/date-picker'
-import { Form, FormField } from '@/rn/components/form'
+import { Form, FormTrigger, FormField } from '@/rn/components/form'
 import { TextInput } from '@/rn/components/input'
 import { RadioGroup } from '@/rn/components/radio'
 import { Select } from '@/rn/components/select'
@@ -20,7 +20,7 @@ import { NavLayout } from '#/components/nav-layout'
 type RegisterForm = {
   name: string
   email: string
-  birthdate: Date | undefined
+  birthdate: Date | null | undefined
   gender: string
   favoriteFood: string
   newsletter: boolean
@@ -45,20 +45,16 @@ export const FormPage = () => {
   const padding = useSafeAreaPadding()
   const [submitted, setSubmitted] = useState<RegisterForm | null>(null)
 
-  const form = useForm<RegisterForm>({
+  const { control, handleSubmit } = useForm<RegisterForm>({
     defaultValues: {
       name: '',
       email: '',
-      birthdate: undefined,
+      birthdate: null,
       gender: '',
       favoriteFood: '',
       newsletter: false,
       notifications: true,
     },
-  })
-
-  const onSubmit = form.handleSubmit(data => {
-    setSubmitted(data)
   })
 
   return (
@@ -72,24 +68,28 @@ export const FormPage = () => {
             Form
           </H1>
 
-          <Form form={form} className='gap-5'>
+          <Form
+            onSubmit={handleSubmit(data => setSubmitted(data))}
+            className='gap-5'
+          >
             {/* text input */}
-            <FormField<RegisterForm> name='name' label='Full Name' required>
-              {({ value, onChange, invalid }) => (
-                <TextInput
-                  value={value}
-                  onChangeText={onChange}
-                  invalid={invalid}
-                  placeholder='Enter your full name'
-                />
-              )}
+            <FormField
+              name='name'
+              label='Full Name'
+              requiredMask
+              control={control}
+              onChangePropName='onChangeText'
+            >
+              <TextInput placeholder='Enter your full name' />
             </FormField>
 
             {/* text input with pattern validation */}
-            <FormField<RegisterForm>
+            <FormField
               name='email'
               label='Email'
-              required
+              requiredMask
+              control={control}
+              onChangePropName='onChangeText'
               rules={{
                 pattern: {
                   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
@@ -97,70 +97,53 @@ export const FormPage = () => {
                 },
               }}
             >
-              {({ value, onChange, invalid }) => (
-                <TextInput
-                  value={value}
-                  onChangeText={onChange}
-                  invalid={invalid}
-                  placeholder='Enter your email'
-                  keyboardType='email-address'
-                  autoCapitalize='none'
-                />
-              )}
+              <TextInput
+                placeholder='Enter your email'
+                keyboardType='email-address'
+                autoCapitalize='none'
+              />
             </FormField>
 
             {/* date picker */}
-            <FormField<RegisterForm> name='birthdate' label='Birth Date'>
-              {({ value, onChange, invalid }) => (
-                <DatePicker
-                  value={value}
-                  onChange={onChange}
-                  invalid={invalid}
-                  placeholder='Select birth date'
-                />
-              )}
+            <FormField name='birthdate' label='Birth Date' control={control}>
+              <DatePicker placeholder='Select birth date' />
             </FormField>
 
             {/* radio group - each item is a pressable row with radio + label */}
-            <FormField<RegisterForm> name='gender' label='Gender' required>
-              {({ value, onChange }) => (
-                <RadioGroup
-                  value={value}
-                  onChange={onChange}
-                  className='flex-row flex-wrap gap-x-6 gap-y-3'
-                >
-                  {genders.map(g => (
-                    <View key={g.value} className='items-center gap-1.5'>
-                      <RadioGroup.Item value={g.value} />
-                      <Span className='text-xs text-gray-600 transition dark:text-gray-400'>
-                        {g.label}
-                      </Span>
-                    </View>
-                  ))}
-                </RadioGroup>
-              )}
+            <FormField
+              name='gender'
+              label='Gender'
+              requiredMask
+              control={control}
+            >
+              <RadioGroup className='flex-row flex-wrap gap-x-6 gap-y-3'>
+                {genders.map(g => (
+                  <View key={g.value} className='items-center gap-1.5'>
+                    <RadioGroup.Item value={g.value} />
+                    <Span className='text-xs text-gray-600 transition dark:text-gray-400'>
+                      {g.label}
+                    </Span>
+                  </View>
+                ))}
+              </RadioGroup>
             </FormField>
 
             {/* select */}
-            <FormField<RegisterForm>
+            <FormField
               name='favoriteFood'
               label='Favorite Food'
-              required
+              requiredMask
+              control={control}
             >
-              {({ value, onChange, invalid }) => (
-                <Select
-                  items={foods}
-                  value={value}
-                  onChange={onChange}
-                  invalid={invalid}
-                  placeholder='Select a food...'
-                  title='Favorite Food'
-                />
-              )}
+              <Select
+                items={foods}
+                placeholder='Select a food...'
+                title='Favorite Food'
+              />
             </FormField>
 
             {/* checkbox */}
-            <FormField<RegisterForm> name='newsletter' label='Newsletter'>
+            <FormField name='newsletter' label='Newsletter' control={control}>
               {({ value, onChange }) => (
                 <View className='flex-row items-center gap-3'>
                   <Checkbox checked={value} onChange={onChange} />
@@ -174,7 +157,11 @@ export const FormPage = () => {
             </FormField>
 
             {/* switch */}
-            <FormField<RegisterForm> name='notifications' label='Notifications'>
+            <FormField
+              name='notifications'
+              label='Notifications'
+              control={control}
+            >
               {({ value, onChange }) => (
                 <View className='flex-row items-center justify-between'>
                   <Span className='text-sm text-gray-700 transition dark:text-gray-300'>
@@ -186,12 +173,7 @@ export const FormPage = () => {
             </FormField>
 
             {/* submit */}
-            <Pressable
-              onPress={onSubmit}
-              className='bg-primary mt-1 items-center rounded-lg py-2.5'
-            >
-              <Span className='text-sm font-semibold text-white'>Submit</Span>
-            </Pressable>
+            <FormTrigger className=''>Submit</FormTrigger>
           </Form>
 
           {/* result */}
