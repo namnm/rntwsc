@@ -15,7 +15,6 @@ const e = (className: string, expectedValue: any) => {
 
 describe('classNameToNative', () => {
   // basic twrnc
-  it('text-red-500', () => e('text-red-500', { color: '#ef4444' }))
   it('flex', () => e('flex', { display: 'flex' }))
   it('flex-col', () => e('flex-col', { flexDirection: 'column' }))
   it('flex-row', () => e('flex-row', { flexDirection: 'row' }))
@@ -24,6 +23,7 @@ describe('classNameToNative', () => {
     e('justify-between', {
       justifyContent: 'space-between',
     }))
+
   it('p-4', () =>
     e('p-4', {
       paddingTop: 16,
@@ -32,13 +32,30 @@ describe('classNameToNative', () => {
       paddingRight: 16,
     }))
   it('mt-2', () => e('mt-2', { marginTop: 8 }))
+
   it('w-full', () => e('w-full', { width: '100%' }))
   it('h-10', () => e('h-10', { height: 40 }))
+
+  it('w-vw', () =>
+    e('w-[10vw]', {
+      calc: { v: 10, ty: 'vw' },
+      key: 'width',
+    }))
+  it('h-vh', () =>
+    e('h-[10vh]', {
+      calc: { v: 10, ty: 'vh' },
+      key: 'height',
+    }))
+
   it('rounded-lg', () => e('rounded-lg', { borderRadius: 8 }))
+
   it('font-bold', () => e('font-bold', { fontWeight: 'bold' }))
   it('text-lg', () => e('text-lg', { fontSize: 18, lineHeight: 28 }))
+  it('text-red-500', () => e('text-red-500', { color: '#ef4444' }))
+
   it('opacity-50', () => e('opacity-50', { opacity: 0.5 }))
   it('overflow-hidden', () => e('overflow-hidden', { overflow: 'hidden' }))
+
   it('z-10', () => e('z-10', { zIndex: 10 }))
   it('-z-10', () => e('-z-10', { zIndex: -10 }))
   it('z-[999]', () => e('z-[999]', { zIndex: 999 }))

@@ -12,7 +12,7 @@ import { normalizeStyle } from '@/rn/core/tw/lib/normalize-style'
 
 type Options = Partial<
   Omit<ClassNameToStylesOptions, 'className'> &
-    Pick<ClassNameToStylesOptions, 'variables'> & {
+    Pick<ClassNameToStylesOptions, 'variables' | 'dimensions'> & {
       state: ClassNameState
       style: Style
     }

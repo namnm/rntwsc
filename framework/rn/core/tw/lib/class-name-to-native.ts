@@ -662,7 +662,7 @@ extraTwrnc.push(options => {
   }
 })
 
-// alpha color
+// alpha with variable
 extraTwrnc.push(options => {
   const { className, onUnknown } = options
   const matches = /(.+)\/(\d+)$/.exec(className)
@@ -705,5 +705,38 @@ extraTwrnc.push(options => {
   }
   return {
     zIndex,
+  }
+})
+
+// simple vw vh
+extraTwrnc.push(options => {
+  const { className, onUnknown } = options
+  const re = /-\[(\d+)(vw|vh)\]$/
+  const matches = re.exec(className)
+  if (!matches) {
+    return
+  }
+  const [, n, ty] = matches
+  const v = Number(n)
+  if (n !== v.toString()) {
+    return onUnknown(className)
+  }
+  const style = classNameToNative({
+    ...options,
+    className: className.replace(re, '-0'),
+  })
+  if (!style || Array.isArray(style)) {
+    return onUnknown(className)
+  }
+  const keys = Object.keys(style)
+  if (keys.length > 1) {
+    return onUnknown(className)
+  }
+  return {
+    calc: {
+      v,
+      ty,
+    },
+    key: keys[0],
   }
 })
