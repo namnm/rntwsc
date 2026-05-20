@@ -28,10 +28,12 @@ import {
   rSelect,
   rSwitch,
   rTextInput,
+  rViewport,
 } from '#/pages/route-paths'
 import { SelectPage } from '#/pages/select'
 import { SwitchPage } from '#/pages/switch'
 import { TextInputPage } from '#/pages/text-input'
+import { ViewportPage } from '#/pages/viewport'
 
 // we define all routes for native
 // need to explicit define it here to make sure not
@@ -53,5 +55,6 @@ export const routesNative = {
   [rModal]: ModalPage,
   [rForm]: FormPage,
   [rSelect]: SelectPage,
+  [rViewport]: ViewportPage,
 }
 export type Routes = typeof routesNative

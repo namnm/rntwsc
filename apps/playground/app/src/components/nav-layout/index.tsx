@@ -27,6 +27,7 @@ import {
   rSelect,
   rSwitch,
   rTextInput,
+  rViewport,
 } from '#/pages/route-paths'
 
 export type NavItem = {
@@ -82,6 +83,11 @@ export const NavLayout = ({ children }: NavLayoutProps) => (
         <NavSidebarLink href={rCheckbox} label='Checkbox' />
         <NavSidebarLink href={rSwitch} label='Switch' />
         <NavSidebarLink href={rForm} label='Form' />
+        <Separator />
+        <Span className='mb-1 px-2 text-xs font-semibold text-gray-400 transition dark:text-gray-500'>
+          CORE
+        </Span>
+        <NavSidebarLink href={rViewport} label='Viewport' />
         <Separator />
         <ThemeSwitcher />
         <Separator />

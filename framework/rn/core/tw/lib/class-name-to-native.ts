@@ -14,7 +14,10 @@ import type {
   ClassNameSelector,
   ClassNameWithVariable,
 } from '@/rn/core/tw/class-name'
-import { parseCalcExpr } from '@/rn/core/tw/lib/class-name-calc'
+import {
+  classNameCalc,
+  classNameCalcKeys,
+} from '@/rn/core/tw/lib/class-name-calc'
 import {
   animationMap,
   transitionDurationDefault,
@@ -185,8 +188,8 @@ const omitEmptyClassName = (className: ClassNameNative): ClassNameNative => {
   return omitEmptyObject(className)
 }
 
-type ExtraTwrncOptions = Required<Options>
-type ExtraTwrnc = (options: ExtraTwrncOptions) => any
+export type ExtraTwrncOptions = Required<Options>
+export type ExtraTwrnc = (options: ExtraTwrncOptions) => any
 const extraTwrnc: ExtraTwrnc[] = []
 
 const stripNative = [
@@ -721,23 +724,16 @@ extraTwrnc.push(options => {
   if (n !== v.toString()) {
     return onUnknown(className)
   }
-  const style = classNameToNative({
-    ...options,
-    className: className.replace(re, '-0'),
-  })
-  if (!style || Array.isArray(style)) {
-    return onUnknown(className)
-  }
-  const keys = Object.keys(style)
-  if (!keys.length) {
-    return onUnknown(className)
-  }
   return {
     calc: {
       v,
       ty,
     },
-    keys,
+    keys: classNameCalcKeys({
+      ...options,
+      classNameToNative,
+      re,
+    }),
   }
 })
 
@@ -749,23 +745,16 @@ extraTwrnc.push(options => {
   if (!matches) {
     return
   }
-  const calc = parseCalcExpr(matches[1])
+  const calc = classNameCalc(matches[1])
   if (!calc) {
-    return onUnknown(className)
-  }
-  const style = classNameToNative({
-    ...options,
-    className: className.replace(re, '-0'),
-  })
-  if (!style || Array.isArray(style)) {
-    return onUnknown(className)
-  }
-  const keys = Object.keys(style)
-  if (!keys.length) {
     return onUnknown(className)
   }
   return {
     calc,
-    keys,
+    keys: classNameCalcKeys({
+      ...options,
+      classNameToNative,
+      re,
+    }),
   }
 })

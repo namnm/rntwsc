@@ -107,7 +107,7 @@ const classNameToStylesRecursive = ({
 
   if ('calc' in className) {
     const { calc, keys } = className
-    const v = evalCalc(calc, dimensions)
+    const v = caclRecursive(calc, dimensions)
     if (v === undefined) {
       return
     }
@@ -127,13 +127,13 @@ const classNameToStylesRecursive = ({
   })
 }
 
-const evalCalc = (
+const caclRecursive = (
   calc: ClassNameCalc,
   dimensions: DimensionsSize | Nullish,
 ): number | undefined => {
   if ('op' in calc) {
-    const l = evalCalc(calc.l, dimensions)
-    const r = evalCalc(calc.r, dimensions)
+    const l = caclRecursive(calc.l, dimensions)
+    const r = caclRecursive(calc.r, dimensions)
     if (l === undefined || r === undefined) {
       return undefined
     }
