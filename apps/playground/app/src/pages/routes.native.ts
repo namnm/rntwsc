@@ -9,7 +9,6 @@ import { DatePickerPage } from '#/pages/date-picker'
 import { DrawerPage } from '#/pages/drawer'
 import { FormPage } from '#/pages/form'
 import { HomePage } from '#/pages/home'
-import { TextInputPage } from '#/pages/text-input'
 import { ModalPage } from '#/pages/modal'
 import { RadioPage } from '#/pages/radio'
 import {
@@ -24,14 +23,15 @@ import {
   rDrawer,
   rForm,
   rHome,
-  rTextInput,
   rModal,
   rRadio,
   rSelect,
   rSwitch,
+  rTextInput,
 } from '#/pages/route-paths'
 import { SelectPage } from '#/pages/select'
 import { SwitchPage } from '#/pages/switch'
+import { TextInputPage } from '#/pages/text-input'
 
 // we define all routes for native
 // need to explicit define it here to make sure not

@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next'
 
+import { getAlias } from '@/devtools/babel-config/get-alias'
 import { shouldTranspileExtension } from '@/devtools/babel-config/should-transpile'
-import { getAlias } from '@/devtools/ts/get-alias'
 import { cssExtractVariablesRegex } from '@/devtools/webpack-css-extract-variables/transform'
 import { ResolveClientExtension } from '@/devtools/webpack-resolve-client-extension'
 import { glob } from '@/nodejs/glob'

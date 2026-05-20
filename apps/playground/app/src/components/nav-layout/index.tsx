@@ -22,11 +22,11 @@ import {
   rDrawer,
   rForm,
   rHome,
-  rTextInput,
   rModal,
   rRadio,
   rSelect,
   rSwitch,
+  rTextInput,
 } from '#/pages/route-paths'
 
 export type NavItem = {

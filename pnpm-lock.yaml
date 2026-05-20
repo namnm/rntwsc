@@ -414,7 +414,9 @@ importers:
         specifier: 8.1.1
         version: 8.1.1(stylelint@17.11.1(typescript@6.0.3))
 
-  framework/devtools/ts:
+  framework/devtools/tsc: {}
+
+  framework/devtools/type-coverage:
     dependencies:
       type-coverage:
         specifier: 2.29.7
