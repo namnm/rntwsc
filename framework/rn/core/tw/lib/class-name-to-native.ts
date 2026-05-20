@@ -729,7 +729,7 @@ extraTwrnc.push(options => {
     return onUnknown(className)
   }
   const keys = Object.keys(style)
-  if (keys.length > 1) {
+  if (!keys.length) {
     return onUnknown(className)
   }
   return {
@@ -737,7 +737,7 @@ extraTwrnc.push(options => {
       v,
       ty,
     },
-    key: keys[0],
+    keys,
   }
 })
 
@@ -761,11 +761,11 @@ extraTwrnc.push(options => {
     return onUnknown(className)
   }
   const keys = Object.keys(style)
-  if (keys.length > 1) {
+  if (!keys.length) {
     return onUnknown(className)
   }
   return {
     calc,
-    key: keys[0],
+    keys,
   }
 })

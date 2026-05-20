@@ -106,16 +106,17 @@ const classNameToStylesRecursive = ({
   }
 
   if ('calc' in className) {
-    const { calc, key } = className
+    const { calc, keys } = className
     const v = evalCalc(calc, dimensions)
     if (v === undefined) {
       return
     }
     styles.push({
       level,
-      style: {
-        [key]: v,
-      },
+      style: keys.reduce<StrMap>((m, k) => {
+        m[k] = v
+        return m
+      }, {}),
     })
     return
   }

@@ -40,7 +40,7 @@ export type ClassNameWithVariable = {
 }
 export type ClassNameWithCalc = {
   calc: ClassNameCalc
-  key: string
+  keys: string[]
 }
 export type ClassNameNativeSingle =
   | StyleSingle
