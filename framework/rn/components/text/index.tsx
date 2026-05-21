@@ -3,7 +3,6 @@
 import { useTextStyle } from '@/rn/components/text/text-style-context'
 import type { TextProps } from '@/rn/core/components/text'
 import { TextWithoutContext } from '@/rn/core/components/text'
-import { Platform } from 'react-native'
 
 export const Text = ({ className, ...props }: TextProps) => {
   const ctx = useTextStyle()
