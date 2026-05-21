@@ -4,7 +4,7 @@ import { shouldTranspileExtension } from '@/devtools/babel-config/should-transpi
 
 type MessageId = 'enforceUseClient' | 'wrongPosition' | 'missingNewlines'
 
-export const enforceUseClient: TSESLint.RuleModule<MessageId, [string[]?]> = {
+export const enforceUseClient: TSESLint.RuleModule<MessageId, [string[]]> = {
   meta: {
     type: 'problem',
     fixable: 'code',
@@ -21,13 +21,14 @@ export const enforceUseClient: TSESLint.RuleModule<MessageId, [string[]?]> = {
         type: 'array',
         items: {
           type: 'string',
+          required: true,
         },
+        minItems: 1,
         uniqueItems: true,
+        required: true,
       },
     ],
   },
-
-  defaultOptions: [[]],
 
   create: c => {
     if (
