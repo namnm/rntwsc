@@ -28,6 +28,9 @@ import {
   rSwitch,
   rTextInput,
   rViewport,
+  rYhHome,
+  rYhCamera,
+  rYhChat,
 } from '#/pages/route-paths'
 
 export type NavItem = {
@@ -88,6 +91,13 @@ export const NavLayout = ({ children }: NavLayoutProps) => (
           CORE
         </Span>
         <NavSidebarLink href={rViewport} label='Viewport' />
+        <Separator />
+        <Span className='mb-1 px-2 text-xs font-semibold text-gray-400 transition dark:text-gray-500'>
+          YOURHEALTH DEMO
+        </Span>
+        <NavSidebarLink href={rYhHome} label='YH — Trang chủ' />
+        <NavSidebarLink href={rYhCamera} label='YH — Camera / OCR' />
+        <NavSidebarLink href={rYhChat} label='YH — AI Chatbox' />
         <Separator />
         <ThemeSwitcher />
         <Separator />

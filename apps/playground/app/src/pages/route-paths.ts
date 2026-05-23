@@ -17,3 +17,7 @@ export const rSelect = '/select'
 export const rSwitch = '/switch'
 export const rTextInput = '/text-input'
 export const rViewport = '/viewport'
+
+export const rYhHome = '/yh-home'
+export const rYhCamera = '/yh-camera'
+export const rYhChat = '/yh-chat'
