@@ -66,6 +66,23 @@ export const ButtonPage = async () => {
 
           <View className='gap-3'>
             <Span className='text-foreground text-lg font-semibold transition'>
+              as child
+            </Span>
+            <View className='gap-4'>
+              <Button asChild>
+                <a
+                  href='https://google.com'
+                  target='_blank'
+                  className='relative'
+                >
+                  <Span>Google</Span>
+                </a>
+              </Button>
+            </View>
+          </View>
+
+          <View className='gap-3'>
+            <Span className='text-foreground text-lg font-semibold transition'>
               size
             </Span>
             <View className='flex-row flex-wrap items-center gap-3'>

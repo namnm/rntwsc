@@ -22,11 +22,12 @@ import {
   rDrawer,
   rForm,
   rHome,
-  rInput,
   rModal,
   rRadio,
   rSelect,
   rSwitch,
+  rTextInput,
+  rViewport,
 } from '#/pages/route-paths'
 
 export type NavItem = {
@@ -75,13 +76,18 @@ export const NavLayout = ({ children }: NavLayoutProps) => (
         <Span className='mb-1 px-2 text-xs font-semibold text-gray-400 transition dark:text-gray-500'>
           FORM
         </Span>
-        <NavSidebarLink href={rInput} label='Text Input' />
+        <NavSidebarLink href={rTextInput} label='Text Input' />
         <NavSidebarLink href={rSelect} label='Select' />
         <NavSidebarLink href={rDatePicker} label='Date Picker' />
         <NavSidebarLink href={rRadio} label='Radio' />
         <NavSidebarLink href={rCheckbox} label='Checkbox' />
         <NavSidebarLink href={rSwitch} label='Switch' />
         <NavSidebarLink href={rForm} label='Form' />
+        <Separator />
+        <Span className='mb-1 px-2 text-xs font-semibold text-gray-400 transition dark:text-gray-500'>
+          CORE
+        </Span>
+        <NavSidebarLink href={rViewport} label='Viewport' />
         <Separator />
         <ThemeSwitcher />
         <Separator />

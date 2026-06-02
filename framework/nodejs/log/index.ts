@@ -2,6 +2,7 @@ import { bold, cyan, gray, magenta, red, yellow } from 'colors/safe'
 import type { StackFrame } from 'stack-trace'
 import stacktrace from 'stack-trace'
 
+import { killSelfChildren } from '@/nodejs/kill'
 import { isInRepo, path } from '@/nodejs/path'
 import { repoRoot } from '@/root'
 import { jsonSafe } from '@/shared/json-safe'
@@ -37,11 +38,6 @@ export class Log {
 
   displayNodeModulesPath: boolean = true
   minimal: boolean = false
-
-  cacheSize = 1000
-  stdall: string[] = []
-  stdout: string[] = []
-  stderr: string[] = []
 
   stack = ((err: unknown, lv: LogLevel = 'error') => {
     if (!err) {
@@ -102,17 +98,6 @@ export class Log {
     condition?: unknown,
   ) => never
 
-  private cache = (k: 'stdall' | 'stdout' | 'stderr', msg: string) => {
-    if (!this.cacheSize) {
-      return
-    }
-    const arr = this[k]
-    if (arr.length >= this.cacheSize) {
-      arr.shift()
-    }
-    arr.push(msg)
-  }
-
   private println = (lv: LogLevel, msg: string, condition: unknown) => {
     const color = this.getColorFn(lv)
     msg = this.colorize(msg, bold)
@@ -122,7 +107,10 @@ export class Log {
       const timestamp = this.getTimestamp()
       const level = this.getLabel(lv)
       parts.push(this.colorize(`${timestamp} ${level} `, color))
-      const location = this.getLocation(stacktrace.get()[2])
+      const frames = stacktrace.get()
+      const frame =
+        frames.find(f => f.getFileName() !== __filename) || frames[2]
+      const location = this.getLocation(frame)
       parts.push(this.colorize(`${location} `, gray))
     }
     parts.push(msg)
@@ -140,18 +128,14 @@ export class Log {
       msg = msg + '\n' + condition
     }
 
-    this.cache('stdall', msg)
     if (lv === 'error' || lv === 'fatal') {
-      this.cache('stderr', msg)
-
       console.error(msg)
     } else {
-      this.cache('stdout', msg)
-
       console.log(msg)
     }
 
     if (lv === 'fatal') {
+      killSelfChildren()
       process.exit(1)
     }
   }
@@ -163,7 +147,7 @@ export class Log {
   timezone = new Date().getTimezoneOffset() / -60
   private getTimestamp = () => {
     let date = new Date()
-    const d = this.timezone * -60 + date.getTimezoneOffset()
+    const d = this.timezone * 60 + date.getTimezoneOffset()
     date = new Date(date.getTime() + d * 60 * 1000)
     return [
       date.getFullYear(),
@@ -232,7 +216,7 @@ export class Log {
         return
       }
       let fn = frame.getFunctionName() || frame.getMethodName()
-      fn = fn ? fn.replace(/\S+\./g, '') : '<anonnymous>'
+      fn = fn ? fn.replace(/\S+\./g, '') : '<anonymous>'
       stacks.push({
         fn,
         location,

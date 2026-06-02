@@ -3,47 +3,56 @@
 import { minimal as log } from '@/nodejs/log'
 
 const supported = [
-  'all',
-  'fmt',
   'doctoc',
   'normalize',
   'eslint',
   'stylelint',
   'prettier',
-  'ts',
+  'tsc',
+  'type-coverage',
 ] as const
+type Pkg = (typeof supported)[number]
 
-const argvPkg = process.argv[2] as (typeof supported)[number]
-if (!supported.some(v => v === argvPkg)) {
-  log.fatal(`Invalid devtools script ${argvPkg}`)
-}
+const argvPkgs = process.argv[2].split(',') as Pkg[]
+argvPkgs.forEach(argvPkg => {
+  if (!supported.some(v => v === argvPkg)) {
+    log.fatal(`Invalid devtools script ${argvPkg}`)
+  }
+})
 
 type Options = {
   dir: string
 }
 
-const r = async (pkg: string, { dir }: Options) => {
-  await require(`@/devtools/${pkg}`).run(dir)
+const r = async (p: Pkg, { dir }: Options) => {
+  await require(`@/devtools/${p}`).run(dir)
 }
-const fmt = async (o: Options) => {
-  // need to run in this order to avoid conflicts between commands
-  await r('normalize', o)
-  await Promise.all(['doctoc', 'eslint', 'stylelint'].map(pkg => r(pkg, o)))
-  await r('prettier', o)
-}
-const all = async (o: Options) => {
-  await fmt(o)
-  await r('ts', o)
+
+const checkAndPush = (promises: Promise<unknown>[], p: Pkg, o: Options) => {
+  if (!argvPkgs.includes(p)) {
+    return
+  }
+  promises.push(r(p, o))
 }
 
 export const run = async (o: Options) => {
-  let p: Promise<unknown>
-  if (argvPkg === 'all') {
-    p = all(o)
-  } else if (argvPkg === 'fmt') {
-    p = fmt(o)
-  } else {
-    p = r(argvPkg, o)
+  let promises: Promise<unknown>[] = []
+  checkAndPush(promises, 'normalize', o)
+
+  // need to run in this order to avoid conflicts between commands
+  const fmtPromises: Promise<unknown>[] = []
+  checkAndPush(fmtPromises, 'doctoc', o)
+  checkAndPush(fmtPromises, 'eslint', o)
+  checkAndPush(fmtPromises, 'stylelint', o)
+  if (fmtPromises.length) {
+    await Promise.all(promises)
+    promises = []
+    await Promise.all(fmtPromises)
   }
-  await p.catch((err: Error) => log.stack(err, 'fatal'))
+
+  checkAndPush(promises, 'prettier', o)
+  checkAndPush(promises, 'tsc', o)
+  checkAndPush(promises, 'type-coverage', o)
+
+  await Promise.all(promises).catch((err: Error) => log.stack(err, 'fatal'))
 }

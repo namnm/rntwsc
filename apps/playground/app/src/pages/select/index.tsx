@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
+import type { SelectItem } from '@/rn/components/select'
 import { Select } from '@/rn/components/select'
 import { H1, Span } from '@/rn/components/text'
 import { ScrollView } from '@/rn/core/components/scroll-view'
@@ -14,7 +15,7 @@ const appearances = ['outlined', 'filled', 'ghost', 'underlined'] as const
 const sizes = ['sm', 'md', 'lg'] as const
 const shapes = ['rounded', 'pill', 'none'] as const
 
-const fruits = [
+const fruits: SelectItem[] = [
   { value: 'apple', label: 'Apple' },
   { value: 'banana', label: 'Banana' },
   { value: 'cherry', label: 'Cherry' },
@@ -24,10 +25,45 @@ const fruits = [
   { value: 'grape', label: 'Grape' },
 ]
 
+const countries: SelectItem[] = [
+  { value: 'us', label: 'United States of America' },
+  { value: 'gb', label: 'United Kingdom' },
+  { value: 'au', label: 'Australia' },
+  { value: 'nz', label: 'New Zealand' },
+  { value: 'za', label: 'South Africa' },
+  { value: 'kr', label: 'South Korea' },
+  { value: 'ae', label: 'United Arab Emirates' },
+  { value: 'pg', label: 'Papua New Guinea' },
+  { value: 'tt', label: 'Trinidad and Tobago' },
+  { value: 'bo', label: 'Bolivia (Plurinational State)' },
+]
+
+const fetchFruits = () =>
+  new Promise<SelectItem[]>(resolve => setTimeout(() => resolve(fruits), 1200))
+
 export const SelectPage = () => {
   const padding = useSafeAreaPadding()
   const [controlled, setControlled] = useState('banana')
   const [multi, setMulti] = useState<string[]>(['banana', 'cherry'])
+  const [remoteItems, setRemoteItems] = useState<SelectItem[]>(countries)
+
+  const handleRemoteSearch = useCallback((query: string) => {
+    const lower = query.toLowerCase()
+    setRemoteItems(
+      countries
+        .filter(f => f.label.toLowerCase().includes(lower))
+        .map(f => {
+          const idx = f.label.toLowerCase().indexOf(lower)
+          return {
+            ...f,
+            highlight:
+              query.length > 0
+                ? [[idx, idx + query.length] as [number, number]]
+                : undefined,
+          }
+        }),
+    )
+  }, [])
 
   return (
     <NavLayout>
@@ -134,6 +170,64 @@ export const SelectPage = () => {
             <Span className='text-foreground text-xs transition'>
               Selected: {multi.length ? multi.join(', ') : '-'}
             </Span>
+          </View>
+
+          <View className='gap-3'>
+            <Span className='text-foreground text-lg font-semibold transition'>
+              search (local filter)
+            </Span>
+            <Span className='text-foreground text-xs transition'>
+              try: "uni", "so ko", "new z", "and"
+            </Span>
+            <Select
+              items={countries}
+              searchable
+              title='Search countries'
+              placeholder='Select a country..'
+            />
+            <Select
+              multiple
+              items={countries}
+              searchable
+              title='Search countries (multiple)'
+              placeholder='Select countries..'
+            />
+          </View>
+
+          <View className='gap-3'>
+            <Span className='text-foreground text-lg font-semibold transition'>
+              search (remote + highlight)
+            </Span>
+            <Span className='text-foreground text-xs transition'>
+              server returns highlight ranges, try: "united", "south"
+            </Span>
+            <Select
+              items={remoteItems}
+              onSearch={handleRemoteSearch}
+              title='Search countries'
+              placeholder='Select a country..'
+            />
+          </View>
+
+          <View className='gap-3'>
+            <Span className='text-foreground text-lg font-semibold transition'>
+              items as async function
+            </Span>
+            <Span className='text-foreground text-xs transition'>
+              fetches on open, shows loading state while promise resolves
+            </Span>
+            <Select
+              items={fetchFruits}
+              title='Async fruits'
+              placeholder='Select a fruit..'
+            />
+            <Select
+              multiple
+              items={fetchFruits}
+              searchable
+              title='Async + search + multiple'
+              placeholder='Select fruits..'
+            />
           </View>
 
           <View className='gap-3'>

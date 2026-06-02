@@ -1,1 +1,1 @@
-export { TextInputPage as default } from '#/pages/input'
+export { TextInputPage as default } from '#/pages/text-input'

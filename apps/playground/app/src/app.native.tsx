@@ -16,14 +16,14 @@ import { initThemeNative } from '@/rn/core/theme/index.native'
 import { TwPeerProvider } from '@/rn/core/tw/marker'
 import { tw } from '@/rn/core/tw/tw'
 import { composeProviders } from '@/rn/core/utils/compose-providers'
-import { rForm } from '#/pages/route-paths'
+import { rViewport } from '#/pages/route-paths'
 import { routesNative } from '#/pages/routes.native'
 
 import { name as appName } from '../app.json'
 
 const RootStack = createNativeStackNavigator({
   screens: routesNative,
-  initialRouteName: rForm,
+  initialRouteName: rViewport,
   screenOptions: {
     headerShown: false,
     contentStyle: tw`bg-white`,

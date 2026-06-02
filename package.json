@@ -5,17 +5,19 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "fmt": "node ./devtools fmt",
+    "fmt": "node ./devtools normalize,doctoc,eslint,stylelint,prettier",
     "doctoc": "node ./devtools doctoc",
     "normalize": "node ./devtools normalize",
     "eslint": "node ./devtools eslint",
     "stylelint": "node ./devtools stylelint",
     "prettier": "node ./devtools prettier",
-    "ts": "node ./devtools ts"
+    "ts": "node ./devtools tsc,type-coverage",
+    "tsc": "node ./devtools tsc",
+    "type-coverage": "node ./devtools type-coverage"
   },
   "engines": {
     "node": ">=24.11",
-    "pnpm": ">=10"
+    "pnpm": ">=11"
   },
   "dependencies": {
     "json5": "2.2.3",
@@ -25,19 +27,5 @@
     "@types/node": "25.8.0",
     "typescript": "6.0.3"
   },
-  "pnpm": {
-    "overrides": {
-      "react": "19.2.3",
-      "react-dom": "19.2.3",
-      "react-native": "0.85.3",
-      "react-native-reanimated": "4.3.1",
-      "react-native-safe-area-context": "5.7.0",
-      "react-native-worklets": "0.8.3"
-    },
-    "patchedDependencies": {
-      "react-native-web": "patches/react-native-web.patch",
-      "eslint-plugin-import": "patches/eslint-plugin-import.patch",
-      "eslint-plugin-react": "patches/eslint-plugin-react.patch"
-    }
-  }
+  "ignoreTsc": true
 }

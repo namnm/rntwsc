@@ -198,6 +198,14 @@ const MyComponent = () => <View className={classNameStringFromSomeWhere} />
   - `rotate-`
   - `scale-`
   - TODO: Each shorthand will be partial merged into the transform array
+- Support viewport width height:
+  - `<property>-[<number>vw]`
+  - `<property>-[<number>vh]`
+  - `<property>-screen`
+- Support basic calc:
+  - `<property>-[calc(<expr>)]`
+  - Supported operators: + - \* /
+  - Supported units: px, vw, vh
 
 #### Special props
 

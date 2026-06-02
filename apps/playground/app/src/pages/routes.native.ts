@@ -9,7 +9,6 @@ import { DatePickerPage } from '#/pages/date-picker'
 import { DrawerPage } from '#/pages/drawer'
 import { FormPage } from '#/pages/form'
 import { HomePage } from '#/pages/home'
-import { TextInputPage } from '#/pages/input'
 import { ModalPage } from '#/pages/modal'
 import { RadioPage } from '#/pages/radio'
 import {
@@ -24,14 +23,17 @@ import {
   rDrawer,
   rForm,
   rHome,
-  rInput,
   rModal,
   rRadio,
   rSelect,
   rSwitch,
+  rTextInput,
+  rViewport,
 } from '#/pages/route-paths'
 import { SelectPage } from '#/pages/select'
 import { SwitchPage } from '#/pages/switch'
+import { TextInputPage } from '#/pages/text-input'
+import { ViewportPage } from '#/pages/viewport'
 
 // we define all routes for native
 // need to explicit define it here to make sure not
@@ -44,7 +46,7 @@ export const routesNative = {
   [rButtonGroup]: ButtonGroupPage,
   [rButtonToggleGroup]: ButtonToggleGroupPage,
   [rAlert]: AlertPage,
-  [rInput]: TextInputPage,
+  [rTextInput]: TextInputPage,
   [rSwitch]: SwitchPage,
   [rCheckbox]: CheckboxPage,
   [rRadio]: RadioPage,
@@ -53,5 +55,6 @@ export const routesNative = {
   [rModal]: ModalPage,
   [rForm]: FormPage,
   [rSelect]: SelectPage,
+  [rViewport]: ViewportPage,
 }
 export type Routes = typeof routesNative
