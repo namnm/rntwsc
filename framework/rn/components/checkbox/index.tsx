@@ -157,7 +157,12 @@ const Root = ({
     onChange,
   })
 
-  const cn = checkboxCva({ type, size, checked: value, disabled })
+  const cn = checkboxCva({
+    type,
+    size,
+    checked: value,
+    disabled,
+  })
 
   return (
     <Pressable
@@ -167,7 +172,12 @@ const Root = ({
       renderToHardwareTextureAndroid={disabled}
       shouldRasterizeIOS={disabled}
     >
-      <CheckboxIndicatorContext.Provider value={{ cn, checked: value }}>
+      <CheckboxIndicatorContext.Provider
+        value={{
+          cn,
+          checked: value,
+        }}
+      >
         {children || <Indicator />}
       </CheckboxIndicatorContext.Provider>
     </Pressable>

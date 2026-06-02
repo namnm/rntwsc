@@ -23,7 +23,11 @@ export type ClassNameToStylesOptions = {
 
 export const classNameToStyles = (options: ClassNameToStylesOptions) => {
   const styles: StyleWithLevel[] = []
-  classNameToStylesRecursive({ ...options, level: 0, styles })
+  classNameToStylesRecursive({
+    ...options,
+    level: 0,
+    styles,
+  })
   return styles.sort((a, b) => a.level - b.level).map(s => s.style)
 }
 

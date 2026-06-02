@@ -186,7 +186,12 @@ export const Badge = ({
   children,
   ...props
 }: BadgeProps) => {
-  const cn = badgeCva({ type, size, shape, appearance })
+  const cn = badgeCva({
+    type,
+    size,
+    shape,
+    appearance,
+  })
 
   return (
     <View {...props} className={[cn.container, className]}>

@@ -57,7 +57,9 @@ export const noSingleItemArrayProp: TSESLint.RuleModule<
         c.report({
           node: n,
           messageId: 'noSingleItemArrayProp',
-          data: { prop: n.name.name },
+          data: {
+            prop: n.name.name,
+          },
           fix: f => f.replaceText(expr, c.sourceCode.getText(item)),
         })
       },

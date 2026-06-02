@@ -4,7 +4,9 @@ const paths = () => {
   // treat json extension as json5 to import json with comments
   require('json5/lib/register')
   const exts = require.extensions
-  Object.assign(exts, { '.json': exts['.json5'] })
+  Object.assign(exts, {
+    '.json': exts['.json5'],
+  })
   return require('./tsconfig.json').compilerOptions.paths
 }
 

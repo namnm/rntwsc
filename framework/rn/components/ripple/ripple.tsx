@@ -38,7 +38,15 @@ export const Ripple = ({ className }: RippleProps) => {
       const size = Math.ceil(Math.sqrt(dx * dx + dy * dy) * 2)
 
       const id = ulid()
-      setRippleData(prev => [...prev, { id, x, y, size }])
+      setRippleData(prev => [
+        ...prev,
+        {
+          id,
+          x,
+          y,
+          size,
+        },
+      ])
 
       const t = window.setTimeout(() => {
         setRippleData(prev => prev.filter(r => r.id !== id))

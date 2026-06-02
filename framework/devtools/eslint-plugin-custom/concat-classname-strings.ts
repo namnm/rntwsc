@@ -75,7 +75,9 @@ export const concatClassnameStrings: TSESLint.RuleModule<
         c.report({
           node: expr,
           messageId: 'concatClassnameStrings',
-          data: { prop: n.name.name },
+          data: {
+            prop: n.name.name,
+          },
           fix: f => {
             const newElements: string[] = []
             let group: TSESTree.Literal[] = []

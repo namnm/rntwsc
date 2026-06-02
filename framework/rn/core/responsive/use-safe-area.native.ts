@@ -20,17 +20,25 @@ export const useSafeAreaPadding = (): ClassName => {
 
 export const useSafeAreaPaddingTop = (): ClassName => {
   const insets = useSafeAreaInsetsOriginal()
-  return { paddingTop: insets.top }
+  return {
+    paddingTop: insets.top,
+  }
 }
 export const useSafeAreaPaddingRight = (): ClassName => {
   const insets = useSafeAreaInsetsOriginal()
-  return { paddingRight: insets.right }
+  return {
+    paddingRight: insets.right,
+  }
 }
 export const useSafeAreaPaddingBottom = (): ClassName => {
   const insets = useSafeAreaInsetsOriginal()
-  return { paddingBottom: insets.bottom }
+  return {
+    paddingBottom: insets.bottom,
+  }
 }
 export const useSafeAreaPaddingLeft = (): ClassName => {
   const insets = useSafeAreaInsetsOriginal()
-  return { paddingLeft: insets.left }
+  return {
+    paddingLeft: insets.left,
+  }
 }

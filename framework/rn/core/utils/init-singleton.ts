@@ -14,7 +14,10 @@ export const initSingleton = <
   init: T1
   getter: T2
 }): T1 & T2 => {
-  const merged = { ...init, ...getter }
+  const merged = {
+    ...init,
+    ...getter,
+  }
   if (process.env.NODE_ENV === 'production') {
     return merged
   }

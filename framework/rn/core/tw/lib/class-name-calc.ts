@@ -165,10 +165,28 @@ export const classNameCalcKeys = ({
 
 export const classNameCalcScreens: StrMap<{ unit: 'vw' | 'vh'; key: string }> =
   {
-    'w-screen': { unit: 'vw', key: 'width' },
-    'h-screen': { unit: 'vh', key: 'height' },
-    'min-w-screen': { unit: 'vw', key: 'minWidth' },
-    'min-h-screen': { unit: 'vh', key: 'minHeight' },
-    'max-w-screen': { unit: 'vw', key: 'maxWidth' },
-    'max-h-screen': { unit: 'vh', key: 'maxHeight' },
+    'w-screen': {
+      unit: 'vw',
+      key: 'width',
+    },
+    'h-screen': {
+      unit: 'vh',
+      key: 'height',
+    },
+    'min-w-screen': {
+      unit: 'vw',
+      key: 'minWidth',
+    },
+    'min-h-screen': {
+      unit: 'vh',
+      key: 'minHeight',
+    },
+    'max-w-screen': {
+      unit: 'vw',
+      key: 'maxWidth',
+    },
+    'max-h-screen': {
+      unit: 'vh',
+      key: 'maxHeight',
+    },
   }

@@ -14,9 +14,18 @@ export const DarkModeSwitcher = async () => {
   const setDarkMode = useSetDarkMode()
 
   const options = [
-    { value: true, name: t('dark') },
-    { value: false, name: t('light') },
-    { value: undefined, name: t('system') },
+    {
+      value: true,
+      name: t('dark'),
+    },
+    {
+      value: false,
+      name: t('light'),
+    },
+    {
+      value: undefined,
+      name: t('system'),
+    },
   ]
 
   return (

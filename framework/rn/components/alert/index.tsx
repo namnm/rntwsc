@@ -104,7 +104,9 @@ const Root = ({
   children,
   ...props
 }: AlertProps) => {
-  const cn = alertCva({ type })
+  const cn = alertCva({
+    type,
+  })
 
   const arr = Children.toArray(children)
   const icon = arr.find(c => isValidElement(c) && c.type === Icon)
@@ -124,7 +126,11 @@ const Root = ({
   }
 
   return (
-    <AlertContext.Provider value={{ cn }}>
+    <AlertContext.Provider
+      value={{
+        cn,
+      }}
+    >
       <View role='alert' className={[cn.root, className]} {...props}>
         {children}
       </View>

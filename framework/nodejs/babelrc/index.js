@@ -13,7 +13,12 @@ const es6 = p => {
 const babelrc = {
   plugins: [
     es6('@babel/plugin-transform-typescript'),
-    [es6('@babel/plugin-transform-modules-commonjs'), { loose: true }],
+    [
+      es6('@babel/plugin-transform-modules-commonjs'),
+      {
+        loose: true,
+      },
+    ],
   ],
   babelrc: false,
   retainLines: true,

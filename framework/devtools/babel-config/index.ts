@@ -52,7 +52,12 @@ export const config = ({
         )
         presets.push(
           //
-          [require.resolve('@babel/preset-react'), { runtime: 'automatic' }],
+          [
+            require.resolve('@babel/preset-react'),
+            {
+              runtime: 'automatic',
+            },
+          ],
         )
       }
 

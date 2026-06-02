@@ -56,13 +56,48 @@ const switchCva = cva({
     },
   },
   compoundVariants: [
-    { type: 'basic', classNames: { trackOn: 'bg-gray-800 dark:bg-white' } },
-    { type: 'primary', classNames: { trackOn: 'bg-primary' } },
-    { type: 'secondary', classNames: { trackOn: 'bg-secondary' } },
-    { type: 'info', classNames: { trackOn: 'bg-info' } },
-    { type: 'success', classNames: { trackOn: 'bg-success' } },
-    { type: 'warning', classNames: { trackOn: 'bg-warning' } },
-    { type: 'error', classNames: { trackOn: 'bg-error' } },
+    {
+      type: 'basic',
+      classNames: {
+        trackOn: 'bg-gray-800 dark:bg-white',
+      },
+    },
+    {
+      type: 'primary',
+      classNames: {
+        trackOn: 'bg-primary',
+      },
+    },
+    {
+      type: 'secondary',
+      classNames: {
+        trackOn: 'bg-secondary',
+      },
+    },
+    {
+      type: 'info',
+      classNames: {
+        trackOn: 'bg-info',
+      },
+    },
+    {
+      type: 'success',
+      classNames: {
+        trackOn: 'bg-success',
+      },
+    },
+    {
+      type: 'warning',
+      classNames: {
+        trackOn: 'bg-warning',
+      },
+    },
+    {
+      type: 'error',
+      classNames: {
+        trackOn: 'bg-error',
+      },
+    },
   ],
 })
 
@@ -86,7 +121,11 @@ export const Switch = ({
     onChange,
   })
 
-  const cn = switchCva({ type, size, disabled })
+  const cn = switchCva({
+    type,
+    size,
+    disabled,
+  })
 
   return (
     <Pressable

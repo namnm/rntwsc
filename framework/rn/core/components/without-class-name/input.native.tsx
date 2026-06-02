@@ -34,7 +34,10 @@ const WithAnimatedColor = ({ wrapperStyle, style, ...props }: Props) => {
   return (
     <TextInput
       {...props}
-      style={{ ...style, color }}
+      style={{
+        ...style,
+        color,
+      }}
       placeholderTextColor={ptc}
     />
   )

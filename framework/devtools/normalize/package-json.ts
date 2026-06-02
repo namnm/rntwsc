@@ -135,7 +135,9 @@ export const normalizePackageJson = async () => {
     if (jsonSafe(packageJson) === jsonSafe(newPackageJson)) {
       return
     }
-    await fs.writeJson(p, newPackageJson, { spaces: 2 })
+    await fs.writeJson(p, newPackageJson, {
+      spaces: 2,
+    })
   })
 
   await Promise.all(promises)

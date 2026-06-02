@@ -7,7 +7,9 @@ export const mergeDefault = (
   if (!defaultValue) {
     return value
   }
-  value = { ...value }
+  value = {
+    ...value,
+  }
   Object.keys(defaultValue).forEach(k => {
     if (value[k] === undefined) {
       value[k] = defaultValue[k]

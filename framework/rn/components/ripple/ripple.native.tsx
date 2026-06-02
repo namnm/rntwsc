@@ -32,7 +32,11 @@ export const Ripple = ({ className, ...props }: RippleNativeProps) => {
   }, [opacity, scale])
 
   const animation = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+    transform: [
+      {
+        scale: scale.value,
+      },
+    ],
     opacity: opacity.value,
   }))
 

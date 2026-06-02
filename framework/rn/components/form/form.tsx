@@ -28,7 +28,11 @@ const useFormContext = () => useSafeContext(FormContext)
 type FormProps = ViewProps & FormContextType
 
 const Form = ({ onSubmit, ...props }: FormProps) => (
-  <FormContext.Provider value={{ onSubmit }}>
+  <FormContext.Provider
+    value={{
+      onSubmit,
+    }}
+  >
     <View {...props} />
   </FormContext.Provider>
 )

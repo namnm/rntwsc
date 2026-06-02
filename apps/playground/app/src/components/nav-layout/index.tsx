@@ -42,9 +42,19 @@ export type NavItem = {
 type NavLayoutProps = PropsWithChildren
 
 const bottomItems: NavItem[] = [
-  { key: 'home', label: 'Home', active: true },
-  { key: 'search', label: 'Search' },
-  { key: 'profile', label: 'Profile' },
+  {
+    key: 'home',
+    label: 'Home',
+    active: true,
+  },
+  {
+    key: 'search',
+    label: 'Search',
+  },
+  {
+    key: 'profile',
+    label: 'Profile',
+  },
 ]
 export const NavLayout = ({ children }: NavLayoutProps) => (
   <View className='flex-1 md:flex-row'>

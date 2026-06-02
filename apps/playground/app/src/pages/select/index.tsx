@@ -16,26 +16,77 @@ const sizes = ['sm', 'md', 'lg'] as const
 const shapes = ['rounded', 'pill', 'none'] as const
 
 const fruits: SelectItem[] = [
-  { value: 'apple', label: 'Apple' },
-  { value: 'banana', label: 'Banana' },
-  { value: 'cherry', label: 'Cherry' },
-  { value: 'durian', label: 'Durian' },
-  { value: 'elderberry', label: 'Elderberry' },
-  { value: 'fig', label: 'Fig' },
-  { value: 'grape', label: 'Grape' },
+  {
+    value: 'apple',
+    label: 'Apple',
+  },
+  {
+    value: 'banana',
+    label: 'Banana',
+  },
+  {
+    value: 'cherry',
+    label: 'Cherry',
+  },
+  {
+    value: 'durian',
+    label: 'Durian',
+  },
+  {
+    value: 'elderberry',
+    label: 'Elderberry',
+  },
+  {
+    value: 'fig',
+    label: 'Fig',
+  },
+  {
+    value: 'grape',
+    label: 'Grape',
+  },
 ]
 
 const countries: SelectItem[] = [
-  { value: 'us', label: 'United States of America' },
-  { value: 'gb', label: 'United Kingdom' },
-  { value: 'au', label: 'Australia' },
-  { value: 'nz', label: 'New Zealand' },
-  { value: 'za', label: 'South Africa' },
-  { value: 'kr', label: 'South Korea' },
-  { value: 'ae', label: 'United Arab Emirates' },
-  { value: 'pg', label: 'Papua New Guinea' },
-  { value: 'tt', label: 'Trinidad and Tobago' },
-  { value: 'bo', label: 'Bolivia (Plurinational State)' },
+  {
+    value: 'us',
+    label: 'United States of America',
+  },
+  {
+    value: 'gb',
+    label: 'United Kingdom',
+  },
+  {
+    value: 'au',
+    label: 'Australia',
+  },
+  {
+    value: 'nz',
+    label: 'New Zealand',
+  },
+  {
+    value: 'za',
+    label: 'South Africa',
+  },
+  {
+    value: 'kr',
+    label: 'South Korea',
+  },
+  {
+    value: 'ae',
+    label: 'United Arab Emirates',
+  },
+  {
+    value: 'pg',
+    label: 'Papua New Guinea',
+  },
+  {
+    value: 'tt',
+    label: 'Trinidad and Tobago',
+  },
+  {
+    value: 'bo',
+    label: 'Bolivia (Plurinational State)',
+  },
 ]
 
 const fetchFruits = () =>

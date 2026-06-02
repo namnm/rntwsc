@@ -10,7 +10,9 @@ export const styleToProps = (props: StrMap, styleProps: string[] | Nullish) => {
     return props
   }
   // clone to be able to modify
-  style = { ...style }
+  style = {
+    ...style,
+  }
   props.style = style
   for (const k of styleProps) {
     if (k in style) {

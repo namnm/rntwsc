@@ -31,13 +31,17 @@ export const proxy = ({
   headers.set(urlHeaderKey, url)
 
   if (pathname.startsWith('/_next/') || pathname === '/favicon.ico') {
-    return NextResponse.next({ headers })
+    return NextResponse.next({
+      headers,
+    })
   }
 
   const redirect = () => {
     url = new URL(`${pathname}${search}`, url).toString()
     // we can use status 308 here if we need permanant redirect
-    return NextResponse.redirect(url, { headers })
+    return NextResponse.redirect(url, {
+      headers,
+    })
   }
 
   // if the path is not normalized then normalize it and redirect
@@ -111,8 +115,12 @@ export const proxy = ({
   headers.set(i18nHeaderKey, localePath)
 
   const response = rewrite
-    ? NextResponse.rewrite(url, { headers })
-    : NextResponse.next({ headers })
+    ? NextResponse.rewrite(url, {
+        headers,
+      })
+    : NextResponse.next({
+        headers,
+      })
 
   setCookieLocale(response, localePath)
   return response

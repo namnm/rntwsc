@@ -9,7 +9,6 @@ import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort'
 import unicornPlugin from 'eslint-plugin-unicorn'
 import globals from 'globals'
 
-import { enforceUseClient } from '@/devtools/eslint/config-enforce-use-client'
 import { restrictedImports } from '@/devtools/eslint/config-restricted-imports'
 import { customPlugin } from '@/devtools/eslint-plugin-custom'
 import { fs } from '@/nodejs/fs'
@@ -100,7 +99,7 @@ export const config = ({
   ]
 
   const alreadyMergedRules: StrMap<boolean> = {}
-  const mergeRules = (rules: StrMap) => {
+  const mergeRules = (rules?: StrMap) => {
     if (!overriddenRules) {
       return rules
     }
@@ -141,7 +140,13 @@ export const config = ({
     },
     rules: mergeRules({
       curly: [warn, 'all'],
-      quotes: [warn, 'single', { avoidEscape: true }],
+      quotes: [
+        warn,
+        'single',
+        {
+          avoidEscape: true,
+        },
+      ],
       'react/jsx-curly-brace-presence': warn,
       semi: [warn, 'never'],
       'arrow-body-style': [warn, 'as-needed'],
@@ -149,7 +154,13 @@ export const config = ({
       'object-shorthand': [warn, 'always'],
       'one-var': [warn, 'never'],
       'prefer-const': warn,
-      'spaced-comment': [warn, 'always', { markers: ['/'] }],
+      'spaced-comment': [
+        warn,
+        'always',
+        {
+          markers: ['/'],
+        },
+      ],
       'react/jsx-no-useless-fragment': warn,
       'react/self-closing-comp': warn,
 
@@ -183,8 +194,15 @@ export const config = ({
       ],
       'import/enforce-node-protocol-usage': [warn, 'always'],
 
+      'object-curly-newline': [warn, 'always'],
+      'object-property-newline': [
+        warn,
+        {
+          allowAllPropertiesOnSameLine: false,
+        },
+      ],
+
       'custom/concat-classname-strings': warn,
-      'custom/enforce-use-client': [warn, enforceUseClient],
       'custom/no-single-item-array-prop': [warn, ['style', 'className']],
     }),
   }
@@ -197,10 +215,20 @@ export const config = ({
       'no-return-assign': warn,
       'no-func-assign': warn,
       'no-class-assign': warn,
-      '@typescript-eslint/no-unused-vars': [warn, { args: 'none' }],
+      '@typescript-eslint/no-unused-vars': [
+        warn,
+        {
+          args: 'none',
+        },
+      ],
       '@typescript-eslint/no-shadow': warn,
 
-      'no-restricted-imports': [warn, { paths: restrictedImports }],
+      'no-restricted-imports': [
+        warn,
+        {
+          paths: restrictedImports,
+        },
+      ],
 
       'import/no-mutable-exports': warn,
       'import/no-extraneous-dependencies': [
@@ -210,7 +238,12 @@ export const config = ({
           includeTypes: true,
         },
       ],
-      'unicorn/filename-case': [warn, { case: 'kebabCase' }],
+      'unicorn/filename-case': [
+        warn,
+        {
+          case: 'kebabCase',
+        },
+      ],
 
       'prefer-arrow/prefer-arrow-functions': [
         warn,
@@ -220,13 +253,26 @@ export const config = ({
           classPropertiesAllowed: true,
         },
       ],
-      'prefer-arrow-callback': [warn, { allowNamedFunctions: true }],
-      'func-style': [warn, 'expression', { allowArrowFunctions: true }],
+      'prefer-arrow-callback': [
+        warn,
+        {
+          allowNamedFunctions: true,
+        },
+      ],
+      'func-style': [
+        warn,
+        'expression',
+        {
+          allowArrowFunctions: true,
+        },
+      ],
 
       'react/destructuring-assignment': [
         warn,
         'always',
-        { destructureInSignature: 'always' },
+        {
+          destructureInSignature: 'always',
+        },
       ],
 
       'custom/err-name': warn,
@@ -307,9 +353,8 @@ export const config = ({
           tsconfigRootDir: p,
         },
       },
-      rules: mergeRules({
-        // no rule yet
-      }),
+      // no rule yet
+      rules: mergeRules(),
     }))
     tsNonFixable = tsBase.map(b => ({
       ...b,

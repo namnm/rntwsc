@@ -28,17 +28,41 @@ type RegisterForm = {
 }
 
 const genders = [
-  { value: 'male', label: 'Male' },
-  { value: 'female', label: 'Female' },
-  { value: 'other', label: 'Other' },
+  {
+    value: 'male',
+    label: 'Male',
+  },
+  {
+    value: 'female',
+    label: 'Female',
+  },
+  {
+    value: 'other',
+    label: 'Other',
+  },
 ]
 
 const foods = [
-  { value: 'pizza', label: 'Pizza' },
-  { value: 'sushi', label: 'Sushi' },
-  { value: 'tacos', label: 'Tacos' },
-  { value: 'pasta', label: 'Pasta' },
-  { value: 'ramen', label: 'Ramen' },
+  {
+    value: 'pizza',
+    label: 'Pizza',
+  },
+  {
+    value: 'sushi',
+    label: 'Sushi',
+  },
+  {
+    value: 'tacos',
+    label: 'Tacos',
+  },
+  {
+    value: 'pasta',
+    label: 'Pasta',
+  },
+  {
+    value: 'ramen',
+    label: 'Ramen',
+  },
 ]
 
 export const FormPage = () => {

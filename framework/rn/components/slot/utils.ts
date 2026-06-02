@@ -16,7 +16,9 @@ export const mergeProps = (
   slotProps: AnyProps,
   childProps: AnyProps,
 ): AnyProps => {
-  const merged: AnyProps = { ...slotProps }
+  const merged: AnyProps = {
+    ...slotProps,
+  }
 
   for (const key of Object.keys(childProps)) {
     const slotVal = slotProps[key]
@@ -48,7 +50,10 @@ export const mergeProps = (
         // Flatten arrays (React Native allows style arrays)
         const flatSlot = flattenStyle(slotVal)
         const flatChild = flattenStyle(childVal)
-        merged[key] = { ...flatSlot, ...flatChild }
+        merged[key] = {
+          ...flatSlot,
+          ...flatChild,
+        }
       }
       continue
     }

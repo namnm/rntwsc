@@ -20,9 +20,18 @@ const radioCva = cva({
   },
   attributes: {
     size: {
-      sm: { container: 'h-4 w-4', dot: 'h-2 w-2' },
-      md: { container: 'h-5 w-5', dot: 'h-2.5 w-2.5' },
-      lg: { container: 'h-6 w-6', dot: 'h-3 w-3' },
+      sm: {
+        container: 'h-4 w-4',
+        dot: 'h-2 w-2',
+      },
+      md: {
+        container: 'h-5 w-5',
+        dot: 'h-2.5 w-2.5',
+      },
+      lg: {
+        container: 'h-6 w-6',
+        dot: 'h-3 w-3',
+      },
     },
     type: {
       basic: {},
@@ -37,7 +46,9 @@ const radioCva = cva({
       true: {},
     },
     disabled: {
-      true: { container: 'cursor-not-allowed opacity-50' },
+      true: {
+        container: 'cursor-not-allowed opacity-50',
+      },
     },
   },
   compoundVariants: [
@@ -52,32 +63,50 @@ const radioCva = cva({
     {
       checked: true,
       type: 'primary',
-      classNames: { container: 'border-primary', dot: 'bg-primary' },
+      classNames: {
+        container: 'border-primary',
+        dot: 'bg-primary',
+      },
     },
     {
       checked: true,
       type: 'secondary',
-      classNames: { container: 'border-secondary', dot: 'bg-secondary' },
+      classNames: {
+        container: 'border-secondary',
+        dot: 'bg-secondary',
+      },
     },
     {
       checked: true,
       type: 'info',
-      classNames: { container: 'border-info', dot: 'bg-info' },
+      classNames: {
+        container: 'border-info',
+        dot: 'bg-info',
+      },
     },
     {
       checked: true,
       type: 'success',
-      classNames: { container: 'border-success', dot: 'bg-success' },
+      classNames: {
+        container: 'border-success',
+        dot: 'bg-success',
+      },
     },
     {
       checked: true,
       type: 'warning',
-      classNames: { container: 'border-warning', dot: 'bg-warning' },
+      classNames: {
+        container: 'border-warning',
+        dot: 'bg-warning',
+      },
     },
     {
       checked: true,
       type: 'error',
-      classNames: { container: 'border-error', dot: 'bg-error' },
+      classNames: {
+        container: 'border-error',
+        dot: 'bg-error',
+      },
     },
   ],
 })
@@ -104,7 +133,12 @@ export const Radio = ({
     onChange,
   })
 
-  const cn = radioCva({ type, size, checked, disabled })
+  const cn = radioCva({
+    type,
+    size,
+    checked,
+    disabled,
+  })
 
   return (
     <Pressable
@@ -158,7 +192,13 @@ const Root = ({
 
   return (
     <RadioGroupContext.Provider
-      value={{ type, size, disabled, value: state, onSelect: setState }}
+      value={{
+        type,
+        size,
+        disabled,
+        value: state,
+        onSelect: setState,
+      }}
     >
       <View className={className}>{children}</View>
     </RadioGroupContext.Provider>
@@ -213,4 +253,6 @@ const Item = ({
   )
 }
 
-export const RadioGroup = Object.assign(Root, { Item })
+export const RadioGroup = Object.assign(Root, {
+  Item,
+})

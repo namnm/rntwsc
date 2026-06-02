@@ -24,7 +24,9 @@ export const pathToNode = (
 })
 
 export const isUndefined = (node: t.Node) =>
-  t.isIdentifier(node, { name: 'undefined' })
+  t.isIdentifier(node, {
+    name: 'undefined',
+  })
 
 export const pathToLiteral = (
   ctx: Ctx,

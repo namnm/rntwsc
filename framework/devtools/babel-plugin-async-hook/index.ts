@@ -93,8 +93,12 @@ const stripAwaitOrYield = (
   if (t.isCallExpression(arg) && t.isMemberExpression(arg.callee)) {
     const { object, property, computed } = arg.callee
     const isPromiseAll =
-      t.isIdentifier(object, { name: 'Promise' }) &&
-      t.isIdentifier(property, { name: 'all' }) &&
+      t.isIdentifier(object, {
+        name: 'Promise',
+      }) &&
+      t.isIdentifier(property, {
+        name: 'all',
+      }) &&
       !computed
     if (!isPromiseAll) {
       return invalid()

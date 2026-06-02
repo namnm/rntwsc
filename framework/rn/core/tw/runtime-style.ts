@@ -26,7 +26,11 @@ export const runtimeStyle = (
     className,
     onSelector:
       onSelector ||
-      (selector => defaultOnSelector({ className: selector, state })),
+      (selector =>
+        defaultOnSelector({
+          className: selector,
+          state,
+        })),
     variables,
     dimensions,
     ...options,

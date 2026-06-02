@@ -55,7 +55,12 @@ export const classNameToNative = (options: Options): ClassNameNative => {
     const style = className
       .split(/\s+/g)
       .filter(s => s)
-      .map(s => classNameToNative({ ...required, className: s }))
+      .map(s =>
+        classNameToNative({
+          ...required,
+          className: s,
+        }),
+      )
     return omitEmptyClassName(style)
   }
 

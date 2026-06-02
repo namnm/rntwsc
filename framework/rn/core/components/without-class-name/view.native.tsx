@@ -52,7 +52,11 @@ const Grid = ({
 }: GridProps) => {
   gridCols = (
     typeof gridCols === 'number'
-      ? Array.from({ length: gridCols }).fill({ fr: 1 })
+      ? Array.from({
+          length: gridCols,
+        }).fill({
+          fr: 1,
+        })
       : gridCols
   ) as GridTrack[]
   const totalCols = gridCols.length
@@ -125,7 +129,10 @@ const Grid = ({
 
   // distribute +1px to columns with largest fractional part first
   const fracRank = floats
-    .map((x, i) => ({ i, frac: x - Math.floor(x) }))
+    .map((x, i) => ({
+      i,
+      frac: x - Math.floor(x),
+    }))
     .sort((a, b) => b.frac - a.frac)
 
   for (let i = 0; i < totalCols && deficit > 0; i++) {

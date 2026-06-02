@@ -56,7 +56,13 @@ const Item = ({ open, onClose, reference, children }: DropdownProps) => {
       <View
         ref={refs.setFloating}
         className='overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900'
-        style={[floatingStyles, { minWidth, opacity: minWidth > 0 ? 1 : 0 }]}
+        style={[
+          floatingStyles,
+          {
+            minWidth,
+            opacity: minWidth > 0 ? 1 : 0,
+          },
+        ]}
       >
         {children}
       </View>

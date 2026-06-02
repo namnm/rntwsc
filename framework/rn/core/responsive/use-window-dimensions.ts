@@ -1,7 +1,9 @@
 'use client'
 
-// eslint-disable-next-line no-restricted-imports
-import { useWindowDimensions as useWindowDimensionsOriginal } from 'react-native'
+import {
+  // eslint-disable-next-line no-restricted-imports
+  useWindowDimensions as useWindowDimensionsOriginal,
+} from 'react-native'
 
 import { isWeb } from '@/rn/core/utils/platform'
 import { useIsMounted } from '@/rn/core/utils/use-is-mounted'

@@ -83,54 +83,74 @@ const classNames = cva({
     {
       appearance: 'outlined',
       invalid: true,
-      classNames: { input: 'border-error focus:border-error' },
+      classNames: {
+        input: 'border-error focus:border-error',
+      },
     },
     {
       appearance: 'filled',
       invalid: true,
-      classNames: { input: 'border-error focus:border-error' },
+      classNames: {
+        input: 'border-error focus:border-error',
+      },
     },
     {
       appearance: 'ghost',
       invalid: true,
-      classNames: { input: 'border-error focus:border-error' },
+      classNames: {
+        input: 'border-error focus:border-error',
+      },
     },
     {
       appearance: 'underlined',
       invalid: true,
-      classNames: { input: 'border-b-error focus:border-b-error' },
+      classNames: {
+        input: 'border-b-error focus:border-b-error',
+      },
     },
     // ========================================================================
     // prefix / suffix padding
     {
       prefix: true,
       size: 'sm',
-      classNames: { input: 'pl-6' },
+      classNames: {
+        input: 'pl-6',
+      },
     },
     {
       prefix: true,
       size: 'md',
-      classNames: { input: 'pl-7' },
+      classNames: {
+        input: 'pl-7',
+      },
     },
     {
       prefix: true,
       size: 'lg',
-      classNames: { input: 'pl-8' },
+      classNames: {
+        input: 'pl-8',
+      },
     },
     {
       suffix: true,
       size: 'sm',
-      classNames: { input: 'pr-6' },
+      classNames: {
+        input: 'pr-6',
+      },
     },
     {
       suffix: true,
       size: 'md',
-      classNames: { input: 'pr-7' },
+      classNames: {
+        input: 'pr-7',
+      },
     },
     {
       suffix: true,
       size: 'lg',
-      classNames: { input: 'pr-8' },
+      classNames: {
+        input: 'pr-8',
+      },
     },
   ],
 })

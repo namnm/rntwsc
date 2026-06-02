@@ -71,7 +71,13 @@ export const noImportOutside: TSESLint.RuleModule<
       ) {
         return
       }
-      c.report({ node: src, messageId: 'noImportOutside', data: { dir } })
+      c.report({
+        node: src,
+        messageId: 'noImportOutside',
+        data: {
+          dir,
+        },
+      })
     }
 
     return {

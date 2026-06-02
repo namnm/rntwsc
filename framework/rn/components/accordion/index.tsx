@@ -112,7 +112,9 @@ const Root = ({
   children,
   ...props
 }: AccordionProps) => {
-  const cn = accordionCva({ gap })
+  const cn = accordionCva({
+    gap,
+  })
 
   const collapsible =
     'collapsible' in props && typeof props.collapsible === 'boolean'
@@ -152,14 +154,23 @@ const Root = ({
 
   children = Children.toArray(children).map((_c, i) => {
     const c = _c as ReactElement<AccordionItemProps>
-    return cloneElement(c, { __first: i === 0 })
+    return cloneElement(c, {
+      __first: i === 0,
+    })
   })
   if (border) {
     children = <View className={cn.border}>{children}</View>
   }
 
   return (
-    <AccordionContext.Provider value={{ cn, value: state, setValue, disabled }}>
+    <AccordionContext.Provider
+      value={{
+        cn,
+        value: state,
+        setValue,
+        disabled,
+      }}
+    >
       {children}
     </AccordionContext.Provider>
   )
@@ -234,7 +245,14 @@ const Item = ({
   disabled = ctxDisabled || disabled
 
   return (
-    <AccordionItemContext.Provider value={{ __first, value, open, disabled }}>
+    <AccordionItemContext.Provider
+      value={{
+        __first,
+        value,
+        open,
+        disabled,
+      }}
+    >
       <View {...props} className={[disabled && cn.itemDisabled, className]}>
         {children}
       </View>
@@ -262,7 +280,9 @@ const Content = ({ className, children, ...props }: AccordionContentProps) => {
       style={
         open && !contentHeight
           ? undefined
-          : { height: open ? contentHeight : 0 }
+          : {
+              height: open ? contentHeight : 0,
+            }
       }
     >
       <TextStyleProvider className={cn.contentText}>

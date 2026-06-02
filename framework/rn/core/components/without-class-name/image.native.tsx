@@ -15,7 +15,12 @@ export const ImageWocn = ({ src, ...props }: ImagePropsWocn) => {
   const Component = isReanimated(props) ? AnimatedImage : Image
 
   const ty = typeof src
-  const source = ty === 'string' || ty === 'number' ? { uri: src } : src
+  const source =
+    ty === 'string' || ty === 'number'
+      ? {
+          uri: src,
+        }
+      : src
 
   return renderReanimated(Component, {
     ...props,

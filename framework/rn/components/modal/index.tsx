@@ -22,10 +22,18 @@ const modalCva = cva({
   },
   attributes: {
     size: {
-      sm: { panel: 'h-[60%] w-80' },
-      md: { panel: 'h-[75%] w-96' },
-      lg: { panel: 'h-[85%] w-[32rem]' },
-      full: { panel: 'h-[90%] w-[90%]' },
+      sm: {
+        panel: 'h-[60%] w-80',
+      },
+      md: {
+        panel: 'h-[75%] w-96',
+      },
+      lg: {
+        panel: 'h-[85%] w-[32rem]',
+      },
+      full: {
+        panel: 'h-[90%] w-[90%]',
+      },
     },
   },
 })
@@ -58,7 +66,9 @@ export const Modal = ({
     return null
   }
 
-  const cn = modalCva({ size })
+  const cn = modalCva({
+    size,
+  })
 
   return (
     <Portal disableBodyScroll>

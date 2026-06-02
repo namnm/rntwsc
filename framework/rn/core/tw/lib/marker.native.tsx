@@ -17,7 +17,16 @@ export const MarkerGroupProvider = ({
   children,
 }: GroupProviderProps) => {
   const v = useContext(GroupContext)
-  return <GroupContext value={{ ...v, ...state }}>{children}</GroupContext>
+  return (
+    <GroupContext
+      value={{
+        ...v,
+        ...state,
+      }}
+    >
+      {children}
+    </GroupContext>
+  )
 }
 export const useMarkerGroupState = () => useContext(GroupContext)
 

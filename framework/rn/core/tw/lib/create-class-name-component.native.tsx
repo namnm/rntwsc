@@ -137,7 +137,9 @@ const ClassNameComponent = ({
   })
 
   if (!metadata || !Object.keys(metadata).length) {
-    props = { ...props }
+    props = {
+      ...props,
+    }
     classNameKeys.forEach((k, i) => {
       const sk = styleKeys[i]
       props[sk] = styles[i]
@@ -424,7 +426,9 @@ const composeHandlers = (props: any, handlers: StrMap<Function> | Falsish) => {
     return props
   }
   // clone to modify
-  props = { ...props }
+  props = {
+    ...props,
+  }
   for (const [k, extraHandler] of Object.entries(handlers)) {
     const originalHandler = props[k]
     props[k] = (e: any) => {

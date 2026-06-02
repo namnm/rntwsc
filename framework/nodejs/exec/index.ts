@@ -21,7 +21,10 @@ export const exec = (cmd: string) =>
   })
 
 export const execSync = async (cmd: string) =>
-  child_process.execSync(cmd, { stdio: 'inherit', cwd: repoRoot })
+  child_process.execSync(cmd, {
+    stdio: 'inherit',
+    cwd: repoRoot,
+  })
 
 export type Cmd = {
   bin: string

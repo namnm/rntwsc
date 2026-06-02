@@ -51,12 +51,20 @@ export const inputCva = cva({
       },
     },
     shape: {
-      none: { container: 'rounded-none' },
-      rounded: { container: 'rounded-md' },
-      pill: { container: 'rounded-full' },
+      none: {
+        container: 'rounded-none',
+      },
+      rounded: {
+        container: 'rounded-md',
+      },
+      pill: {
+        container: 'rounded-full',
+      },
     },
     disabled: {
-      true: { container: 'cursor-not-allowed opacity-50' },
+      true: {
+        container: 'cursor-not-allowed opacity-50',
+      },
     },
     active: {
       true: {},
@@ -69,52 +77,72 @@ export const inputCva = cva({
     {
       appearance: 'underlined',
       shape: 'rounded',
-      classNames: { container: 'rounded-none' },
+      classNames: {
+        container: 'rounded-none',
+      },
     },
     {
       appearance: 'underlined',
       shape: 'pill',
-      classNames: { container: 'rounded-none' },
+      classNames: {
+        container: 'rounded-none',
+      },
     },
     {
       appearance: 'outlined',
       active: true,
-      classNames: { container: 'border-black dark:border-white' },
+      classNames: {
+        container: 'border-black dark:border-white',
+      },
     },
     {
       appearance: 'filled',
       active: true,
-      classNames: { container: 'border-black dark:border-white' },
+      classNames: {
+        container: 'border-black dark:border-white',
+      },
     },
     {
       appearance: 'ghost',
       active: true,
-      classNames: { container: 'border-black dark:border-white' },
+      classNames: {
+        container: 'border-black dark:border-white',
+      },
     },
     {
       appearance: 'underlined',
       active: true,
-      classNames: { container: 'border-b-black dark:border-b-white' },
+      classNames: {
+        container: 'border-b-black dark:border-b-white',
+      },
     },
     {
       appearance: 'outlined',
       invalid: true,
-      classNames: { container: 'border-error focus:border-error' },
+      classNames: {
+        container: 'border-error focus:border-error',
+      },
     },
     {
       appearance: 'filled',
       invalid: true,
-      classNames: { container: 'border-error focus:border-error' },
+      classNames: {
+        container: 'border-error focus:border-error',
+      },
     },
     {
       appearance: 'ghost',
       invalid: true,
-      classNames: { container: 'border-error focus:border-error' },
+      classNames: {
+        container: 'border-error focus:border-error',
+      },
     },
     {
       appearance: 'underlined',
       invalid: true,
-      classNames: { container: 'border-b-error focus:border-b-error' },
+      classNames: {
+        container: 'border-b-error focus:border-b-error',
+      },
     },
   ],
 })

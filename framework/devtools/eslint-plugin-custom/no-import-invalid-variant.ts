@@ -44,7 +44,10 @@ export const noImportInvalidVariant: TSESLint.RuleModule<
       c.report({
         node: src,
         messageId: 'noImportInvalidVariant',
-        data: { importPath, variant: importVariant },
+        data: {
+          importPath,
+          variant: importVariant,
+        },
       })
     }
 

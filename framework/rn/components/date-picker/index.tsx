@@ -51,9 +51,15 @@ const datePickerCva = cva({
   },
   attributes: {
     size: {
-      sm: { trigger: 'gap-1' },
-      md: { trigger: 'gap-1.5' },
-      lg: { trigger: 'gap-2' },
+      sm: {
+        trigger: 'gap-1',
+      },
+      md: {
+        trigger: 'gap-1.5',
+      },
+      lg: {
+        trigger: 'gap-2',
+      },
     },
   },
 })
@@ -128,48 +134,53 @@ const Calendar = ({ value, onSelect }: CalendarProps) => {
       </View>
 
       <View className='px-2'>
-        {Array.from({ length: 6 }, (_, row) => (
-          <View key={row} className='flex-row'>
-            {grid.slice(row * 7, row * 7 + 7).map(({ date, current }) => {
-              const selected = value ? isSameDay(date, value) : false
-              const isToday = isSameDay(date, today)
+        {Array.from(
+          {
+            length: 6,
+          },
+          (_, row) => (
+            <View key={row} className='flex-row'>
+              {grid.slice(row * 7, row * 7 + 7).map(({ date, current }) => {
+                const selected = value ? isSameDay(date, value) : false
+                const isToday = isSameDay(date, today)
 
-              return (
-                <Pressable
-                  key={date.toISOString()}
-                  onPress={() => onSelect(date)}
-                  className='flex-1 items-center py-0.5'
-                >
-                  <View
-                    className={[
-                      'h-8 w-8 items-center justify-center rounded-full transition-colors',
-                      selected
-                        ? 'bg-primary'
-                        : isToday
-                          ? 'dark:bg-primary/20 bg-primary-100'
-                          : 'hover:bg-gray-100 dark:hover:bg-gray-800',
-                    ]}
+                return (
+                  <Pressable
+                    key={date.toISOString()}
+                    onPress={() => onSelect(date)}
+                    className='flex-1 items-center py-0.5'
                   >
-                    <Span
+                    <View
                       className={[
-                        'text-sm transition',
+                        'h-8 w-8 items-center justify-center rounded-full transition-colors',
                         selected
-                          ? 'font-semibold text-white'
+                          ? 'bg-primary'
                           : isToday
-                            ? 'font-semibold text-primary'
-                            : current
-                              ? 'text-gray-800 dark:text-gray-100'
-                              : 'text-gray-300 dark:text-gray-600',
+                            ? 'dark:bg-primary/20 bg-primary-100'
+                            : 'hover:bg-gray-100 dark:hover:bg-gray-800',
                       ]}
                     >
-                      {date.getDate()}
-                    </Span>
-                  </View>
-                </Pressable>
-              )
-            })}
-          </View>
-        ))}
+                      <Span
+                        className={[
+                          'text-sm transition',
+                          selected
+                            ? 'font-semibold text-white'
+                            : isToday
+                              ? 'font-semibold text-primary'
+                              : current
+                                ? 'text-gray-800 dark:text-gray-100'
+                                : 'text-gray-300 dark:text-gray-600',
+                        ]}
+                      >
+                        {date.getDate()}
+                      </Span>
+                    </View>
+                  </Pressable>
+                )
+              })}
+            </View>
+          ),
+        )}
       </View>
 
       <View className='mt-3 items-center px-4'>
@@ -224,7 +235,9 @@ export const DatePicker = ({
     invalid,
     active: open,
   })
-  const cn = datePickerCva({ size })
+  const cn = datePickerCva({
+    size,
+  })
 
   const handleSelect = (date: Date) => {
     setSelected(date)

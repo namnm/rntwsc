@@ -24,15 +24,25 @@ export const extract = ({ twExtractOutputPath }: Options) => {
     }
     const frame = codeFrameColumns(
       currentCode,
-      { start: loc.start, end: loc.end },
-      { highlightCode: true },
+      {
+        start: loc.start,
+        end: loc.end,
+      },
+      {
+        highlightCode: true,
+      },
     )
     return new Error(`${msg}\n${frame}`)
   }
 
   const extractors: Extractor[] = []
   if (process.env.NEXT_PUBLIC_MINIFY_CLASS_NAMES) {
-    extractors.push(twExtract({ err, twExtractOutputPath }))
+    extractors.push(
+      twExtract({
+        err,
+        twExtractOutputPath,
+      }),
+    )
   }
 
   const paths = globSync('**/*.{ts,tsx}')

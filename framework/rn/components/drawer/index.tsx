@@ -72,7 +72,9 @@ export const Drawer = ({
     return null
   }
 
-  const cn = drawerCva({ side })
+  const cn = drawerCva({
+    side,
+  })
   const showHandle = side === 'bottom'
 
   return (

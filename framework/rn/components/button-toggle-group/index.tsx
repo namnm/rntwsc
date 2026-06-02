@@ -85,7 +85,9 @@ export const ToggleGroup = ({
 
   children = arr.map((_c, i) => {
     const c = _c as ReactElement<ToggleItemProps>
-    return cloneElement(c, { __index: i })
+    return cloneElement(c, {
+      __index: i,
+    })
   })
 
   return (

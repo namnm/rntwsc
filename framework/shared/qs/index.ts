@@ -8,7 +8,10 @@ type Options = Omit<qs.IStringifyOptions, 'sort'>
 
 const sort = (a: string, b: string) => a.localeCompare(b)
 export const qsStableStringify = (q: object, o?: Options) =>
-  qs.stringify(q, { ...o, sort })
+  qs.stringify(q, {
+    ...o,
+    sort,
+  })
 
 export const qsParse = (q: string) => qs.parse(q)
 
@@ -19,7 +22,10 @@ export type QsIdSecret = {
 
 export const qsIdSecret = (t: QsIdSecret) => {
   const { id, secret } = t
-  return qsStableStringify({ id, secret })
+  return qsStableStringify({
+    id,
+    secret,
+  })
 }
 
 export const qsIdSecretParse = (encoded: string | Falsish) => {
@@ -30,5 +36,8 @@ export const qsIdSecretParse = (encoded: string | Falsish) => {
   if (!id || !secret || typeof id !== 'string' || typeof secret !== 'string') {
     return
   }
-  return { id, secret } as QsIdSecret
+  return {
+    id,
+    secret,
+  } as QsIdSecret
 }

@@ -32,8 +32,23 @@ export const addPortal = (
   const idx = items.findIndex(e => e.id === id)
   items =
     idx >= 0
-      ? items.map((e, i) => (i === idx ? { id, node, disableBodyScroll } : e))
-      : [...items, { id, node, disableBodyScroll }]
+      ? items.map((e, i) =>
+          i === idx
+            ? {
+                id,
+                node,
+                disableBodyScroll,
+              }
+            : e,
+        )
+      : [
+          ...items,
+          {
+            id,
+            node,
+            disableBodyScroll,
+          },
+        ]
   listeners.forEach(cb => cb())
 }
 

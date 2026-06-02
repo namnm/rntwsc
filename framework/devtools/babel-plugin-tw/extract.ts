@@ -20,7 +20,10 @@ export const twExtract = ({ err, twExtractOutputPath }: Options) => {
   }
 
   return {
-    visitor: createVisitor({ extract, err }),
+    visitor: createVisitor({
+      extract,
+      err,
+    }),
     done: () => writeTwExtractOutput(twExtractOutputPath, minified),
   }
 }

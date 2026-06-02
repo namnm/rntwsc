@@ -27,9 +27,15 @@ export const selectCva = cva({
   },
   attributes: {
     size: {
-      sm: { trigger: 'gap-1' },
-      md: { trigger: 'gap-1.5' },
-      lg: { trigger: 'gap-2' },
+      sm: {
+        trigger: 'gap-1',
+      },
+      md: {
+        trigger: 'gap-1.5',
+      },
+      lg: {
+        trigger: 'gap-2',
+      },
     },
   },
 })

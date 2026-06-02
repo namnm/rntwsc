@@ -38,19 +38,33 @@ const buildSegments = (
   ranges: [number, number][],
 ): Segment[] => {
   if (ranges.length === 0) {
-    return [{ text: label, hl: false }]
+    return [
+      {
+        text: label,
+        hl: false,
+      },
+    ]
   }
   const segs: Segment[] = []
   let cursor = 0
   for (const [start, end] of ranges) {
     if (cursor < start) {
-      segs.push({ text: label.slice(cursor, start), hl: false })
+      segs.push({
+        text: label.slice(cursor, start),
+        hl: false,
+      })
     }
-    segs.push({ text: label.slice(start, end), hl: true })
+    segs.push({
+      text: label.slice(start, end),
+      hl: true,
+    })
     cursor = end
   }
   if (cursor < label.length) {
-    segs.push({ text: label.slice(cursor), hl: false })
+    segs.push({
+      text: label.slice(cursor),
+      hl: false,
+    })
   }
   return segs
 }
@@ -204,11 +218,21 @@ const getSegments = (
     return buildSegments(item.label, mergeRanges(item.highlight || []))
   }
   if (!query) {
-    return [{ text: item.label, hl: false }]
+    return [
+      {
+        text: item.label,
+        hl: false,
+      },
+    ]
   }
   const ranges = matchItem(item, query, s)
   if (!ranges || ranges.length === 0) {
-    return [{ text: item.label, hl: false }]
+    return [
+      {
+        text: item.label,
+        hl: false,
+      },
+    ]
   }
   return buildSegments(item.label, ranges)
 }
@@ -369,7 +393,9 @@ export const Select = ({
     invalid,
     active,
   })
-  const cn = selectCva({ size })
+  const cn = selectCva({
+    size,
+  })
 
   // -- fragments --
 

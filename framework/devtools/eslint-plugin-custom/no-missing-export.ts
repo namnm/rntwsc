@@ -65,7 +65,10 @@ export const noMissingExport: TSESLint.RuleModule<
             c.report({
               node: program,
               messageId: 'exportMissing',
-              data: { name, other: otherName },
+              data: {
+                name,
+                other: otherName,
+              },
             })
           }
 
@@ -76,7 +79,10 @@ export const noMissingExport: TSESLint.RuleModule<
             c.report({
               node: program,
               messageId: 'exportExtra',
-              data: { name, other: otherName },
+              data: {
+                name,
+                other: otherName,
+              },
             })
           }
         }
@@ -117,7 +123,10 @@ const getVariantPaths = (base: string) => {
     for (const e of exts) {
       const filepath = `${base}.${v}.${e}`
       if (fs.existsSync(filepath)) {
-        r.push({ variant: v, path: filepath })
+        r.push({
+          variant: v,
+          path: filepath,
+        })
       }
     }
   }

@@ -50,14 +50,18 @@ module.exports = options => {
   if (!exts['.json5']) {
     require('json5/lib/register')
     // treat json extension as json5 to import json with comments
-    Object.assign(exts, { '.json': exts['.json5'] })
+    Object.assign(exts, {
+      '.json': exts['.json5'],
+    })
   }
 
   // register transpiler to be able to import typescript
   if (options.babel) {
     require('@babel/register')(require('@/nodejs/babelrc'))
   } else {
-    require('ts-node').register({ transpileOnly: true })
+    require('ts-node').register({
+      transpileOnly: true,
+    })
   }
 
   // now we should be able to import typescript from now on
