@@ -7,12 +7,11 @@ export const noNullishCoalescing: TSESLint.RuleModule<
   meta: {
     type: 'problem',
     docs: {
-      description:
-        'Make it more verbose such as `!v ? v1 : v2` or `v || v1` or `v && v1`',
+      description: 'Disallow nullish coalescing operator',
     },
     messages: {
       noNullishCoalescing:
-        'Make it more verbose such as `!v ? v1 : v2` or `v || v1` or `v && v1`',
+        'Make it more verbose such as `!v ? v1 : v2` or `v || v1` or `v && v1` or `typeof v ..`',
     },
     schema: [],
   },
