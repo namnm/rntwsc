@@ -2,10 +2,8 @@
 
 import { useState } from 'react'
 
-import { Button } from '@/rn/components/button'
 import { Span } from '@/rn/components/text'
 import { Pressable } from '@/rn/core/components/pressable'
-import { ScrollView } from '@/rn/core/components/scroll-view'
 import { View } from '@/rn/core/components/view'
 import { YhLayout } from '#/components/yh-layout'
 
@@ -18,22 +16,18 @@ export const YhCameraPage = () => {
   const [group, setGroup] = useState('Nội khoa')
 
   return (
-    <YhLayout activeTab='camera' title='Chụp hồ sơ'>
-      <ScrollView className='flex-1 bg-slate-50'>
+    <YhLayout activeTab='camera' hideHeader>
+      <View className='flex-1'>
         {phase === 'camera' && (
-          <View className='flex-1'>
-            {/* Viewfinder */}
-            <View className='relative mx-3 mt-3 overflow-hidden rounded-2xl bg-gray-900' style={{ height: 260 }}>
+          <View className='flex-1 flex-col bg-black'>
+            {/* Viewfinder - fills all available space */}
+            <View className='relative flex-1 overflow-hidden bg-gray-900'>
               {/* Corner guides */}
-              <View className='absolute inset-4 border-2 border-transparent'>
-                {/* TL */}
-                <View className='absolute left-0 top-0 h-6 w-6 border-l-2 border-t-2 border-white' />
-                {/* TR */}
-                <View className='absolute right-0 top-0 h-6 w-6 border-r-2 border-t-2 border-white' />
-                {/* BL */}
-                <View className='absolute bottom-0 left-0 h-6 w-6 border-b-2 border-l-2 border-white' />
-                {/* BR */}
-                <View className='absolute bottom-0 right-0 h-6 w-6 border-b-2 border-r-2 border-white' />
+              <View className='absolute inset-6'>
+                <View className='absolute left-0 top-0 h-8 w-8 border-l-2 border-t-2 border-white' />
+                <View className='absolute right-0 top-0 h-8 w-8 border-r-2 border-t-2 border-white' />
+                <View className='absolute bottom-0 left-0 h-8 w-8 border-b-2 border-l-2 border-white' />
+                <View className='absolute bottom-0 right-0 h-8 w-8 border-b-2 border-r-2 border-white' />
               </View>
               <View className='absolute inset-0 items-center justify-center'>
                 <Span className='text-center text-xs text-white/60'>
@@ -41,17 +35,17 @@ export const YhCameraPage = () => {
                 </Span>
               </View>
               {/* Scan line */}
-              <View className='absolute left-4 right-4 top-1/2 h-0.5 bg-blue-400/50' />
+              <View className='absolute left-6 right-6 top-1/2 h-0.5 bg-blue-400/50' />
             </View>
 
-            {/* Camera controls */}
-            <View className='flex-row items-center justify-around px-6 py-5'>
+            {/* Camera controls - flush against tab bar */}
+            <View className='flex-row items-center justify-around bg-black px-6 py-5'>
               {/* Album */}
               <Pressable className='items-center gap-1.5'>
-                <View className='h-12 w-12 items-center justify-center rounded-2xl bg-gray-200'>
-                  <Span className='text-xl text-gray-600'>&#128444;</Span>
+                <View className='h-12 w-12 items-center justify-center rounded-2xl bg-gray-700'>
+                  <Span className='text-xl text-gray-300'>&#128444;</Span>
                 </View>
-                <Span className='text-[10px] text-gray-500'>Album</Span>
+                <Span className='text-[10px] text-gray-400'>Album</Span>
               </Pressable>
 
               {/* Capture */}
@@ -62,8 +56,8 @@ export const YhCameraPage = () => {
                 }}
                 className='items-center'
               >
-                <View className='h-16 w-16 items-center justify-center rounded-full border-4 border-blue-600 bg-white shadow-lg'>
-                  <View className='h-12 w-12 rounded-full bg-blue-600' />
+                <View className='h-16 w-16 items-center justify-center rounded-full border-4 border-white'>
+                  <View className='h-12 w-12 rounded-full bg-white' />
                 </View>
               </Pressable>
 
@@ -75,19 +69,11 @@ export const YhCameraPage = () => {
                 }}
                 className='items-center gap-1.5'
               >
-                <View className='h-12 w-12 items-center justify-center rounded-2xl bg-gray-200'>
-                  <Span className='text-xl text-gray-600'>&#128196;</Span>
+                <View className='h-12 w-12 items-center justify-center rounded-2xl bg-gray-700'>
+                  <Span className='text-xl text-gray-300'>&#128196;</Span>
                 </View>
-                <Span className='text-[10px] text-gray-500'>Tải file</Span>
+                <Span className='text-[10px] text-gray-400'>Tải file</Span>
               </Pressable>
-            </View>
-
-            <View className='mx-4'>
-              <View className='rounded-xl bg-blue-50 p-3'>
-                <Span className='text-[10px] text-blue-700'>
-                  Hỗ trợ: ảnh JPG/PNG, file PDF, video. App sẽ tự động đọc và điền thông tin từ hồ sơ.
-                </Span>
-              </View>
             </View>
           </View>
         )}
@@ -201,7 +187,7 @@ export const YhCameraPage = () => {
             </View>
           </View>
         )}
-      </ScrollView>
+      </View>
     </YhLayout>
   )
 }

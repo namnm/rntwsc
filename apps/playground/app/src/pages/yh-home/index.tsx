@@ -32,6 +32,11 @@ const historyRecords = [
   { id: 'h1', dateObj: new Date(2025, 3, 15), date: '15/04/2025', disease: 'Viêm họng cấp', place: 'PK Tai Mũi Họng', medicine: 'Amoxicillin 500mg', doctor: 'BS. Nguyễn Văn A' },
   { id: 'h2', dateObj: new Date(2025, 2, 12), date: '12/03/2025', disease: 'Huyết áp cao', place: 'BV Bạch Mai', medicine: 'Amlodipine 5mg', doctor: 'BS. Trần Thị B' },
   { id: 'h3', dateObj: new Date(2025, 0, 5), date: '05/01/2025', disease: 'Tiểu đường type 2', place: 'PK Đa khoa Hà Nội', medicine: 'Metformin 500mg', doctor: 'BS. Lê Văn C' },
+  { id: 'h4', dateObj: new Date(2024, 10, 20), date: '20/11/2024', disease: 'Cúm mùa', place: 'BV Đa khoa tỉnh', medicine: 'Oseltamivir 75mg', doctor: 'BS. Phạm Thị D' },
+  { id: 'h5', dateObj: new Date(2024, 7, 8), date: '08/08/2024', disease: 'Viêm xoang', place: 'PK Nhi đồng', medicine: 'Mometasone xịt mũi', doctor: 'BS. Hoàng Văn E' },
+  { id: 'h6', dateObj: new Date(2024, 5, 15), date: '15/06/2024', disease: 'Đau lưng mãn tính', place: 'BV Chấn thương chỉnh hình', medicine: 'Ibuprofen 400mg', doctor: 'BS. Vũ Thị F' },
+  { id: 'h7', dateObj: new Date(2024, 3, 2), date: '02/04/2024', disease: 'Viêm dạ dày', place: 'PK Tiêu hóa', medicine: 'Omeprazole 20mg', doctor: 'BS. Đặng Văn G' },
+  { id: 'h8', dateObj: new Date(2024, 1, 18), date: '18/02/2024', disease: 'Dị ứng da', place: 'BV Da liễu', medicine: 'Loratadine 10mg', doctor: 'BS. Bùi Thị H' },
 ]
 
 const sortOptions = ['Gần nhất', 'Cũ nhất', 'Bộ lọc'] as const
@@ -45,6 +50,9 @@ const getFirstDayOfMonth = (year: number, month: number) => new Date(year, month
 
 type EditForm = { disease: string; time: string; place: string; medicine: string; reminder: string; note: string }
 const emptyForm: EditForm = { disease: '', time: '', place: '', medicine: '', reminder: '', note: '' }
+
+const FILTER_MIN_YEAR = Math.min(...historyRecords.map(r => r.dateObj.getFullYear()))
+const FILTER_MAX_YEAR = new Date().getFullYear()
 
 type DetailRecord = {
   id: string
@@ -98,11 +106,14 @@ export const YhHomePage = () => {
   const [filterDiseases, setFilterDiseases] = useState<Set<string>>(new Set())
   const [filterDoctors, setFilterDoctors] = useState<Set<string>>(new Set())
   const [filterPlaces, setFilterPlaces] = useState<Set<string>>(new Set())
-  const [filterYearStart, setFilterYearStart] = useState(2025)
-  const [filterYearEnd, setFilterYearEnd] = useState(2026)
+  const [filterYearStart, setFilterYearStart] = useState(FILTER_MIN_YEAR)
   // History: per-record more + action confirm
   const [recordMoreId, setRecordMoreId] = useState<string | null>(null)
   const [recordAction, setRecordAction] = useState<{ id: string; type: 'pdf' | 'share' | 'hide' | 'delete' } | null>(null)
+  // History: edit record
+  const [editingRecordId, setEditingRecordId] = useState<string | null>(null)
+  const [editFormValues, setEditFormValues] = useState({ disease: '', date: '', place: '', doctor: '', medicine: '', note: '' })
+  const [editRemovedImages, setEditRemovedImages] = useState<Set<string>>(new Set())
   // History: restore
   const [restoreId, setRestoreId] = useState<string | null>(null)
   const CARD_W = 231
@@ -157,7 +168,15 @@ export const YhHomePage = () => {
   )
   const filterCount =
     filterDiseases.size + filterDoctors.size + filterPlaces.size +
-    (filterYearStart !== minYear || filterYearEnd !== maxYear ? 1 : 0)
+    (filterYearStart !== FILTER_MIN_YEAR ? 1 : 0)
+  const applyFilters = (r: (typeof sortedHistory)[0]) => {
+    if (r.dateObj.getFullYear() < filterYearStart) return false
+    const noneSelected = filterDiseases.size === 0 && filterDoctors.size === 0 && filterPlaces.size === 0
+    if (noneSelected) return true
+    return filterDiseases.has(r.disease) || filterDoctors.has(r.doctor) || filterPlaces.has(r.place)
+  }
+  const filteredHistory = filterCount > 0 ? sortedHistory.filter(applyFilters) : sortedHistory
+  const filteredCount = filteredHistory.length
 
   const allTracking = [
     ...trackingRecords.filter(r => !removedIds.has(r.id)),
@@ -255,12 +274,34 @@ export const YhHomePage = () => {
               <View className='h-1 w-10 rounded-full bg-gray-200' />
             </View>
             {[
-              { label: 'Xuất PDF', type: 'pdf' as const, color: '#132C95' },
-              { label: 'Chia sẻ', type: 'share' as const, color: '#132C95' },
-              { label: 'Ẩn', type: 'hide' as const, color: '#6b7280' },
-              { label: 'Xóa', type: 'delete' as const, color: '#ef4444' },
+              {
+                label: 'Chỉnh sửa', color: '#132C95',
+                icon: <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='#132C95' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg>,
+                onPress: () => { const r = historyRecords.find(h => h.id === recordMoreId!); if (r) { setEditFormValues({ disease: r.disease, date: r.date, place: r.place, doctor: r.doctor ?? '', medicine: r.medicine, note: '' }); setEditRemovedImages(new Set()) } setEditingRecordId(recordMoreId!); setRecordMoreId(null) },
+              },
+              {
+                label: 'Xuất PDF', color: '#132C95',
+                icon: <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='#132C95' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'><path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><polyline points='14 2 14 8 20 8'/><line x1='16' y1='13' x2='8' y2='13'/><line x1='16' y1='17' x2='8' y2='17'/></svg>,
+                onPress: () => { setRecordAction({ id: recordMoreId!, type: 'pdf' }); setRecordMoreId(null) },
+              },
+              {
+                label: 'Chia sẻ', color: '#132C95',
+                icon: <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='#132C95' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'><circle cx='18' cy='5' r='3'/><circle cx='6' cy='12' r='3'/><circle cx='18' cy='19' r='3'/><line x1='8.59' y1='13.51' x2='15.42' y2='17.49'/><line x1='15.41' y1='6.51' x2='8.59' y2='10.49'/></svg>,
+                onPress: () => { setRecordAction({ id: recordMoreId!, type: 'share' }); setRecordMoreId(null) },
+              },
+              {
+                label: 'Ẩn', color: '#6b7280',
+                icon: <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='#6b7280' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'><path d='M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24'/><line x1='1' y1='1' x2='23' y2='23'/></svg>,
+                onPress: () => { setRecordAction({ id: recordMoreId!, type: 'hide' }); setRecordMoreId(null) },
+              },
+              {
+                label: 'Xóa', color: '#ef4444',
+                icon: <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='#ef4444' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'><polyline points='3 6 5 6 21 6'/><path d='M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6'/><path d='M10 11v6'/><path d='M14 11v6'/><path d='M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2'/></svg>,
+                onPress: () => { setRecordAction({ id: recordMoreId!, type: 'delete' }); setRecordMoreId(null) },
+              },
             ].map(item => (
-              <Pressable key={item.type} onPress={() => { setRecordAction({ id: recordMoreId!, type: item.type }); setRecordMoreId(null) }} className='flex-row items-center gap-3 rounded-xl px-3 py-3'>
+              <Pressable key={item.label} onPress={item.onPress} className='flex-row items-center gap-3 rounded-xl px-3 py-3'>
+                {item.icon}
                 <Span className='text-sm' style={{ color: item.color }}>{item.label}</Span>
               </Pressable>
             ))}
@@ -375,27 +416,34 @@ export const YhHomePage = () => {
                   </Pressable>
                 ))}
                 {/* Thoi gian */}
-                <Span className='mb-3 mt-3 text-[10px] font-semibold text-gray-400'>THỜI GIAN</Span>
-                <View className='mb-1 flex-row justify-between'>
-                  <Span className='text-[10px] text-gray-500'>{filterYearStart}</Span>
-                  <Span className='text-[10px] text-gray-500'>{filterYearEnd}</Span>
+                <Span className='mb-2 mt-3 text-[10px] font-semibold text-gray-400'>THỜI GIAN</Span>
+                <View className='mb-1 flex-row items-center justify-between'>
+                  <Span className='text-[11px] text-gray-500'>Từ năm</Span>
+                  <View className='rounded-lg bg-slate-100 px-2.5 py-1'>
+                    <Span className='text-xs font-semibold' style={{ color: PRIMARY }}>{filterYearStart}</Span>
+                  </View>
                 </View>
-                <View className='mb-1 h-1.5 rounded-full bg-gray-200'>
-                  <View className='h-full rounded-full' style={{ backgroundColor: PRIMARY, width: '70%' }} />
+                <View className='mb-1'>
+                  <input
+                    type='range'
+                    min={FILTER_MIN_YEAR}
+                    max={FILTER_MAX_YEAR}
+                    step={1}
+                    value={filterYearStart}
+                    onChange={(e: any) => setFilterYearStart(Number(e.target.value))}
+                    style={{ accentColor: PRIMARY, width: '100%' } as any}
+                  />
                 </View>
-                <View className='mb-4 flex-row justify-between'>
-                  {Array.from({ length: maxYear - minYear + 1 }, (_, i) => minYear + i).map(y => (
-                    <Pressable key={y} onPress={() => { if (y <= filterYearEnd) setFilterYearStart(y) }}>
-                      <Span className='text-[9px]' style={{ color: y >= filterYearStart && y <= filterYearEnd ? PRIMARY : '#9ca3af' }}>{y}</Span>
-                    </Pressable>
-                  ))}
+                <View className='mb-4 flex-row items-center justify-between'>
+                  <Span className='text-[10px] text-gray-400'>{FILTER_MIN_YEAR}</Span>
+                  <Span className='text-[10px] text-gray-400'>{FILTER_MAX_YEAR}</Span>
                 </View>
                 <View className='flex-row gap-3'>
-                  <Pressable onPress={() => { setFilterDiseases(new Set()); setFilterDoctors(new Set()); setFilterPlaces(new Set()); setFilterYearStart(minYear); setFilterYearEnd(maxYear) }} className='flex-1 items-center rounded-xl border border-gray-200 py-3'>
+                  <Pressable onPress={() => { setFilterDiseases(new Set()); setFilterDoctors(new Set()); setFilterPlaces(new Set()); setFilterYearStart(FILTER_MIN_YEAR) }} className='flex-1 items-center rounded-xl border border-gray-200 py-3'>
                     <Span className='text-sm text-gray-600'>Xóa kết quả</Span>
                   </Pressable>
                   <Pressable onPress={() => setShowFilter(false)} className='flex-1 items-center rounded-xl py-3' style={{ backgroundColor: PRIMARY }}>
-                    <Span className='text-sm font-semibold text-white'>Xem kết quả ({sortedHistory.length})</Span>
+                    <Span className='text-sm font-semibold text-white'>Xem kết quả{filterCount > 0 ? ` (${filterCount})` : ''}</Span>
                   </Pressable>
                 </View>
               </View>
@@ -577,6 +625,121 @@ export const YhHomePage = () => {
           </View>
         </View>
       )}
+
+      {/* ---- Edit history record modal ---- */}
+      {editingRecordId !== null && (() => {
+        const rec = historyRecords.find(r => r.id === editingRecordId)
+        if (!rec) return null
+        return (
+          <View className='absolute inset-0 z-50 bg-black/40'>
+            <View className='absolute inset-x-0 bottom-0 rounded-t-3xl bg-white' style={{ maxHeight: '90%' }}>
+              <ScrollView>
+                <View className='p-4'>
+                  <View className='mb-4 flex-row items-center justify-between'>
+                    <Span className='text-sm font-semibold text-gray-800'>Chỉnh sửa hồ sơ</Span>
+                    <Pressable onPress={() => setEditingRecordId(null)} className='h-7 w-7 items-center justify-center rounded-full bg-gray-100'>
+                      <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='#6b7280' strokeWidth='2.5' strokeLinecap='round'>
+                        <line x1='18' y1='6' x2='6' y2='18'/><line x1='6' y1='6' x2='18' y2='18'/>
+                      </svg>
+                    </Pressable>
+                  </View>
+
+                  {/* Info fields */}
+                  {(['disease', 'date', 'place', 'doctor'] as const).map(key => {
+                    const labels = { disease: 'TÊN BỆNH', date: 'NGÀY KHÁM', place: 'NƠI KHÁM', doctor: 'BÁC SĨ' }
+                    return (
+                      <View key={key} className='mb-3'>
+                        <Span className='mb-1 text-[10px] font-medium text-gray-400'>{labels[key]}</Span>
+                        <input
+                          type='text'
+                          value={editFormValues[key]}
+                          onChange={(e: any) => setEditFormValues(prev => ({ ...prev, [key]: e.target.value }))}
+                          style={{ width: '100%', border: '1px solid #e5e7eb', borderRadius: 12, padding: '8px 12px', fontSize: 12, color: '#374151', backgroundColor: '#f8fafc', outline: 'none', boxSizing: 'border-box' } as any}
+                        />
+                      </View>
+                    )
+                  })}
+
+                  {/* Medicine field + add more */}
+                  <View className='mb-3'>
+                    <Span className='mb-1 text-[10px] font-medium text-gray-400'>THUỐC</Span>
+                    <input
+                      type='text'
+                      value={editFormValues.medicine}
+                      onChange={(e: any) => setEditFormValues(prev => ({ ...prev, medicine: e.target.value }))}
+                      style={{ width: '100%', border: '1px solid #e5e7eb', borderRadius: 12, padding: '8px 12px', fontSize: 12, color: '#374151', backgroundColor: '#f8fafc', outline: 'none', boxSizing: 'border-box' } as any}
+                    />
+                    <Pressable className='mt-1.5 flex-row items-center gap-1 self-start rounded-full bg-blue-50 px-2.5 py-1'>
+                      <svg width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='#132C95' strokeWidth='2.5' strokeLinecap='round'>
+                        <line x1='12' y1='5' x2='12' y2='19'/><line x1='5' y1='12' x2='19' y2='12'/>
+                      </svg>
+                      <Span className='text-[10px] font-medium' style={{ color: PRIMARY }}>Thêm thuốc</Span>
+                    </Pressable>
+                  </View>
+
+                  {/* Prescription images */}
+                  <View className='mb-3'>
+                    <Span className='mb-2 text-[10px] font-medium text-gray-400'>ĐƠN THUỐC (HÌNH ẢNH)</Span>
+                    <View className='flex-row flex-wrap gap-2'>
+                      {(mockExtras[rec.id]?.images ?? []).filter(img => !editRemovedImages.has(img.id)).map(img => (
+                        <View
+                          key={img.id}
+                          className='relative items-center justify-center rounded-xl'
+                          style={{ width: '47%', height: 82, backgroundColor: img.type === 'xray' ? '#1e293b' : img.type === 'ultrasound' ? '#1e3a5f' : '#374151' }}
+                        >
+                          <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round'>
+                            <rect x='3' y='3' width='18' height='18' rx='2'/><circle cx='8.5' cy='8.5' r='1.5'/><polyline points='21 15 16 10 5 21'/>
+                          </svg>
+                          <Span className='mt-1 text-[9px] text-white/70'>{img.label}</Span>
+                          <Pressable
+                            onPress={() => setEditRemovedImages(prev => { const n = new Set(prev); n.add(img.id); return n })}
+                            className='absolute right-1.5 top-1.5 h-5 w-5 items-center justify-center rounded-full'
+                            style={{ backgroundColor: 'rgba(0,0,0,0.55)' }}
+                          >
+                            <svg width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='#fff' strokeWidth='3' strokeLinecap='round'>
+                              <line x1='18' y1='6' x2='6' y2='18'/><line x1='6' y1='6' x2='18' y2='18'/>
+                            </svg>
+                          </Pressable>
+                        </View>
+                      ))}
+                      {/* Add image tile */}
+                      <Pressable
+                        className='items-center justify-center rounded-xl border-2 border-dashed border-orange-200 bg-orange-50'
+                        style={{ width: '47%', height: 82 }}
+                      >
+                        <svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='#ea580c' strokeWidth='2' strokeLinecap='round'>
+                          <line x1='12' y1='5' x2='12' y2='19'/><line x1='5' y1='12' x2='19' y2='12'/>
+                        </svg>
+                        <Span className='mt-1 text-[9px] text-orange-500'>Thêm ảnh</Span>
+                      </Pressable>
+                    </View>
+                  </View>
+
+                  {/* Chú ý */}
+                  <View className='mb-5'>
+                    <Span className='mb-1 text-[10px] font-medium text-gray-400'>CHÚ Ý</Span>
+                    <textarea
+                      value={editFormValues.note}
+                      onChange={(e: any) => setEditFormValues(prev => ({ ...prev, note: e.target.value }))}
+                      placeholder='Ghi chú thêm...'
+                      style={{ width: '100%', border: '1px solid #e5e7eb', borderRadius: 12, padding: '8px 12px', fontSize: 12, color: '#374151', backgroundColor: '#f8fafc', outline: 'none', boxSizing: 'border-box', minHeight: 72, resize: 'none', fontFamily: 'inherit' } as any}
+                    />
+                  </View>
+
+                  <View className='flex-row gap-3'>
+                    <Pressable onPress={() => setEditingRecordId(null)} className='flex-1 items-center rounded-xl border border-gray-200 bg-white py-3'>
+                      <Span className='text-sm text-gray-600'>Hủy bỏ</Span>
+                    </Pressable>
+                    <Pressable onPress={() => setEditingRecordId(null)} className='flex-1 items-center rounded-xl py-3' style={{ backgroundColor: PRIMARY }}>
+                      <Span className='text-sm font-semibold text-white'>Lưu</Span>
+                    </Pressable>
+                  </View>
+                </View>
+              </ScrollView>
+            </View>
+          </View>
+        )
+      })()}
 
       {/* ---- Prescription image view ---- */}
       {prescriptionView && (
@@ -952,15 +1115,13 @@ export const YhHomePage = () => {
                     </Pressable>
                   </View>
                   <Span className='text-[10px] text-gray-500'>{rec.place}</Span>
-                  <View className='mt-2 flex-row items-center' style={{ gap: 4 }}>
-                    <Span className='text-[10px] text-gray-500'>Đơn thuốc:</Span>
-                    <Pressable onPress={() => setPrescriptionView({ disease: rec.disease, date: rec.date, place: rec.place, doctor: (rec as any).doctor, medicine: rec.medicine })}>
-                      <svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='#ea580c' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
-                        <path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><polyline points='14 2 14 8 20 8'/>
-                        <line x1='16' y1='13' x2='8' y2='13'/><line x1='16' y1='17' x2='8' y2='17'/>
-                      </svg>
-                    </Pressable>
-                  </View>
+                  <Pressable onPress={() => setPrescriptionView({ disease: rec.disease, date: rec.date, place: rec.place, doctor: (rec as any).doctor, medicine: rec.medicine })} className='mt-2 self-start flex-row items-center gap-1 rounded-lg bg-orange-50 px-2 py-1'>
+                    <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='#ea580c' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
+                      <path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><polyline points='14 2 14 8 20 8'/>
+                      <line x1='16' y1='13' x2='8' y2='13'/><line x1='16' y1='17' x2='8' y2='17'/>
+                    </svg>
+                    <Span className='text-[10px] font-medium text-orange-600'>Đơn thuốc</Span>
+                  </Pressable>
                   {/* divider */}
                   <View className='mt-3' style={{ borderTopWidth: 1, borderColor: '#CECECE' }} />
                   <Pressable onPress={() => { const rawId = rec.id.replace('copy_', ''); const extras = mockExtras[rawId] ?? { images: [], links: [] }; setDetailRecord({ id: rec.id, date: rec.date, disease: rec.disease, place: rec.place, medicine: rec.medicine, doctor: (rec as any).doctor, ...extras }) }} className='mt-2 flex-row items-center justify-center gap-1'>
@@ -1035,9 +1196,9 @@ export const YhHomePage = () => {
 
             {/* Bulk mode: select all */}
             {bulkMode && (
-              <Pressable onPress={() => setSelectedIds(new Set(sortedHistory.map(r => r.id)))} className='mb-3 flex-row items-center gap-2'>
-                <View className='h-4 w-4 items-center justify-center rounded-sm border' style={{ borderColor: selectedIds.size === sortedHistory.length ? PRIMARY : '#d1d5db', backgroundColor: selectedIds.size === sortedHistory.length ? PRIMARY : '#fff' }}>
-                  {selectedIds.size === sortedHistory.length && <svg width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='#fff' strokeWidth='3' strokeLinecap='round'><polyline points='20 6 9 17 4 12'/></svg>}
+              <Pressable onPress={() => setSelectedIds(new Set(filteredHistory.map(r => r.id)))} className='mb-3 flex-row items-center gap-2'>
+                <View className='h-4 w-4 items-center justify-center rounded-sm border' style={{ borderColor: selectedIds.size === filteredHistory.length ? PRIMARY : '#d1d5db', backgroundColor: selectedIds.size === filteredHistory.length ? PRIMARY : '#fff' }}>
+                  {selectedIds.size === filteredHistory.length && <svg width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='#fff' strokeWidth='3' strokeLinecap='round'><polyline points='20 6 9 17 4 12'/></svg>}
                 </View>
                 <Span className='text-[11px] text-gray-600'>Chọn tất cả</Span>
               </Pressable>
@@ -1056,15 +1217,13 @@ export const YhHomePage = () => {
                     <Span className='text-[10px] text-gray-400'>{rec.date}</Span>
                   </View>
                   <Span className='text-[10px] text-gray-500'>{rec.place}</Span>
-                  <View className='mt-2 flex-row items-center' style={{ gap: 4 }}>
-                    <Span className='text-[10px] text-gray-500'>Đơn thuốc:</Span>
-                    <Pressable onPress={() => setPrescriptionView({ disease: rec.disease, date: rec.date, place: rec.place, doctor: rec.doctor, medicine: rec.medicine })}>
-                      <svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='#ea580c' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
-                        <path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><polyline points='14 2 14 8 20 8'/>
-                        <line x1='16' y1='13' x2='8' y2='13'/><line x1='16' y1='17' x2='8' y2='17'/>
-                      </svg>
-                    </Pressable>
-                  </View>
+                  <Pressable onPress={() => setPrescriptionView({ disease: rec.disease, date: rec.date, place: rec.place, doctor: rec.doctor, medicine: rec.medicine })} className='mt-2 self-start flex-row items-center gap-1 rounded-lg bg-orange-50 px-2 py-1'>
+                    <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='#ea580c' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
+                      <path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><polyline points='14 2 14 8 20 8'/>
+                      <line x1='16' y1='13' x2='8' y2='13'/><line x1='16' y1='17' x2='8' y2='17'/>
+                    </svg>
+                    <Span className='text-[10px] font-medium text-orange-600'>Đơn thuốc</Span>
+                  </Pressable>
                   <View className='mt-3' style={{ borderTopWidth: 1, borderColor: '#CECECE' }} />
                   <Pressable onPress={() => setRestoreId(rec.id)} className='mt-2 flex-row items-center justify-center gap-1'>
                     <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke={PRIMARY} strokeWidth='2.5' strokeLinecap='round' strokeLinejoin='round'>
@@ -1077,7 +1236,7 @@ export const YhHomePage = () => {
             })()}
 
             {/* Normal record list */}
-            {!specialView && sortedHistory.map(rec => {
+            {!specialView && filteredHistory.map(rec => {
               const isFollowing = historyFollowSet.has(rec.id)
               const isSelected = selectedIds.has(rec.id)
               return (
@@ -1118,15 +1277,13 @@ export const YhHomePage = () => {
                       )}
                     </View>
                     <Span className='text-[10px] text-gray-500'>{rec.place}</Span>
-                    <View className='mt-2 flex-row items-center' style={{ gap: 4 }}>
-                      <Span className='text-[10px] text-gray-500'>Đơn thuốc:</Span>
-                      <Pressable onPress={() => setPrescriptionView({ disease: rec.disease, date: rec.date, place: rec.place, doctor: rec.doctor, medicine: rec.medicine })}>
-                        <svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='#ea580c' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
-                          <path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><polyline points='14 2 14 8 20 8'/>
-                          <line x1='16' y1='13' x2='8' y2='13'/><line x1='16' y1='17' x2='8' y2='17'/>
-                        </svg>
-                      </Pressable>
-                    </View>
+                    <Pressable onPress={() => setPrescriptionView({ disease: rec.disease, date: rec.date, place: rec.place, doctor: rec.doctor, medicine: rec.medicine })} className='mt-2 self-start flex-row items-center gap-1 rounded-lg bg-orange-50 px-2 py-1'>
+                      <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='#ea580c' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
+                        <path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><polyline points='14 2 14 8 20 8'/>
+                        <line x1='16' y1='13' x2='8' y2='13'/><line x1='16' y1='17' x2='8' y2='17'/>
+                      </svg>
+                      <Span className='text-[10px] font-medium text-orange-600'>Đơn thuốc</Span>
+                    </Pressable>
                     <View className='mt-3' style={{ borderTopWidth: 1, borderColor: '#CECECE' }} />
                     <Pressable onPress={() => { const extras = mockExtras[rec.id] ?? { images: [], links: [] }; setDetailRecord({ id: rec.id, date: rec.date, disease: rec.disease, place: rec.place, medicine: rec.medicine, doctor: rec.doctor, ...extras }) }} className='mt-2 flex-row items-center justify-center gap-1'>
                       <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='#3b82f6' strokeWidth='2.5' strokeLinecap='round' strokeLinejoin='round'>
