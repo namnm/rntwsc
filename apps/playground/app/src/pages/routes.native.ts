@@ -29,11 +29,13 @@ import {
   rSwitch,
   rTextInput,
   rViewport,
+  rYhVaccine,
 } from '#/pages/route-paths'
 import { SelectPage } from '#/pages/select'
 import { SwitchPage } from '#/pages/switch'
 import { TextInputPage } from '#/pages/text-input'
 import { ViewportPage } from '#/pages/viewport'
+import { YhVaccinePage } from '#/pages/yh-vaccine'
 
 // we define all routes for native
 // need to explicit define it here to make sure not
@@ -56,5 +58,6 @@ export const routesNative = {
   [rForm]: FormPage,
   [rSelect]: SelectPage,
   [rViewport]: ViewportPage,
+  [rYhVaccine]: YhVaccinePage,
 }
 export type Routes = typeof routesNative
