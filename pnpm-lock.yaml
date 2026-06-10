@@ -35,7 +35,553 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
 
-  apps/playground/app:
+  packages/devtools/babel-config:
+    dependencies:
+      '@babel/preset-react':
+        specifier: 7.28.5
+        version: 7.28.5(@babel/core@7.29.0)
+      '@babel/preset-typescript':
+        specifier: 7.28.5
+        version: 7.28.5(@babel/core@7.29.0)
+      '@react-native/babel-preset':
+        specifier: '*'
+        version: 0.85.3(@babel/core@7.29.0)
+      babel-plugin-module-resolver:
+        specifier: 5.0.3
+        version: 5.0.3
+      babel-plugin-react-compiler:
+        specifier: 1.0.0
+        version: 1.0.0
+      react-native-worklets:
+        specifier: 0.8.3
+        version: 0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
+    devDependencies:
+      '@babel/core':
+        specifier: 7.29.0
+        version: 7.29.0
+      '@types/babel__core':
+        specifier: 7.20.5
+        version: 7.20.5
+
+  packages/devtools/babel-extract:
+    dependencies:
+      '@babel/code-frame':
+        specifier: 7.29.0
+        version: 7.29.0
+      '@babel/parser':
+        specifier: 7.29.3
+        version: 7.29.3
+      '@babel/traverse':
+        specifier: 7.29.0
+        version: 7.29.0
+    devDependencies:
+      '@types/babel__code-frame':
+        specifier: 7.27.0
+        version: 7.27.0
+      '@types/babel__traverse':
+        specifier: 7.28.0
+        version: 7.28.0
+
+  packages/devtools/babel-plugin-async-hook:
+    dependencies:
+      '@babel/core':
+        specifier: 7.29.0
+        version: 7.29.0
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
+    devDependencies:
+      '@types/babel__core':
+        specifier: 7.20.5
+        version: 7.20.5
+
+  packages/devtools/babel-plugin-client-extension:
+    dependencies:
+      '@babel/core':
+        specifier: 7.29.0
+        version: 7.29.0
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
+    devDependencies:
+      '@types/babel__core':
+        specifier: 7.20.5
+        version: 7.20.5
+
+  packages/devtools/babel-plugin-rsc-validation:
+    dependencies:
+      '@babel/core':
+        specifier: 7.29.0
+        version: 7.29.0
+    devDependencies:
+      '@types/babel__core':
+        specifier: 7.20.5
+        version: 7.20.5
+
+  packages/devtools/babel-plugin-tw:
+    dependencies:
+      '@babel/core':
+        specifier: 7.29.0
+        version: 7.29.0
+      '@babel/template':
+        specifier: 7.28.6
+        version: 7.28.6
+      react-native:
+        specifier: 0.85.3
+        version: 0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3)
+      twrnc:
+        specifier: 4.16.0
+        version: 4.16.0(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(yaml@2.9.0)
+      yaml:
+        specifier: 2.9.0
+        version: 2.9.0
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
+    devDependencies:
+      '@types/babel__core':
+        specifier: 7.20.5
+        version: 7.20.5
+      '@types/babel__template':
+        specifier: 7.4.4
+        version: 7.4.4
+
+  packages/devtools/doctoc:
+    dependencies:
+      doctoc:
+        specifier: 2.4.1
+        version: 2.4.1
+
+  packages/devtools/eslint:
+    dependencies:
+      '@eslint/config-helpers':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@eslint/js':
+        specifier: 10.0.1
+        version: 10.0.1(eslint@10.3.0(jiti@2.6.1))
+      '@typescript-eslint/eslint-plugin':
+        specifier: 8.59.3
+        version: 8.59.3(@typescript-eslint/parser@8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3))(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3)
+      '@typescript-eslint/parser':
+        specifier: 8.59.3
+        version: 8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3)
+      '@typescript-eslint/utils':
+        specifier: 8.59.3
+        version: 8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3)
+      eslint:
+        specifier: 10.3.0
+        version: 10.3.0(jiti@2.6.1)
+      eslint-plugin-import:
+        specifier: 2.32.0
+        version: 2.32.0(patch_hash=7f5c1b3ac0419b772c3abd1152f946a5f6c8f5ebf558cb49b732215630c2f48b)(@typescript-eslint/parser@8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3))(eslint@10.3.0(jiti@2.6.1))
+      eslint-plugin-prefer-arrow:
+        specifier: 1.2.3
+        version: 1.2.3(eslint@10.3.0(jiti@2.6.1))
+      eslint-plugin-react:
+        specifier: 7.37.5
+        version: 7.37.5(patch_hash=24ed0c82b63c09560e6a640404cb8b5769455a704db5068d2ac54d9c68e9b43e)(eslint@10.3.0(jiti@2.6.1))
+      eslint-plugin-react-hooks:
+        specifier: 7.1.1
+        version: 7.1.1(eslint@10.3.0(jiti@2.6.1))
+      eslint-plugin-react-refresh:
+        specifier: 0.5.2
+        version: 0.5.2(eslint@10.3.0(jiti@2.6.1))
+      eslint-plugin-simple-import-sort:
+        specifier: 13.0.0
+        version: 13.0.0(eslint@10.3.0(jiti@2.6.1))
+      eslint-plugin-unicorn:
+        specifier: 64.0.0
+        version: 64.0.0(eslint@10.3.0(jiti@2.6.1))
+      globals:
+        specifier: 17.6.0
+        version: 17.6.0
+      typescript-eslint:
+        specifier: 8.59.3
+        version: 8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3)
+    devDependencies:
+      '@types/eslint':
+        specifier: 9.6.1
+        version: 9.6.1
+
+  packages/devtools/eslint-plugin-custom:
+    dependencies:
+      '@typescript-eslint/utils':
+        specifier: 8.59.3
+        version: 8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3)
+      eslint:
+        specifier: 10.3.0
+        version: 10.3.0(jiti@2.6.1)
+    devDependencies:
+      '@types/eslint':
+        specifier: 9.6.1
+        version: 9.6.1
+
+  packages/devtools/metro-config:
+    dependencies:
+      '@react-native/metro-babel-transformer':
+        specifier: '*'
+        version: 0.85.3(@babel/core@7.29.0)
+      '@react-native/metro-config':
+        specifier: '*'
+        version: 0.85.3(@babel/core@7.29.0)
+      '@rnx-kit/metro-config':
+        specifier: 2.2.4
+        version: 2.2.4(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
+      '@rnx-kit/metro-resolver-symlinks':
+        specifier: 0.3.0
+        version: 0.3.0
+      react-native-svg-transformer:
+        specifier: '*'
+        version: 1.5.3(react-native-svg@15.15.5(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(typescript@6.0.3)
+
+  packages/devtools/next-config:
+    dependencies:
+      next:
+        specifier: '*'
+        version: 16.2.6(@babel/core@7.29.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.99.0)
+
+  packages/devtools/normalize:
+    dependencies:
+      semver:
+        specifier: 7.8.0
+        version: 7.8.0
+      yaml:
+        specifier: 2.9.0
+        version: 2.9.0
+    devDependencies:
+      '@types/semver':
+        specifier: 7.7.1
+        version: 7.7.1
+
+  packages/devtools/postcss-config: {}
+
+  packages/devtools/prettier:
+    dependencies:
+      '@prettier/plugin-xml':
+        specifier: 3.4.2
+        version: 3.4.2(prettier@3.8.3)
+      prettier:
+        specifier: 3.8.3
+        version: 3.8.3
+      prettier-plugin-tailwindcss:
+        specifier: 0.8.0
+        version: 0.8.0(prettier@3.8.3)
+
+  packages/devtools/stylelint:
+    dependencies:
+      postcss:
+        specifier: 8.5.14
+        version: 8.5.14
+      postcss-scss:
+        specifier: 4.0.9
+        version: 4.0.9(postcss@8.5.14)
+      stylelint:
+        specifier: 17.11.1
+        version: 17.11.1(typescript@6.0.3)
+      stylelint-config-hudochenkov:
+        specifier: 13.0.2
+        version: 13.0.2(stylelint-order@8.1.1(stylelint@17.11.1(typescript@6.0.3)))(stylelint@17.11.1(typescript@6.0.3))
+      stylelint-order:
+        specifier: 8.1.1
+        version: 8.1.1(stylelint@17.11.1(typescript@6.0.3))
+
+  packages/devtools/tsc: {}
+
+  packages/devtools/type-coverage:
+    dependencies:
+      type-coverage:
+        specifier: 2.29.7
+        version: 2.29.7(typescript@6.0.3)
+
+  packages/devtools/webpack-css-extract-variables:
+    dependencies:
+      css-tree:
+        specifier: 3.2.1
+        version: 3.2.1
+      sass:
+        specifier: 1.99.0
+        version: 1.99.0
+      webpack:
+        specifier: '*'
+        version: 5.106.2
+    devDependencies:
+      '@types/css-tree':
+        specifier: 2.3.11
+        version: 2.3.11
+
+  packages/devtools/webpack-resolve-client-extension:
+    devDependencies:
+      enhanced-resolve:
+        specifier: 5.21.3
+        version: 5.21.3
+
+  packages/nodejs/babelrc:
+    dependencies:
+      '@babel/core':
+        specifier: 7.29.0
+        version: 7.29.0
+      '@babel/plugin-transform-modules-commonjs':
+        specifier: 7.28.6
+        version: 7.28.6(@babel/core@7.29.0)
+      '@babel/plugin-transform-typescript':
+        specifier: 7.28.6
+        version: 7.28.6(@babel/core@7.29.0)
+    devDependencies:
+      '@types/babel__core':
+        specifier: 7.20.5
+        version: 7.20.5
+
+  packages/nodejs/circular-imports: {}
+
+  packages/nodejs/entrypoint:
+    dependencies:
+      '@babel/register':
+        specifier: 7.29.3
+        version: 7.29.3(@babel/core@7.29.0)
+      dotenv:
+        specifier: 17.4.2
+        version: 17.4.2
+      ts-node:
+        specifier: 10.9.2
+        version: 10.9.2(@types/node@25.8.0)(typescript@6.0.3)
+    devDependencies:
+      '@types/babel__register':
+        specifier: 7.17.3
+        version: 7.17.3
+
+  packages/nodejs/exec: {}
+
+  packages/nodejs/fs:
+    dependencies:
+      fs-extra:
+        specifier: 11.3.5
+        version: 11.3.5
+    devDependencies:
+      '@types/fs-extra':
+        specifier: 11.0.4
+        version: 11.0.4
+
+  packages/nodejs/gitignore:
+    dependencies:
+      ignore:
+        specifier: 7.0.5
+        version: 7.0.5
+
+  packages/nodejs/glob:
+    dependencies:
+      fast-glob:
+        specifier: 3.3.3
+        version: 3.3.3
+      globby:
+        specifier: 16.2.0
+        version: 16.2.0
+
+  packages/nodejs/kill:
+    dependencies:
+      tree-kill:
+        specifier: 1.2.2
+        version: 1.2.2
+
+  packages/nodejs/log:
+    dependencies:
+      colors:
+        specifier: 1.4.0
+        version: 1.4.0
+      stack-trace:
+        specifier: 1.0.0
+        version: 1.0.0
+    devDependencies:
+      '@types/stack-trace':
+        specifier: 0.0.33
+        version: 0.0.33
+
+  packages/nodejs/path: {}
+
+  packages/rn/components:
+    dependencies:
+      '@floating-ui/react':
+        specifier: '*'
+        version: 0.27.19(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@floating-ui/react-native':
+        specifier: '*'
+        version: 0.10.9(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
+      react:
+        specifier: 19.2.3
+        version: 19.2.3
+      react-dom:
+        specifier: 19.2.3
+        version: 19.2.3(react@19.2.3)
+      react-hook-form:
+        specifier: '*'
+        version: 7.75.0(react@19.2.3)
+      react-native:
+        specifier: 0.85.3
+        version: 0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3)
+      react-native-reanimated:
+        specifier: 4.3.1
+        version: 4.3.1(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
+      react-native-svg:
+        specifier: '*'
+        version: 15.15.5(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
+    devDependencies:
+      '@types/react':
+        specifier: 19.2.14
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.14)
+
+  packages/rn/core:
+    dependencies:
+      '@react-navigation/native':
+        specifier: '*'
+        version: 7.2.4(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
+      bezier-easing:
+        specifier: 3.0.0
+        version: 3.0.0
+      color-rgba:
+        specifier: 3.0.0
+        version: 3.0.0
+      i18next:
+        specifier: 26.2.0
+        version: 26.2.0(typescript@6.0.3)
+      js-cookie:
+        specifier: 3.0.5
+        version: 3.0.5
+      next:
+        specifier: '*'
+        version: 16.2.6(@babel/core@7.29.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.99.0)
+      react:
+        specifier: 19.2.3
+        version: 19.2.3
+      react-i18next:
+        specifier: 17.0.8
+        version: 17.0.8(i18next@26.2.0(typescript@6.0.3))(react-dom@19.2.3(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)(typescript@6.0.3)
+      react-native:
+        specifier: 0.85.3
+        version: 0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3)
+      react-native-css-animations:
+        specifier: 0.1.1
+        version: 0.1.1(react-native-reanimated@4.3.1(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
+      react-native-fast-image:
+        specifier: '*'
+        version: 8.6.3(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
+      react-native-reanimated:
+        specifier: 4.3.1
+        version: 4.3.1(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
+      react-native-safe-area-context:
+        specifier: 5.7.0
+        version: 5.7.0(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
+      tailwind-merge:
+        specifier: 3.6.0
+        version: 3.6.0
+      tailwindcss:
+        specifier: '*'
+        version: 4.3.0
+      twrnc:
+        specifier: '*'
+        version: 4.16.0(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(yaml@2.9.0)
+    devDependencies:
+      '@types/color-rgba':
+        specifier: 2.1.3
+        version: 2.1.3
+      '@types/js-cookie':
+        specifier: 3.0.6
+        version: 3.0.6
+      '@types/react':
+        specifier: 19.2.14
+        version: 19.2.14
+      vitest:
+        specifier: 4.1.6
+        version: 4.1.6(@types/node@25.8.0)(vite@8.0.0(@types/node@25.8.0)(jiti@2.6.1)(sass@1.99.0)(terser@5.44.1)(yaml@2.9.0))
+
+  packages/rn/immer:
+    dependencies:
+      immer:
+        specifier: 11.1.8
+        version: 11.1.8
+      use-immer:
+        specifier: 0.11.0
+        version: 0.11.0(immer@11.1.8)(react@19.2.3)
+
+  packages/rn/storage:
+    dependencies:
+      '@react-native-async-storage/async-storage':
+        specifier: '*'
+        version: 3.0.2(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
+      react-native-mmkv:
+        specifier: '*'
+        version: 4.3.1(react-native-nitro-modules@0.35.6(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
+
+  packages/rn/svg-icons:
+    dependencies:
+      react:
+        specifier: 19.2.3
+        version: 19.2.3
+      react-native-svg:
+        specifier: '*'
+        version: 15.15.5(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
+    devDependencies:
+      '@types/react':
+        specifier: 19.2.14
+        version: 19.2.14
+
+  packages/rn/themes: {}
+
+  packages/shared/circular-deps: {}
+
+  packages/shared/json-safe:
+    dependencies:
+      json-stringify-safe:
+        specifier: 5.0.1
+        version: 5.0.1
+    devDependencies:
+      '@types/json-stringify-safe':
+        specifier: 5.0.3
+        version: 5.0.3
+
+  packages/shared/json-stable:
+    dependencies:
+      json-stable-stringify:
+        specifier: 1.3.0
+        version: 1.3.0
+
+  packages/shared/lodash:
+    dependencies:
+      lodash-es:
+        specifier: 4.18.1
+        version: 4.18.1
+    devDependencies:
+      '@types/lodash-es':
+        specifier: 4.17.12
+        version: 4.17.12
+
+  packages/shared/qs:
+    dependencies:
+      qs:
+        specifier: 6.15.1
+        version: 6.15.1
+    devDependencies:
+      '@types/qs':
+        specifier: 6.15.1
+        version: 6.15.1
+
+  packages/shared/simple-log: {}
+
+  packages/shared/ts-utils:
+    dependencies:
+      utility-types:
+        specifier: 3.11.0
+        version: 3.11.0
+
+  packages/shared/ulidx:
+    dependencies:
+      ulidx:
+        specifier: 2.4.1
+        version: 2.4.1
+
+  playground:
     dependencies:
       '@babel/runtime':
         specifier: 7.29.2
@@ -120,7 +666,7 @@ importers:
         specifier: 4.16.0
         version: 4.16.0(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(yaml@2.9.0)
 
-  apps/playground/web:
+  playground-web:
     dependencies:
       accept-language:
         specifier: 3.0.20
@@ -155,559 +701,13 @@ importers:
         version: 10.1.1(@babel/core@7.29.0)(webpack@5.106.2)
       baseline-browser-mapping:
         specifier: latest
-        version: 2.10.33
+        version: 2.10.35
       cross-env:
         specifier: 10.1.0
         version: 10.1.0
       postcss-rename:
         specifier: 0.8.1
         version: 0.8.1
-
-  framework/devtools/babel-config:
-    dependencies:
-      '@babel/preset-react':
-        specifier: 7.28.5
-        version: 7.28.5(@babel/core@7.29.0)
-      '@babel/preset-typescript':
-        specifier: 7.28.5
-        version: 7.28.5(@babel/core@7.29.0)
-      '@react-native/babel-preset':
-        specifier: '*'
-        version: 0.85.3(@babel/core@7.29.0)
-      babel-plugin-module-resolver:
-        specifier: 5.0.3
-        version: 5.0.3
-      babel-plugin-react-compiler:
-        specifier: 1.0.0
-        version: 1.0.0
-      react-native-worklets:
-        specifier: 0.8.3
-        version: 0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
-    devDependencies:
-      '@babel/core':
-        specifier: 7.29.0
-        version: 7.29.0
-      '@types/babel__core':
-        specifier: 7.20.5
-        version: 7.20.5
-
-  framework/devtools/babel-extract:
-    dependencies:
-      '@babel/code-frame':
-        specifier: 7.29.0
-        version: 7.29.0
-      '@babel/parser':
-        specifier: 7.29.3
-        version: 7.29.3
-      '@babel/traverse':
-        specifier: 7.29.0
-        version: 7.29.0
-    devDependencies:
-      '@types/babel__code-frame':
-        specifier: 7.27.0
-        version: 7.27.0
-      '@types/babel__traverse':
-        specifier: 7.28.0
-        version: 7.28.0
-
-  framework/devtools/babel-plugin-async-hook:
-    dependencies:
-      '@babel/core':
-        specifier: 7.29.0
-        version: 7.29.0
-      zod:
-        specifier: 4.4.3
-        version: 4.4.3
-    devDependencies:
-      '@types/babel__core':
-        specifier: 7.20.5
-        version: 7.20.5
-
-  framework/devtools/babel-plugin-client-extension:
-    dependencies:
-      '@babel/core':
-        specifier: 7.29.0
-        version: 7.29.0
-      zod:
-        specifier: 4.4.3
-        version: 4.4.3
-    devDependencies:
-      '@types/babel__core':
-        specifier: 7.20.5
-        version: 7.20.5
-
-  framework/devtools/babel-plugin-rsc-validation:
-    dependencies:
-      '@babel/core':
-        specifier: 7.29.0
-        version: 7.29.0
-    devDependencies:
-      '@types/babel__core':
-        specifier: 7.20.5
-        version: 7.20.5
-
-  framework/devtools/babel-plugin-tw:
-    dependencies:
-      '@babel/core':
-        specifier: 7.29.0
-        version: 7.29.0
-      '@babel/template':
-        specifier: 7.28.6
-        version: 7.28.6
-      react-native:
-        specifier: 0.85.3
-        version: 0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3)
-      twrnc:
-        specifier: 4.16.0
-        version: 4.16.0(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(yaml@2.9.0)
-      yaml:
-        specifier: 2.9.0
-        version: 2.9.0
-      zod:
-        specifier: 4.4.3
-        version: 4.4.3
-    devDependencies:
-      '@types/babel__core':
-        specifier: 7.20.5
-        version: 7.20.5
-      '@types/babel__template':
-        specifier: 7.4.4
-        version: 7.4.4
-
-  framework/devtools/doctoc:
-    dependencies:
-      doctoc:
-        specifier: 2.4.1
-        version: 2.4.1
-
-  framework/devtools/eslint:
-    dependencies:
-      '@eslint/config-helpers':
-        specifier: 0.6.0
-        version: 0.6.0
-      '@eslint/js':
-        specifier: 10.0.1
-        version: 10.0.1(eslint@10.3.0(jiti@2.6.1))
-      '@typescript-eslint/eslint-plugin':
-        specifier: 8.59.3
-        version: 8.59.3(@typescript-eslint/parser@8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3))(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3)
-      '@typescript-eslint/parser':
-        specifier: 8.59.3
-        version: 8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3)
-      '@typescript-eslint/utils':
-        specifier: 8.59.3
-        version: 8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3)
-      eslint:
-        specifier: 10.3.0
-        version: 10.3.0(jiti@2.6.1)
-      eslint-plugin-import:
-        specifier: 2.32.0
-        version: 2.32.0(patch_hash=7f5c1b3ac0419b772c3abd1152f946a5f6c8f5ebf558cb49b732215630c2f48b)(@typescript-eslint/parser@8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3))(eslint@10.3.0(jiti@2.6.1))
-      eslint-plugin-prefer-arrow:
-        specifier: 1.2.3
-        version: 1.2.3(eslint@10.3.0(jiti@2.6.1))
-      eslint-plugin-react:
-        specifier: 7.37.5
-        version: 7.37.5(patch_hash=24ed0c82b63c09560e6a640404cb8b5769455a704db5068d2ac54d9c68e9b43e)(eslint@10.3.0(jiti@2.6.1))
-      eslint-plugin-react-hooks:
-        specifier: 7.1.1
-        version: 7.1.1(eslint@10.3.0(jiti@2.6.1))
-      eslint-plugin-react-refresh:
-        specifier: 0.5.2
-        version: 0.5.2(eslint@10.3.0(jiti@2.6.1))
-      eslint-plugin-simple-import-sort:
-        specifier: 13.0.0
-        version: 13.0.0(eslint@10.3.0(jiti@2.6.1))
-      eslint-plugin-unicorn:
-        specifier: 64.0.0
-        version: 64.0.0(eslint@10.3.0(jiti@2.6.1))
-      globals:
-        specifier: 17.6.0
-        version: 17.6.0
-      typescript-eslint:
-        specifier: 8.59.3
-        version: 8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3)
-    devDependencies:
-      '@types/eslint':
-        specifier: 9.6.1
-        version: 9.6.1
-
-  framework/devtools/eslint-plugin-custom:
-    dependencies:
-      '@typescript-eslint/utils':
-        specifier: 8.59.3
-        version: 8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3)
-      eslint:
-        specifier: 10.3.0
-        version: 10.3.0(jiti@2.6.1)
-    devDependencies:
-      '@types/eslint':
-        specifier: 9.6.1
-        version: 9.6.1
-
-  framework/devtools/metro-config:
-    dependencies:
-      '@react-native/metro-babel-transformer':
-        specifier: '*'
-        version: 0.85.3(@babel/core@7.29.0)
-      '@react-native/metro-config':
-        specifier: '*'
-        version: 0.85.3(@babel/core@7.29.0)
-      '@rnx-kit/metro-config':
-        specifier: 2.2.4
-        version: 2.2.4(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
-      '@rnx-kit/metro-resolver-symlinks':
-        specifier: 0.3.0
-        version: 0.3.0
-      react-native-svg-transformer:
-        specifier: '*'
-        version: 1.5.3(react-native-svg@15.15.5(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(typescript@6.0.3)
-
-  framework/devtools/next-config:
-    dependencies:
-      next:
-        specifier: '*'
-        version: 16.2.6(@babel/core@7.29.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.99.0)
-
-  framework/devtools/normalize:
-    dependencies:
-      semver:
-        specifier: 7.8.0
-        version: 7.8.0
-      yaml:
-        specifier: 2.9.0
-        version: 2.9.0
-    devDependencies:
-      '@types/semver':
-        specifier: 7.7.1
-        version: 7.7.1
-
-  framework/devtools/postcss-config: {}
-
-  framework/devtools/prettier:
-    dependencies:
-      '@prettier/plugin-xml':
-        specifier: 3.4.2
-        version: 3.4.2(prettier@3.8.3)
-      prettier:
-        specifier: 3.8.3
-        version: 3.8.3
-      prettier-plugin-tailwindcss:
-        specifier: 0.8.0
-        version: 0.8.0(prettier@3.8.3)
-
-  framework/devtools/stylelint:
-    dependencies:
-      postcss:
-        specifier: 8.5.14
-        version: 8.5.14
-      postcss-scss:
-        specifier: 4.0.9
-        version: 4.0.9(postcss@8.5.14)
-      stylelint:
-        specifier: 17.11.1
-        version: 17.11.1(typescript@6.0.3)
-      stylelint-config-hudochenkov:
-        specifier: 13.0.2
-        version: 13.0.2(stylelint-order@8.1.1(stylelint@17.11.1(typescript@6.0.3)))(stylelint@17.11.1(typescript@6.0.3))
-      stylelint-order:
-        specifier: 8.1.1
-        version: 8.1.1(stylelint@17.11.1(typescript@6.0.3))
-
-  framework/devtools/tsc: {}
-
-  framework/devtools/type-coverage:
-    dependencies:
-      type-coverage:
-        specifier: 2.29.7
-        version: 2.29.7(typescript@6.0.3)
-
-  framework/devtools/webpack-css-extract-variables:
-    dependencies:
-      css-tree:
-        specifier: 3.2.1
-        version: 3.2.1
-      sass:
-        specifier: 1.99.0
-        version: 1.99.0
-      webpack:
-        specifier: '*'
-        version: 5.106.2
-    devDependencies:
-      '@types/css-tree':
-        specifier: 2.3.11
-        version: 2.3.11
-
-  framework/devtools/webpack-resolve-client-extension:
-    devDependencies:
-      enhanced-resolve:
-        specifier: 5.21.3
-        version: 5.21.3
-
-  framework/nodejs/babelrc:
-    dependencies:
-      '@babel/core':
-        specifier: 7.29.0
-        version: 7.29.0
-      '@babel/plugin-transform-modules-commonjs':
-        specifier: 7.28.6
-        version: 7.28.6(@babel/core@7.29.0)
-      '@babel/plugin-transform-typescript':
-        specifier: 7.28.6
-        version: 7.28.6(@babel/core@7.29.0)
-    devDependencies:
-      '@types/babel__core':
-        specifier: 7.20.5
-        version: 7.20.5
-
-  framework/nodejs/circular-imports: {}
-
-  framework/nodejs/entrypoint:
-    dependencies:
-      '@babel/register':
-        specifier: 7.29.3
-        version: 7.29.3(@babel/core@7.29.0)
-      dotenv:
-        specifier: 17.4.2
-        version: 17.4.2
-      ts-node:
-        specifier: 10.9.2
-        version: 10.9.2(@types/node@25.8.0)(typescript@6.0.3)
-    devDependencies:
-      '@types/babel__register':
-        specifier: 7.17.3
-        version: 7.17.3
-
-  framework/nodejs/exec: {}
-
-  framework/nodejs/fs:
-    dependencies:
-      fs-extra:
-        specifier: 11.3.5
-        version: 11.3.5
-    devDependencies:
-      '@types/fs-extra':
-        specifier: 11.0.4
-        version: 11.0.4
-
-  framework/nodejs/gitignore:
-    dependencies:
-      ignore:
-        specifier: 7.0.5
-        version: 7.0.5
-
-  framework/nodejs/glob:
-    dependencies:
-      fast-glob:
-        specifier: 3.3.3
-        version: 3.3.3
-      globby:
-        specifier: 16.2.0
-        version: 16.2.0
-
-  framework/nodejs/kill:
-    dependencies:
-      tree-kill:
-        specifier: 1.2.2
-        version: 1.2.2
-
-  framework/nodejs/log:
-    dependencies:
-      colors:
-        specifier: 1.4.0
-        version: 1.4.0
-      stack-trace:
-        specifier: 1.0.0
-        version: 1.0.0
-    devDependencies:
-      '@types/stack-trace':
-        specifier: 0.0.33
-        version: 0.0.33
-
-  framework/nodejs/path: {}
-
-  framework/rn/components:
-    dependencies:
-      '@floating-ui/react':
-        specifier: '*'
-        version: 0.27.19(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      '@floating-ui/react-native':
-        specifier: '*'
-        version: 0.10.9(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
-      react:
-        specifier: 19.2.3
-        version: 19.2.3
-      react-dom:
-        specifier: 19.2.3
-        version: 19.2.3(react@19.2.3)
-      react-hook-form:
-        specifier: '*'
-        version: 7.75.0(react@19.2.3)
-      react-native:
-        specifier: 0.85.3
-        version: 0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3)
-      react-native-reanimated:
-        specifier: 4.3.1
-        version: 4.3.1(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
-      react-native-svg:
-        specifier: '*'
-        version: 15.15.5(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
-    devDependencies:
-      '@types/react':
-        specifier: 19.2.14
-        version: 19.2.14
-      '@types/react-dom':
-        specifier: 19.2.3
-        version: 19.2.3(@types/react@19.2.14)
-
-  framework/rn/core:
-    dependencies:
-      '@react-navigation/native':
-        specifier: '*'
-        version: 7.2.4(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
-      bezier-easing:
-        specifier: 3.0.0
-        version: 3.0.0
-      color-rgba:
-        specifier: 3.0.0
-        version: 3.0.0
-      i18next:
-        specifier: 26.2.0
-        version: 26.2.0(typescript@6.0.3)
-      js-cookie:
-        specifier: 3.0.5
-        version: 3.0.5
-      next:
-        specifier: '*'
-        version: 16.2.6(@babel/core@7.29.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.99.0)
-      react:
-        specifier: 19.2.3
-        version: 19.2.3
-      react-i18next:
-        specifier: 17.0.8
-        version: 17.0.8(i18next@26.2.0(typescript@6.0.3))(react-dom@19.2.3(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)(typescript@6.0.3)
-      react-native:
-        specifier: 0.85.3
-        version: 0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3)
-      react-native-css-animations:
-        specifier: 0.1.1
-        version: 0.1.1(react-native-reanimated@4.3.1(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
-      react-native-fast-image:
-        specifier: '*'
-        version: 8.6.3(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
-      react-native-reanimated:
-        specifier: 4.3.1
-        version: 4.3.1(react-native-worklets@0.8.3(@babel/core@7.29.0)(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
-      react-native-safe-area-context:
-        specifier: 5.7.0
-        version: 5.7.0(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
-      tailwind-merge:
-        specifier: 3.6.0
-        version: 3.6.0
-      tailwindcss:
-        specifier: '*'
-        version: 4.3.0
-      twrnc:
-        specifier: '*'
-        version: 4.16.0(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(yaml@2.9.0)
-    devDependencies:
-      '@types/color-rgba':
-        specifier: 2.1.3
-        version: 2.1.3
-      '@types/js-cookie':
-        specifier: 3.0.6
-        version: 3.0.6
-      '@types/react':
-        specifier: 19.2.14
-        version: 19.2.14
-      vitest:
-        specifier: 4.1.6
-        version: 4.1.6(@types/node@25.8.0)(vite@8.0.0(@types/node@25.8.0)(jiti@2.6.1)(sass@1.99.0)(terser@5.44.1)(yaml@2.9.0))
-
-  framework/rn/immer:
-    dependencies:
-      immer:
-        specifier: 11.1.8
-        version: 11.1.8
-      use-immer:
-        specifier: 0.11.0
-        version: 0.11.0(immer@11.1.8)(react@19.2.3)
-
-  framework/rn/storage:
-    dependencies:
-      '@react-native-async-storage/async-storage':
-        specifier: '*'
-        version: 3.0.2(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
-      react-native-mmkv:
-        specifier: '*'
-        version: 4.3.1(react-native-nitro-modules@0.35.6(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3))(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
-
-  framework/rn/svg-icons:
-    dependencies:
-      react:
-        specifier: 19.2.3
-        version: 19.2.3
-      react-native-svg:
-        specifier: '*'
-        version: 15.15.5(react-native@0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3))(react@19.2.3)
-    devDependencies:
-      '@types/react':
-        specifier: 19.2.14
-        version: 19.2.14
-
-  framework/rn/themes: {}
-
-  framework/shared/circular-deps: {}
-
-  framework/shared/json-safe:
-    dependencies:
-      json-stringify-safe:
-        specifier: 5.0.1
-        version: 5.0.1
-    devDependencies:
-      '@types/json-stringify-safe':
-        specifier: 5.0.3
-        version: 5.0.3
-
-  framework/shared/json-stable:
-    dependencies:
-      json-stable-stringify:
-        specifier: 1.3.0
-        version: 1.3.0
-
-  framework/shared/lodash:
-    dependencies:
-      lodash-es:
-        specifier: 4.18.1
-        version: 4.18.1
-    devDependencies:
-      '@types/lodash-es':
-        specifier: 4.17.12
-        version: 4.17.12
-
-  framework/shared/qs:
-    dependencies:
-      qs:
-        specifier: 6.15.1
-        version: 6.15.1
-    devDependencies:
-      '@types/qs':
-        specifier: 6.15.1
-        version: 6.15.1
-
-  framework/shared/simple-log: {}
-
-  framework/shared/ts-utils:
-    dependencies:
-      utility-types:
-        specifier: 3.11.0
-        version: 3.11.0
-
-  framework/shared/ulidx:
-    dependencies:
-      ulidx:
-        specifier: 2.4.1
-        version: 2.4.1
 
 packages:
 
@@ -2444,8 +2444,8 @@ packages:
   '@types/lodash-es@4.17.12':
     resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
 
-  '@types/lodash@4.17.21':
-    resolution: {integrity: sha512-FOvQ0YPD5NOfPgMzJihoT+Za5pdkDJWcbpuj1DjaKZIr/gxodQjY/uWEFlTNqW2ugXHUiL8lRQgw63dzKHZdeQ==}
+  '@types/lodash@4.17.24':
+    resolution: {integrity: sha512-gIW7lQLZbue7lRSWEFql49QJJWThrTFFeIMJdp3eH4tKoxm1OvEPg02rm4wCCSHS0cL3/Fizimb35b7k8atwsQ==}
 
   '@types/mdast@3.0.15':
     resolution: {integrity: sha512-LnwD+mUEfxWMa1QpDraczIn6k0Ee3SMicuYSSzS6ZYl2gKS09EClnJYGd8Du6rfc5r/GZEk5o1mRb8TaTj03sQ==}
@@ -2852,8 +2852,8 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  baseline-browser-mapping@2.10.33:
-    resolution: {integrity: sha512-bA6+tcSLpz2tIEdDXZPpPTIuxBcC4+w6SieaYyfigIa4h8GlFxbA17v22Vx3JUtuZQj9SgOsnbK+aTBzyDyEuw==}
+  baseline-browser-mapping@2.10.35:
+    resolution: {integrity: sha512-honAfLBde0HAFLdNyBEfuuENkF6zR+ozxqxa/2zJKHBe1qzLqyTSeRKpdPEHAP03rlDGyQOPnCSxnVpVqQo9Mg==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -8217,9 +8217,9 @@ snapshots:
 
   '@types/lodash-es@4.17.12':
     dependencies:
-      '@types/lodash': 4.17.21
+      '@types/lodash': 4.17.24
 
-  '@types/lodash@4.17.21': {}
+  '@types/lodash@4.17.24': {}
 
   '@types/mdast@3.0.15':
     dependencies:
@@ -8723,7 +8723,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  baseline-browser-mapping@2.10.33: {}
+  baseline-browser-mapping@2.10.35: {}
 
   bcp47@1.1.2: {}
 
@@ -8774,7 +8774,7 @@ snapshots:
 
   browserslist@4.28.2:
     dependencies:
-      baseline-browser-mapping: 2.10.33
+      baseline-browser-mapping: 2.10.35
       caniuse-lite: 1.0.30001788
       electron-to-chromium: 1.5.343
       node-releases: 2.0.38
@@ -10808,7 +10808,7 @@ snapshots:
     dependencies:
       '@next/env': 16.2.6
       '@swc/helpers': 0.5.15
-      baseline-browser-mapping: 2.10.33
+      baseline-browser-mapping: 2.10.35
       caniuse-lite: 1.0.30001788
       postcss: 8.4.31
       react: 19.2.3

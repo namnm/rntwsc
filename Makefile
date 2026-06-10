@@ -2,7 +2,7 @@
 # dev utils
 
 extract:
-	export NEXT_PUBLIC_MINIFY_CLASS_NAMES=1 \
+	@export NEXT_PUBLIC_MINIFY_CLASS_NAMES=1 \
 	&& node ./babel-extract;
 
 ###############################################################################
@@ -11,13 +11,13 @@ extract:
 clean:
 	@make clean_rm \
 	&& pnpm ci && pnpm dedupe \
-	&& cd ./apps/playground/app \
+	&& cd ./playground \
 	&& cd ./ios \
 	&& pod install --repo-update \
 	&& cd ../android && ./gradlew clean;
 
 clean_rm:
-	@cd ./apps/playground/app \
+	@cd ./playground \
 	&& rm -rf \
 		./ios/build \
 		./ios/Pods \
@@ -30,7 +30,7 @@ clean_rm:
 clean_deep:
 	@make clean_deep_rm \
 	&& pnpm ci && pnpm dedupe \
-	&& cd ./apps/playground/app \
+	&& cd ./playground \
 	&& cd ./ios \
 	&& pod cache clean --all \
 	&& pod deintegrate \

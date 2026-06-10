@@ -19,6 +19,7 @@ require('tsconfig-paths').register({
 })
 
 require('@/nodejs/entrypoint')({
-  dir: __dirname,
+  cwd: __dirname,
   env: true,
+  babel: true,
 })

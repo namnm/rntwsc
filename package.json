@@ -1,11 +1,11 @@
 {
-  "name": "react-native-tailwind-nextjs",
+  "name": "twrnsc",
   "version": "0.0.0-locked",
   "author": "Nam Nguyen <nam@namnm.com>",
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "fmt": "node ./devtools normalize,doctoc,eslint,stylelint,prettier",
+    "fmt": "node ./devtools normalize,eslint,stylelint,prettier",
     "doctoc": "node ./devtools doctoc",
     "normalize": "node ./devtools normalize",
     "eslint": "node ./devtools eslint",
@@ -13,7 +13,8 @@
     "prettier": "node ./devtools prettier",
     "ts": "node ./devtools tsc,type-coverage",
     "tsc": "node ./devtools tsc",
-    "type-coverage": "node ./devtools type-coverage"
+    "type-coverage": "node ./devtools type-coverage",
+    "build": "node -r ./devtools-register scripts/build"
   },
   "engines": {
     "node": ">=24.11",
