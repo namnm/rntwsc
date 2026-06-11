@@ -7,10 +7,10 @@ without publishing to npm. Consumers install via pnpm git URL with a path select
 
 | Module              | Package            | Deps               |
 | ------------------- | ------------------ | ------------------ |
-| `packages/shared`   | `@twrnsc/shared`   | -                  |
-| `packages/nodejs`   | `@twrnsc/nodejs`   | shared             |
-| `packages/rn`       | `@twrnsc/rn`       | shared, nodejs     |
-| `packages/devtools` | `@twrnsc/devtools` | shared, nodejs, rn |
+| `packages/shared`   | `@rntwsc/shared`   | -                  |
+| `packages/nodejs`   | `@rntwsc/nodejs`   | shared             |
+| `packages/rn`       | `@rntwsc/rn`       | shared, nodejs     |
+| `packages/devtools` | `@rntwsc/devtools` | shared, nodejs, rn |
 
 Each module is a collection of sub-packages (e.g. `nodejs/exec`, `nodejs/log`).
 The build merges them into one installable package.
@@ -20,8 +20,6 @@ The build merges them into one installable package.
 ```sh
 pnpm dist
 ```
-
-Runs via `node -r ./devtools-register scripts/build` (ts-node transpilation, tsconfig-paths registered). No env var flags - scope, version, and module list are hardcoded in `scripts/build.ts`.
 
 ## What it does per module
 
@@ -36,7 +34,7 @@ Runs via `node -r ./devtools-register scripts/build` (ts-node transpilation, tsc
 
 3. **Rewrite imports** in all `.js` and `.d.ts` output files:
    - `@/<same-mod>/sub` -> relative path (e.g. `../exec`)
-   - `@/<other-mod>/sub` -> `@twrnsc/<other-mod>/sub`
+   - `@/<other-mod>/sub` -> `@rntwsc/<other-mod>/sub`
 
 4. **Write package.json** - merges `dependencies` and `peerDependencies` from
    all sub-package `package.json` files, adds cross-module sibling deps
@@ -45,25 +43,25 @@ Runs via `node -r ./devtools-register scripts/build` (ts-node transpilation, tsc
 
 ```
 dist/
-  shared/       <- @twrnsc/shared
+  shared/       <- @rntwsc/shared
     package.json
     lodash/index.js + index.d.ts
     ts-utils/index.js + index.d.ts
     ...
-  nodejs/       <- @twrnsc/nodejs
-    package.json  (depends on @twrnsc/shared)
+  nodejs/       <- @rntwsc/nodejs
+    package.json  (depends on @rntwsc/shared)
     exec/index.js + index.d.ts
     log/index.js + index.d.ts
     ...
-  rn/           <- @twrnsc/rn
-    package.json  (depends on @twrnsc/shared, @twrnsc/nodejs)
+  rn/           <- @rntwsc/rn
+    package.json  (depends on @rntwsc/shared, @rntwsc/nodejs)
     core/...
     components/...
     svg-icons/*.svg (copied)
     themes/*.scss (copied)
     ...
-  devtools/     <- @twrnsc/devtools
-    package.json  (depends on @twrnsc/shared, @twrnsc/nodejs, @twrnsc/rn)
+  devtools/     <- @rntwsc/devtools
+    package.json  (depends on @rntwsc/shared, @rntwsc/nodejs, @rntwsc/rn)
     eslint/index.js + index.d.ts
     babel-plugin-tw/...
     ...
@@ -76,10 +74,10 @@ Add to `package.json` dependencies, pinning to a commit hash on the dist branch:
 ```json
 {
   "dependencies": {
-    "@twrnsc/shared": "github:org/repo#<hash>&path:shared",
-    "@twrnsc/nodejs": "github:org/repo#<hash>&path:nodejs",
-    "@twrnsc/rn": "github:org/repo#<hash>&path:rn",
-    "@twrnsc/devtools": "github:org/repo#<hash>&path:devtools"
+    "@rntwsc/shared": "github:org/repo#<hash>&path:shared",
+    "@rntwsc/nodejs": "github:org/repo#<hash>&path:nodejs",
+    "@rntwsc/rn": "github:org/repo#<hash>&path:rn",
+    "@rntwsc/devtools": "github:org/repo#<hash>&path:devtools"
   }
 }
 ```

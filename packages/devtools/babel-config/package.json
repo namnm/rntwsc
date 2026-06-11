@@ -1,5 +1,5 @@
 {
-  "name": "@twrnsc/devtools-babel-config",
+  "name": "@rntwsc/devtools-babel-config",
   "version": "0.0.0-locked",
   "private": true,
   "type": "commonjs",

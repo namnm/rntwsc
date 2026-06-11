@@ -1,6 +1,4 @@
 import { Button } from '@/rn/components/button'
-import { TextInput } from '@/rn/components/input'
-import { PasswordInput } from '@/rn/components/input/password-input'
 import { H1, Span } from '@/rn/components/text'
 import { ScrollView } from '@/rn/core/components/scroll-view'
 import { View } from '@/rn/core/components/view'
@@ -30,10 +28,6 @@ export const HomePage = async () => {
           <View className='mt-5 items-center'>
             <Button className='w-40'>CVA Button</Button>
           </View>
-        </View>
-        <View className='flex-1 p-4'>
-          <TextInput className='mx-auto mt-5 w-60' />
-          <PasswordInput className='mx-auto mt-2 w-60' />
         </View>
       </Container>
     </NavLayout>

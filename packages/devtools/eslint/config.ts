@@ -11,6 +11,7 @@ import globals from 'globals'
 
 import { restrictedImports } from '@/devtools/eslint/config-restricted-imports'
 import { customPlugin } from '@/devtools/eslint-plugin-custom'
+import { pnpmWorkspaceSync } from '@/devtools/normalize/pnpm-workspace'
 import { fs } from '@/nodejs/fs'
 import { gitignorePath } from '@/nodejs/gitignore'
 import { globSync } from '@/nodejs/glob'
@@ -116,7 +117,7 @@ export const config = ({
     },
     settings: {
       react: {
-        version: '19',
+        version: pnpmWorkspaceSync().overrides?.['react'] || '19',
       },
     },
     linterOptions: {

@@ -1,5 +1,5 @@
 {
-  "name": "@twrnsc/devtools-babel-plugin-tw",
+  "name": "@rntwsc/devtools-babel-plugin-tw",
   "version": "0.0.0-locked",
   "private": true,
   "type": "commonjs",
@@ -11,7 +11,6 @@
     "@babel/core": "7.29.0",
     "@babel/template": "7.28.6",
     "twrnc": "4.16.0",
-    "yaml": "2.9.0",
     "zod": "4.4.3"
   },
   "peerDependencies": {

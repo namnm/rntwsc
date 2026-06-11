@@ -1,5 +1,5 @@
 {
-  "name": "@twrnsc/devtools-babel-plugin-rsc-validation",
+  "name": "@rntwsc/devtools-babel-plugin-rsc-validation",
   "version": "0.0.0-locked",
   "private": true,
   "type": "commonjs",

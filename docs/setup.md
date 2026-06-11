@@ -5,10 +5,10 @@ Install the packages by pinning to a commit hash on the `dist` branch:
 ```json
 {
   "dependencies": {
-    "@twrnsc/shared": "github:namnm/twrnsc#<hash>&path:shared",
-    "@twrnsc/nodejs": "github:namnm/twrnsc#<hash>&path:nodejs",
-    "@twrnsc/rn": "github:namnm/twrnsc#<hash>&path:rn",
-    "@twrnsc/devtools": "github:namnm/twrnsc#<hash>&path:devtools"
+    "@rntwsc/shared": "github:namnm/rntwsc#<hash>&path:shared",
+    "@rntwsc/nodejs": "github:namnm/rntwsc#<hash>&path:nodejs",
+    "@rntwsc/rn": "github:namnm/rntwsc#<hash>&path:rn",
+    "@rntwsc/devtools": "github:namnm/rntwsc#<hash>&path:devtools"
   }
 }
 ```
@@ -24,10 +24,10 @@ Only install what you need. Dependencies:
 
 | Package            | Contents                                               |
 | ------------------ | ------------------------------------------------------ |
-| `@twrnsc/shared`   | Shared utilities (lodash wrappers, ts-utils)           |
-| `@twrnsc/nodejs`   | Node.js utilities (exec, log)                          |
-| `@twrnsc/rn`       | React Native components, core hooks, svg-icons, themes |
-| `@twrnsc/devtools` | Babel plugins, ESLint rules, build config              |
+| `@rntwsc/shared`   | Shared utilities (lodash wrappers, ts-utils)           |
+| `@rntwsc/nodejs`   | Node.js utilities (exec, log)                          |
+| `@rntwsc/rn`       | React Native components, core hooks, svg-icons, themes |
+| `@rntwsc/devtools` | Babel plugins, ESLint rules, build config              |
 
 ## Runtime requirement
 

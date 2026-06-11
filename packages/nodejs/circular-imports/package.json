@@ -1,5 +1,5 @@
 {
-  "name": "@twrnsc/nodejs-circular-imports",
+  "name": "@rntwsc/nodejs-circular-imports",
   "version": "0.0.0-locked",
   "private": true,
   "type": "commonjs",

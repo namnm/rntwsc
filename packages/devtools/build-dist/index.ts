@@ -10,9 +10,10 @@ const packages = 'packages'
 const packagesRoot = path.join(repoRoot, packages)
 const dist = 'dist'
 const distRoot = path.join(repoRoot, dist)
-const scope = '@twrnsc'
+const scope = '@rntwsc'
 const version = '0.0.0'
 
+// our private packages modules with import paths start with '@/...'
 const aliasRegex = /(['"])(@\/[^'"]+)\1/g
 
 type ModuleName = 'shared' | 'nodejs' | 'rn' | 'devtools'
@@ -136,8 +137,6 @@ const prepareTypes = async () => {
 // tsc
 
 const writeTsconfig = async (mod: ModuleName) => {
-  const tmp = path.join(repoRoot, `tsconfig.${mod}.local.json`)
-
   // Build explicit paths only - no broad @/* fallback
   // will become "cannot find module" errors which are suppressed by noEmitOnError:false
   // This prevents TypeScript from following unknown @/ aliases and emitting stray declaration
@@ -165,6 +164,8 @@ const writeTsconfig = async (mod: ModuleName) => {
     include: [`./${packages}/${mod}/**/*`, `./${packages}/**/*.d.ts`],
     exclude: [`./${packages}/${mod}/**/*.test.*`],
   }
+
+  const tmp = path.join(repoRoot, `tsconfig.${mod}.local.json`)
   await fs.writeJson(tmp, config)
   return tmp
 }
@@ -177,8 +178,8 @@ const compile = async (mod: ModuleName, tsconfigPath: string) => {
   })
   await exec(execCmd)
 
-  const distModDir = path.join(distRoot, mod)
-  if (!(await fs.exists(distModDir))) {
+  const distMod = path.join(distRoot, mod)
+  if (!(await fs.exists(distMod))) {
     log.fatal(`tsc produced no output for ${mod}`)
   }
 }
@@ -223,8 +224,9 @@ const rewriteFile = async (
       const subPath = slashIdx === -1 ? '' : withoutAt.slice(slashIdx + 1)
 
       if (importMod !== mod && !cross[mod].includes(importMod as ModuleName)) {
+        const relative = path.relative(packagesRoot, filePath)
         errs.push(
-          `${filePath}: unresolvable import "${importPath}" - "${importMod}" is not in cross deps for "${mod}"`,
+          `${relative}: unresolvable import "${importPath}" - "${importMod}" is not in cross deps for "${mod}"`,
         )
         return m
       }
@@ -270,16 +272,16 @@ const rewriteAll = async (mod: ModuleName): Promise<void> => {
   const errs = results.flat()
   if (errs.length > 0) {
     for (const e of errs) {
-      console.error(e)
+      log.error(e)
     }
-    throw new Error(`${errs.length} unresolvable import(s) in module "${mod}"`)
+    log.fatal(`${errs.length} unresolvable import(s) in module "${mod}"`)
   }
 }
 
 // ---------------------------------------------------------------------------
 // Main
 
-const buildModule = async (mod: ModuleName): Promise<void> => {
+const build = async (mod: ModuleName): Promise<void> => {
   const tsconfigPath = await writeTsconfig(mod)
   try {
     await compile(mod, tsconfigPath)
@@ -294,7 +296,7 @@ const main = async () => {
   await fs.remove(distRoot)
   await fs.ensureDir(distRoot)
   for (const mod of modules) {
-    await buildModule(mod)
+    await build(mod)
   }
 }
 main().catch(err => log.stack(err, 'fatal'))

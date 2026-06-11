@@ -1,5 +1,5 @@
 {
-  "name": "@rntwsc/shared-simple-log",
+  "name": "@rntwsc/devtools-build-dist",
   "version": "0.0.0-locked",
   "private": true,
   "type": "commonjs",

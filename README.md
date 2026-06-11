@@ -1,4 +1,6 @@
-# twrnsc
+# rntwsc
+
+React Native Tailwind Server Component
 
 React Native with Tailwind CSS class names, compatible with Next.js App Router SSR streaming.
 
@@ -16,4 +18,4 @@ React Native with Tailwind CSS class names, compatible with Next.js App Router S
 
 ## License: MIT
 
-Contact: [nam@nongdan.dev](mailto:nam@nongdan.dev)
+Contact: [nam@namnm.com](mailto:nam@namnm.com)

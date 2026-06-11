@@ -25,7 +25,7 @@ pnpm --filter playground start
 pnpm dist
 ```
 
-Compiles all four modules (`shared`, `nodejs`, `rn`, `devtools`) to `dist/` in dependency order. See [build.md](build.md) for details.
+Compiles all four modules (`shared`, `nodejs`, `rn`, `devtools`) to `dist/` in dependency order. See [dist.md](dist.md) for details.
 
 ## Workspace layout
 
@@ -33,8 +33,7 @@ Compiles all four modules (`shared`, `nodejs`, `rn`, `devtools`) to `dist/` in d
 packages/rn/          framework source
 playground/           React Native app + shared pages
 playground-web/       Next.js app
-dist/                 build output (committed on dist branch)
-scripts/              build scripts
+dist/                 dist output (committed on dist branch)
 ```
 
 ## Adding an SVG icon

@@ -10,6 +10,7 @@ const supported = [
   'prettier',
   'tsc',
   'type-coverage',
+  'build-dist',
 ] as const
 type Pkg = (typeof supported)[number]
 

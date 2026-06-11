@@ -1,5 +1,5 @@
 {
-  "name": "@twrnsc/devtools-metro-config",
+  "name": "@rntwsc/devtools-metro-config",
   "version": "0.0.0-locked",
   "private": true,
   "type": "commonjs",

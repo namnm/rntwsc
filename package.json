@@ -1,5 +1,5 @@
 {
-  "name": "twrnsc",
+  "name": "rntwsc",
   "version": "0.0.0-locked",
   "author": "Nam Nguyen <nam@namnm.com>",
   "private": true,
@@ -14,7 +14,7 @@
     "ts": "node ./devtools tsc,type-coverage",
     "tsc": "node ./devtools tsc",
     "type-coverage": "node ./devtools type-coverage",
-    "build": "node -r ./devtools-register scripts/build"
+    "dist": "node ./devtools build-dist"
   },
   "engines": {
     "node": ">=24.11",

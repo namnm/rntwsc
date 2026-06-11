@@ -1,21 +1,15 @@
 import type { Platform } from 'react-native'
 import type { TwConfig } from 'twrnc'
 import { create } from 'twrnc/create'
-import { parse } from 'yaml'
 
-import { repoRoot } from '@/nodejs/entrypoint/root'
-import { fs } from '@/nodejs/fs'
-import { path } from '@/nodejs/path'
+import { pnpmWorkspaceSync } from '@/devtools/normalize/pnpm-workspace'
 
 // can not import twrnc directly as it imports react-native which is not available in nodejs babel env
 export const createTwrnc = (
   platform: Platform['OS'],
   twrncConfig: TwConfig,
 ) => {
-  const wsPath = path.join(repoRoot, 'pnpm-workspace.yaml')
-  const wsFile = fs.readFileSync(wsPath, 'utf8')
-  const overrides = parse(wsFile).overrides || {}
-  const rnVersionStr = overrides['react-native']
+  const rnVersionStr = pnpmWorkspaceSync().overrides?.['react-native'] || ''
   const matches = /(\d+)\.(\d+)\.(\d+)/.exec(rnVersionStr)
   if (!matches) {
     throw new Error(

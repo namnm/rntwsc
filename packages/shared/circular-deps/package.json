@@ -1,5 +1,5 @@
 {
-  "name": "@twrnsc/shared-circular-deps",
+  "name": "@rntwsc/shared-circular-deps",
   "version": "0.0.0-locked",
   "private": true,
   "type": "commonjs",

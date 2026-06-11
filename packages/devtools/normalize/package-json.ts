@@ -1,6 +1,6 @@
 import { compare } from 'semver'
-import { parse } from 'yaml'
 
+import { pnpmWorkspace } from '@/devtools/normalize/pnpm-workspace'
 import { repoRoot } from '@/nodejs/entrypoint/root'
 import { fs } from '@/nodejs/fs'
 import { glob } from '@/nodejs/glob'
@@ -66,11 +66,11 @@ const validSemverRegex = /^\d/
  * - Check if a package appears multiple times in different paths
  */
 export const normalizePackageJson = async () => {
-  const paths = await glob('**/package.json')
-  const rootPackageJson = require(path.join(repoRoot, './package.json'))
-  const wsPath = path.join(repoRoot, 'pnpm-workspace.yaml')
-  const wsFile = fs.readFileSync(wsPath, 'utf8')
-  const overrides = parse(wsFile).overrides || {}
+  const [paths, rootPackageJson, overrides] = await Promise.all([
+    glob('**/package.json'),
+    fs.readJson(path.join(repoRoot, './package.json')),
+    pnpmWorkspace().then(w => w.overrides),
+  ])
 
   const allDependencies: StrMap<PackageData[]> = {}
 
@@ -181,7 +181,7 @@ export const normalizePackageJson = async () => {
     }
 
     for (const d of arr) {
-      const overrideVersion = overrides[d.name]
+      const overrideVersion = overrides?.[d.name]
       if (
         overrideVersion &&
         d.version !== '*' &&

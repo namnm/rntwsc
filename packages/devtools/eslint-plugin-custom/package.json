@@ -1,5 +1,5 @@
 {
-  "name": "@twrnsc/devtools-eslint-plugin-custom",
+  "name": "@rntwsc/devtools-eslint-plugin-custom",
   "version": "0.0.0-locked",
   "private": true,
   "type": "commonjs",

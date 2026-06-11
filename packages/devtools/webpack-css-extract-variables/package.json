@@ -1,5 +1,5 @@
 {
-  "name": "@twrnsc/devtools-webpack-css-extract-variables",
+  "name": "@rntwsc/devtools-webpack-css-extract-variables",
   "version": "0.0.0-locked",
   "private": true,
   "type": "commonjs",
