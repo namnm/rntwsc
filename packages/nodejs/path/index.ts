@@ -49,5 +49,5 @@ export const resolvePathSync = (...paths: string[]) => {
   return f
 }
 
-const resolvePathErr = (f: string) =>
+export const resolvePathErr = (f: string) =>
   new Error(`Cannot resolve: ${path.relative(repoRoot, f) || '.'}`)

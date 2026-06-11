@@ -1,5 +1,4 @@
 import { repoRoot } from '@/nodejs/entrypoint/root'
-import { bin, cmd, exec } from '@/nodejs/exec'
 import { fs } from '@/nodejs/fs'
 import { glob, globby } from '@/nodejs/glob'
 import { log } from '@/nodejs/log'
@@ -13,8 +12,8 @@ const distRoot = path.join(repoRoot, dist)
 const scope = '@rntwsc'
 const version = '0.0.0'
 
-// our private packages modules with import paths start with @/..
-const aliasRegex = /(['"])(@\/[^'"]+)\1/g
+// Our private packages modules with import paths start with @/..
+const aliasRegex = /(['"`])(@\/[^'"`]+)\1/g
 
 type ModuleName = 'shared' | 'nodejs' | 'rn' | 'devtools'
 const modules: ModuleName[] = ['shared', 'nodejs', 'rn', 'devtools']
@@ -25,77 +24,29 @@ const cross: Record<ModuleName, ModuleName[]> = {
   rn: ['shared'],
   devtools: ['shared', 'nodejs', 'rn'],
 }
+const extraCopy: Record<ModuleName, string[]> = {
+  shared: [],
+  nodejs: [],
+  rn: [],
+  devtools: ['tsconfig.base.json'],
+}
 
 // ---------------------------------------------------------------------------
-// main
+// Main
 
 export const run = async () => {
-  await prepareTypes()
   await fs.remove(distRoot)
   await fs.ensureDir(distRoot)
-  for (const mod of modules) {
-    await build(mod)
-  }
+  await Promise.all(modules.map(build))
 }
 
 const build = async (mod: ModuleName): Promise<void> => {
-  const tsconfigPath = await writeTsconfig(mod)
-  try {
-    await compile(mod, tsconfigPath)
-    await Promise.all([
-      copyAssets(mod),
-      rewriteAlias(mod),
-      writePackageJson(mod),
-    ])
-  } finally {
-    await fs.remove(tsconfigPath)
-  }
+  await Promise.all([copy(mod), writePackageJson(mod)])
+  await rewriteAlias(mod)
 }
 
 // ---------------------------------------------------------------------------
-// prepare types
-
-// those packages have their own declaration without @types
-const prepareTypesExtra = new Set(['ulidx'])
-
-const prepareTypes = async () => {
-  const paths = await glob('**/package.json')
-  const repoRootNodeModules = path.join(repoRoot, 'node_modules')
-
-  const promises = paths.map(async p => {
-    const pkg = (await fs.readJson(p)) as SubPkgJson
-    const pkgDir = path.dirname(p)
-
-    const allPkgNames = Object.keys({
-      ...pkg.dependencies,
-      ...pkg.peerDependencies,
-      ...pkg.devDependencies,
-    })
-    const toLink = allPkgNames.filter(
-      k => k.startsWith('@types/') || prepareTypesExtra.has(k),
-    )
-
-    await Promise.all(
-      toLink.map(async typesPkg => {
-        const src = path.join(pkgDir, 'node_modules', typesPkg)
-        const dst = path.join(repoRootNodeModules, typesPkg)
-        const [srcExists] = await Promise.all([
-          fs.exists(src),
-          fs.ensureDir(path.dirname(dst)),
-        ])
-        if (!srcExists) {
-          return
-        }
-        return fs.symlink(src, dst).catch(() => {})
-      }),
-    )
-  })
-
-  await Promise.all(promises)
-}
-
-// ---------------------------------------------------------------------------
-// package.json merging
+// Merge package.json
 
 type Deps = {
   dependencies: StrMap<string>
@@ -111,9 +62,13 @@ type PkgJson = Partial<Deps> & {
   name: string
   version: string
   type: string
+  exports: Record<string, string>
 }
 type SubPkgJson = Partial<Deps>
 
+// Merge dependencies from all sub-package.json files within a module into one
+// flat set. Cross-module deps are added as peerDependencies so consumers
+// install them explicitly rather than getting duplicate copies.
 const mergeDeps = async (mod: ModuleName) => {
   const merged: Deps = {
     dependencies: {},
@@ -142,13 +97,58 @@ const mergeDeps = async (mod: ModuleName) => {
   return merged
 }
 
+// Build an explicit exports map from source files so Node can resolve both
+// bare directory imports (e.g. @rntwsc/nodejs/entrypoint -> index.ts) and
+// exact file imports without relying on wildcard fallback arrays, which many
+// runtimes (tsx, older Metro) do not implement correctly.
+const buildExports = async (
+  mod: ModuleName,
+): Promise<Record<string, string>> => {
+  const srcMod = path.join(packagesRoot, mod)
+  const [codeFiles, assetFiles] = await Promise.all([
+    glob('**/*.{ts,tsx,js,jsx}', {
+      cwd: srcMod,
+      ignore: ['**/*.test.*'],
+      relative: true,
+    }),
+    glob('**/*.{svg,css,scss}', {
+      cwd: srcMod,
+      relative: true,
+    }),
+  ])
+
+  const result: Record<string, string> = {}
+
+  for (const f of codeFiles) {
+    const noExt = f.replace(/\.(tsx?|jsx?)$/, '')
+    result[`./${f}`] = `./${f}`
+    result[`./${noExt}`] = `./${f}`
+    if (path.basename(noExt) === 'index') {
+      const dir = path.dirname(noExt)
+      result[dir === '.' ? '.' : `./${dir}`] = `./${f}`
+    }
+  }
+
+  for (const f of assetFiles) {
+    result[`./${f}`] = `./${f}`
+  }
+
+  for (const f of extraCopy[mod]) {
+    result[`./${f}`] = `./${f}`
+  }
+
+  return result
+}
+
+// Write the dist package.json with merged deps and exports map.
 const writePackageJson = async (mod: ModuleName) => {
-  const deps = await mergeDeps(mod)
+  const [deps, exports] = await Promise.all([mergeDeps(mod), buildExports(mod)])
 
   const pkg: PkgJson = {
     name: `${scope}/${mod}`,
     version,
     type: 'commonjs',
+    exports,
   }
   depKeys
     .filter(k => Object.keys(deps[k]).length)
@@ -160,79 +160,21 @@ const writePackageJson = async (mod: ModuleName) => {
 }
 
 // ---------------------------------------------------------------------------
-// tsc
+// Copy assets
 
-const writeTsconfig = async (mod: ModuleName) => {
-  // Build explicit paths only - no broad @/* fallback
-  // will become "cannot find module" errors which are suppressed by noEmitOnError:false
-  // This prevents TypeScript from following unknown @/ aliases and emitting stray declaration
-  const paths: Record<string, string[]> = {
-    [`@/${mod}/*`]: [`./${packages}/${mod}/*`],
-  }
-  for (const dep of cross[mod]) {
-    paths[`@/${dep}/*`] = [`./${dist}/${dep}/*`]
-  }
-
-  const config = {
-    extends: './tsconfig.base.json',
-    compilerOptions: {
-      rootDir: `./${packages}/${mod}`,
-      outDir: `./${dist}/${mod}`,
-      module: 'esnext',
-      moduleResolution: 'bundler',
-      types: [],
-      allowJs: false,
-      checkJs: false,
-      declaration: true,
-      noEmit: false,
-      paths,
-    },
-    include: [`./${packages}/${mod}/**/*`, `./${packages}/**/*.d.ts`],
-    exclude: [`./${packages}/${mod}/**/*.test.*`],
-  }
-
-  const tmp = path.join(repoRoot, `tsconfig.${mod}.local.json`)
-  await fs.writeJson(tmp, config)
-  return tmp
-}
-
-const compile = async (mod: ModuleName, tsconfigPath: string) => {
-  const execCmd = cmd({
-    bin: await bin(repoRoot, 'tsc'),
-    args: [['--project', tsconfigPath]],
-    argsJoinUsingSpace: true,
-  })
-  await exec(execCmd)
-
-  const distMod = path.join(distRoot, mod)
-  if (!(await fs.exists(distMod))) {
-    log.fatal(`tsc produced no output for ${mod}`)
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Asset copying (non-TS files tsc doesn't handle)
-
-const copyAssets = async (mod: ModuleName) => {
+// Copy source files as-is to dist. No transpilation - the consuming bundler
+// (Metro, Vite) handles that. Extra root-level files (e.g. tsconfig.base.json)
+// can be added per-module via extraCopy.
+const copy = async (mod: ModuleName) => {
   const src = path.join(packagesRoot, mod)
   const dst = path.join(distRoot, mod)
 
-  const srcFiles = await glob('**/*.{js,d.ts,svg,css,scss}', {
+  await fs.ensureDir(dst)
+
+  const srcFiles = await glob('**/*.{ts,tsx,js,jsx,svg,css,scss}', {
     cwd: src,
+    ignore: ['**/*.test.*'],
   })
-
-  const srcSet = new Set(srcFiles)
-  const errs = srcFiles
-    .filter(f => f.endsWith('.js') && !srcSet.has(`${f.slice(0, -3)}.d.ts`))
-    .map(f => path.relative(packagesRoot, f))
-    .map(f => `${f}: js file is missing corresponding .d.ts`)
-
-  if (errs.length) {
-    for (const e of errs) {
-      log.error(e)
-    }
-    log.fatal(`${errs.length} js file(s) missing .d.ts in module "${mod}"`)
-  }
 
   const promises = srcFiles.map(async srcFull => {
     const rel = path.relative(src, srcFull)
@@ -240,25 +182,30 @@ const copyAssets = async (mod: ModuleName) => {
     await fs.ensureDir(path.dirname(dstFull))
     await fs.copyFile(srcFull, dstFull)
   })
-  await Promise.all(promises)
+  await Promise.all([
+    ...promises,
+    ...extraCopy[mod].map(f =>
+      fs.copyFile(path.join(repoRoot, f), path.join(dst, f)),
+    ),
+  ])
 }
 
 // ---------------------------------------------------------------------------
-// Import rewriting
+// Rewrite imports
 
+// Rewrite all @/ alias imports in dist files to @rntwsc/ scoped package
+// imports so they resolve correctly after installation in node_modules.
 const rewriteAlias = async (mod: ModuleName): Promise<void> => {
   const distMod = path.join(distRoot, mod)
 
-  const files: string[] = await globby('**/*.{js,d.ts}', {
+  const files: string[] = await globby('**/*.{ts,tsx,js,jsx}', {
     cwd: distMod,
     gitignore: false,
     absolute: true,
     onlyFiles: true,
   })
 
-  const results = await Promise.all(
-    files.map(f => rewriteAliasInFile(f, mod, distMod)),
-  )
+  const results = await Promise.all(files.map(f => rewriteAliasInFile(f, mod)))
 
   const errs = results.flat()
   if (!errs.length) {
@@ -271,10 +218,12 @@ const rewriteAlias = async (mod: ModuleName): Promise<void> => {
   log.fatal(`${errs.length} unresolvable import(s) in module "${mod}"`)
 }
 
+// Rewrite aliases in a single file. Same-module and cross-module imports both
+// become @rntwsc/ paths - same-module self-references resolve via the exports
+// map generated by buildExports.
 const rewriteAliasInFile = async (
   f: string,
   mod: ModuleName,
-  distMod: string,
 ): Promise<string[]> => {
   const original = await fs.readFile(f, 'utf8')
   const errs: string[] = []
@@ -289,21 +238,10 @@ const rewriteAliasInFile = async (
       const subPath = slashIdx === -1 ? '' : withoutAt.slice(slashIdx + 1)
 
       if (importMod !== mod && !cross[mod].includes(importMod as ModuleName)) {
-        const relative = path.relative(packagesRoot, f)
         errs.push(
-          `${relative}: unresolvable import "${importPath}" - "${importMod}" is not in cross deps for "${mod}"`,
+          `${path.relative(packagesRoot, f)}: unresolvable import "${importPath}" - "${importMod}" is not in cross deps for "${mod}"`,
         )
         return m
-      }
-
-      if (importMod === mod) {
-        const fileDir = path.dirname(f)
-        const target = subPath ? path.join(distMod, subPath) : distMod
-        let rel = path.relative(fileDir, target).replace(/\\/g, '/')
-        if (!rel.startsWith('.')) {
-          rel = `./${rel}`
-        }
-        return `${q}${rel}${q}`
       }
 
       const pkg = subPath

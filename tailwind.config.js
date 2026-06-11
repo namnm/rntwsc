@@ -1,5 +1,4 @@
 // reexport config at root to be compatible with vscode intellisense
-
 require('./devtools-register')
 const { mergeWithArray } = require('@/shared/lodash')
 

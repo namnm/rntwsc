@@ -3,7 +3,8 @@
 
 require('tsconfig-paths/register')
 require('@/nodejs/entrypoint')({
-  cwd: __dirname,
+  target: __dirname,
+  alias: false,
 })
 const { mergeWithArray } = require('@/shared/lodash')
 

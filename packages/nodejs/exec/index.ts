@@ -1,7 +1,7 @@
 import child_process from 'node:child_process'
 
 import { repoRoot } from '@/nodejs/entrypoint/root'
-import { isRepoRoot, path, resolvePath } from '@/nodejs/path'
+import { isRepoRoot, path, resolvePath, resolvePathErr } from '@/nodejs/path'
 import { jsonSafe } from '@/shared/json-safe'
 
 export const exec = (cmd: string) =>
@@ -35,18 +35,18 @@ export type Cmd = {
 export const cmd = (c: Cmd) => {
   const b = jsonSafe(c.bin)
   const eq = c.argsJoinUsingSpace ? ' ' : '='
-  let ag = ''
+  let args = ''
   c.args?.forEach(a => {
     if (a.length === 2) {
-      ag += ` ${a[0]}${eq}${jsonSafe(a[1])}`
+      args += ` ${a[0]}${eq}${jsonSafe(a[1])}`
     } else if (a.length === 1) {
-      ag += ` ${a[0]}`
+      args += ` ${a[0]}`
     } else {
       throw new Error(`${path.basename(c.bin)} invalid arg.length=${a.length}`)
     }
   })
-  const tgt = c.target ? ` ${jsonSafe(c.target)}` : ''
-  return `${b}${ag}${tgt}`
+  const target = c.target ? ` ${jsonSafe(c.target)}` : ''
+  return `${b}${args}${target}`
 }
 
 export const bin = async (dir: string, name: string) => {
@@ -56,7 +56,7 @@ export const bin = async (dir: string, name: string) => {
       return await resolvePath(current, `node_modules/.bin/${name}`)
     } catch {
       if (isRepoRoot(current) || current === '/') {
-        throw new Error(`Cannot resolve bin: ${name}`)
+        throw resolvePathErr(`bin: ${name}`)
       }
       current = path.dirname(current)
     }

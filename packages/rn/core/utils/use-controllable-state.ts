@@ -18,10 +18,10 @@ export const useControllableState = <T>({
 
   if (process.env.NODE_ENV !== 'production') {
     if (controlledRef.current !== isControlled) {
+      const fr = controlledRef.current ? 'controlled' : 'uncontrolled'
+      const to = isControlled ? 'controlled' : 'uncontrolled'
       console.error(
-        `useControllableState: component switched from ${
-          controlledRef.current ? 'controlled' : 'uncontrolled'
-        } to ${isControlled ? 'controlled' : 'uncontrolled'} mode`,
+        `useControllableState: component switched from ${fr} to ${to} mode`,
       )
       controlledRef.current = isControlled
     }

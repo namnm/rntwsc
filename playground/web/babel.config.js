@@ -3,7 +3,9 @@
 
 require('tsconfig-paths/register')
 require('@/nodejs/entrypoint')({
-  cwd: __dirname,
+  target: __dirname,
+  babel: false,
+  alias: false,
 })
 
 module.exports = require('@/devtools/babel-config').config({

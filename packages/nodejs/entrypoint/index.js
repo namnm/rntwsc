@@ -1,15 +1,24 @@
-/** @param {{cwd?: string, repoRoot?: string, env?: true, babel?: true, req?: string}} options */
-module.exports = ({ cwd, repoRoot, env, babel, req } = {}) => {
-  if (!cwd) {
+/** @param {import('.').EntrypointOptions} options */
+module.exports = ({
+  target,
+  repoRoot,
+  env,
+  alias = true,
+  babel = true,
+  override,
+  req,
+} = {}) => {
+  if (!target) {
     // in some cases like IDE eslint, prettier.. the cwd could be invalid
-    throw new Error('Missing cwd in entrypoint')
+    throw new Error('Missing target in entrypoint')
   }
 
+  // --------------------------------------------------------------------------
+  // verify and set repo root
   const fs = require('node:fs')
   const path = require('node:path')
-
   if (!repoRoot) {
-    let dir = cwd
+    let dir = target
     while (dir !== path.dirname(dir)) {
       const pnpm = path.join(dir, 'pnpm-workspace.yaml')
       if (fs.existsSync(pnpm)) {
@@ -19,7 +28,7 @@ module.exports = ({ cwd, repoRoot, env, babel, req } = {}) => {
       dir = path.dirname(dir)
     }
     if (!repoRoot) {
-      throw new Error(`Failed to find pnpm-workspace.yaml from ${cwd}`)
+      throw new Error(`Failed to find pnpm-workspace.yaml from ${target}`)
     }
   } else {
     const pnpm = path.join(repoRoot, 'pnpm-workspace.yaml')
@@ -29,6 +38,7 @@ module.exports = ({ cwd, repoRoot, env, babel, req } = {}) => {
   }
   require('./root').setRepoRoot(repoRoot)
 
+  // --------------------------------------------------------------------------
   // try to load .env and .env.example all together from dir up to root
   if (env) {
     // transpiler is not registered yet, can not import typescript, need to copy from `@/nodejs/path`
@@ -39,7 +49,7 @@ module.exports = ({ cwd, repoRoot, env, babel, req } = {}) => {
 
     /** @type {string[]} */
     const envDirs = []
-    let currentDir = cwd
+    let currentDir = target
     if (isInRepo(currentDir)) {
       while (isInRepo(currentDir)) {
         envDirs.push(currentDir)
@@ -70,6 +80,7 @@ module.exports = ({ cwd, repoRoot, env, babel, req } = {}) => {
     }
   }
 
+  // --------------------------------------------------------------------------
   // register json5 if not yet
   const exts = require.extensions
   if (!exts['.json5']) {
@@ -80,37 +91,54 @@ module.exports = ({ cwd, repoRoot, env, babel, req } = {}) => {
     })
   }
 
+  // --------------------------------------------------------------------------
+  // register tsconfig-paths to use aliases
+  if (alias) {
+    const tsconfig = path.join(target, 'tsconfig.json')
+    const paths = require(tsconfig).compilerOptions.paths
+    require('tsconfig-paths').register({
+      cwd: target,
+      baseUrl: target,
+      paths,
+    })
+  }
+
+  // --------------------------------------------------------------------------
   // register transpiler to be able to import typescript
   if (babel) {
     const babelrc = require('@/nodejs/babelrc')
     require('@babel/register')(babelrc)
   } else {
-    require('ts-node').register({
-      transpileOnly: true,
-    })
-  }
-  // override .js/.jsx to also transpile published @rntwsc packages installed in node_modules
-  const jsH = exts['.js']
-  const tsH = exts['.ts']
-  const jsxH = exts['.jsx']
-  const tsxH = exts['.tsx']
-  /** @typedef {(m: import('module').Module, filename: string) => void} ExtHandler */
-  /** @type {(js: ExtHandler, ts: ExtHandler) => ExtHandler} */
-  const overrideExtHandler = (js, ts) => (m, filename) => {
-    if (filename.includes('@rntwsc')) {
-      return ts(m, filename)
-    }
-    return js(m, filename)
-  }
-  if (tsH) {
-    exts['.js'] = overrideExtHandler(jsH, tsH)
-  }
-  if (tsxH) {
-    exts['.jsx'] = overrideExtHandler(jsxH || tsxH, tsxH)
+    require('tsx/cjs')
   }
 
+  // --------------------------------------------------------------------------
+  // override to also transpile published @rntwsc packages in node_modules
+  if (override) {
+    const jsH = exts['.js']
+    const tsH = exts['.ts']
+    const jsxH = exts['.jsx']
+    const tsxH = exts['.tsx']
+    /** @typedef {(m: import('module').Module, filename: string) => void} ExtHandler */
+    /** @type {(js: ExtHandler, ts: ExtHandler) => ExtHandler} */
+    const overrideExtHandler = (js, ts) => (m, filename) => {
+      if (filename.includes('@rntwsc')) {
+        return ts(m, filename)
+      }
+      return js(m, filename)
+    }
+    if (tsH) {
+      exts['.js'] = overrideExtHandler(jsH, tsH)
+    }
+    if (tsxH) {
+      exts['.jsx'] = overrideExtHandler(jsxH || tsxH, tsxH)
+    }
+  }
+
+  // --------------------------------------------------------------------------
   // now we should be able to import typescript from now on
-  // check shortcut to require another module in this call
+  // req is the shortcut to require a module together in this call
+  // with some clean up and global error handlers
   if (!req) {
     return
   }
@@ -142,5 +170,4 @@ module.exports = ({ cwd, repoRoot, env, babel, req } = {}) => {
   } catch (err) {
     log.stack(err, 'fatal')
   }
-  return
 }

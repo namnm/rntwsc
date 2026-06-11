@@ -12,10 +12,11 @@ publish:
 	&& exit 1)) \
 	&& pnpm dist \
 	&& printf '/*\n!/dist\n' > .gitignore \
-	&& git branch -D dist 2>/dev/null \
+	&& (git branch -D dist 2>/dev/null \
+	|| true) \
 	&& git checkout --orphan dist \
 	&& git rm -rf --cached . \
-	&& git add dist/ .gitignore \
+	&& git add dist \
 	&& git commit -m "dist" \
 	&& git push -uf origin dist \
 	&& git log -1 --format="%H" \

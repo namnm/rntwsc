@@ -1,5 +1,4 @@
 // reexport config at root to be compatible with vscode intellisense
-
 const paths = () => {
   // treat json extension as json5 to import json with comments
   require('json5/lib/register')
@@ -19,7 +18,7 @@ require('tsconfig-paths').register({
 })
 
 require('@/nodejs/entrypoint')({
-  cwd: __dirname,
+  target: __dirname,
   env: true,
-  babel: true,
+  alias: false,
 })

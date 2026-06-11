@@ -1,6 +1,7 @@
 require('tsconfig-paths/register')
 require('@/nodejs/entrypoint')({
-  cwd: __dirname,
+  target: __dirname,
+  alias: false,
 })
 
 module.exports = require('@/devtools/next-config').config({
