@@ -5,4 +5,4 @@ require('tsconfig-paths/register')
 require('@/nodejs/entrypoint')({
   cwd: __dirname,
 })
-module.exports = require('./transformer-ts')
+module.exports = require('./transform')

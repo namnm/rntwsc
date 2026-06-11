@@ -220,6 +220,20 @@ const copyAssets = async (mod: ModuleName) => {
   const srcFiles = await glob('**/*.{js,d.ts,svg,css,scss}', {
     cwd: src,
   })
+
+  const srcSet = new Set(srcFiles)
+  const errs = srcFiles
+    .filter(f => f.endsWith('.js') && !srcSet.has(`${f.slice(0, -3)}.d.ts`))
+    .map(f => path.relative(packagesRoot, f))
+    .map(f => `${f}: js file is missing corresponding .d.ts`)
+
+  if (errs.length) {
+    for (const e of errs) {
+      log.error(e)
+    }
+    log.fatal(`${errs.length} js file(s) missing .d.ts in module "${mod}"`)
+  }
+
   const promises = srcFiles.map(async srcFull => {
     const rel = path.relative(src, srcFull)
     const dstFull = path.join(dst, rel)

@@ -82,11 +82,31 @@ module.exports = ({ cwd, repoRoot, env, babel, req } = {}) => {
 
   // register transpiler to be able to import typescript
   if (babel) {
-    require('@babel/register')(require('@/nodejs/babelrc'))
+    const babelrc = require('@/nodejs/babelrc')
+    require('@babel/register')(babelrc)
   } else {
     require('ts-node').register({
       transpileOnly: true,
     })
+  }
+  // override .js/.jsx to also transpile published @rntwsc packages installed in node_modules
+  const jsH = exts['.js']
+  const tsH = exts['.ts']
+  const jsxH = exts['.jsx']
+  const tsxH = exts['.tsx']
+  /** @typedef {(m: import('module').Module, filename: string) => void} ExtHandler */
+  /** @type {(js: ExtHandler, ts: ExtHandler) => ExtHandler} */
+  const overrideExtHandler = (js, ts) => (m, filename) => {
+    if (filename.includes('@rntwsc')) {
+      return ts(m, filename)
+    }
+    return js(m, filename)
+  }
+  if (tsH) {
+    exts['.js'] = overrideExtHandler(jsH, tsH)
+  }
+  if (tsxH) {
+    exts['.jsx'] = overrideExtHandler(jsxH || tsxH, tsxH)
   }
 
   // now we should be able to import typescript from now on

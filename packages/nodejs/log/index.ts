@@ -37,7 +37,7 @@ export class Log {
   level: LogLevel = 'debug'
 
   displayNodeModulesPath: boolean = true
-  minimal: boolean = false
+  minimal: boolean = true
 
   stack = ((err: unknown, lv: LogLevel = 'error') => {
     if (!err) {
@@ -234,6 +234,3 @@ export class Log {
 }
 
 export const log = new Log()
-
-export const minimal = new Log()
-minimal.minimal = true

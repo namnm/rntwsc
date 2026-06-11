@@ -1,7 +1,7 @@
 import Module from 'node:module'
 
 import { repoRoot } from '@/nodejs/entrypoint/root'
-import { minimal as log } from '@/nodejs/log'
+import { log } from '@/nodejs/log'
 import { isInRepo, path } from '@/nodejs/path'
 import { circularDeps } from '@/shared/circular-deps'
 

@@ -1,6 +1,6 @@
 // shortcut to run devtools scripts
 
-import { minimal as log } from '@/nodejs/log'
+import { log } from '@/nodejs/log'
 
 const supported = [
   'doctoc',

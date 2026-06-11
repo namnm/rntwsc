@@ -36,28 +36,37 @@
     "emitDecoratorMetadata": false
   },
   "exclude": [
-    /** taken from gitignore */
+    // AUTOMATICALLY INHERIT FROM GITIGNORE - BEGIN
     "**/build/",
+    "**/xcuserdata/",
+    "**/DerivedData/",
     "**/.cxx/",
     "**/.idea/",
     "**/.kotlin/",
+    "**/.gradle/",
     "**/node_modules/",
     "**/.pnpm/",
     "**/.pnpm-store/",
     "**/.pnp/",
+    "**/logs/",
+    "**/fastlane/screenshots/",
+    "**/fastlane/test_output/",
     "**/ios/Pods/",
     "**/vendor/bundle/",
     "**/coverage/",
     "**/.vscode/",
     "**/dist/",
+    "**/dist-*/",
     "**/.next/",
     "**/.vercel/",
     "**/out/",
     "**/.velite/",
     "**/.tamagui/",
+    "**/.terraform/",
     "**/.*-cache/",
     "**/target/",
-    /** match with eslint */
+    // match with eslint
     "**/*.min.*"
+    // AUTOMATICALLY INHERIT FROM GITIGNORE - END
   ]
 }
