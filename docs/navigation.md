@@ -5,10 +5,10 @@ Works across server, client, and native with a unified API.
 ## Add a route
 
 ```ts
-// 1. playground/src/pages/route-paths.ts
+// 1. playground/app/src/pages/route-paths.ts
 export const rProfile = '/profile'
 
-// 2. playground/src/pages/routes.native.ts - register page for RN
+// 2. playground/app/src/pages/routes.native.ts - register page for RN
 import { ProfilePage } from '#/pages/profile'
 import { rProfile } from '#/pages/route-paths'
 export const routesNative = {
@@ -16,15 +16,15 @@ export const routesNative = {
   [rProfile]: ProfilePage,
 }
 
-// 3. playground/src/pages/routes.ts - declare params if any (omit if no params)
+// 3. playground/app/src/pages/routes.ts - declare params if any (omit if no params)
 export type RoutesData = {
   [rProfile]: { userId: string }
 }
 
-// 4. playground-web/src/app/[locale]/profile/page.tsx - web page
+// 4. playground/web/src/app/[locale]/profile/page.tsx - web page
 export { ProfilePage as default } from '#/pages/profile'
 
-// 5. playground/src/components/nav-layout/index.tsx - sidebar link
+// 5. playground/app/src/components/nav-layout/index.tsx - sidebar link
 <NavSidebarLink href={rProfile} label='Profile' />
 ```
 
@@ -62,8 +62,8 @@ Platform entry points in `packages/rn/core/navigation/`:
 | `index.client.ts` | Client components | `usePathname()` + `useSearchParams()` from `next-unchecked/navigation` |
 | `index.native.ts` | React Native      | Wraps `useRoute` + `useIsFocused` from `@react-navigation/native`      |
 
-On native, `routesNative` is passed to `createNativeStackNavigator` and wrapped with `createStaticNavigation` in `playground/src/app.native.tsx`. On web, Next.js file-system routing handles everything under `playground-web/src/app/[locale]/`.
+On native, `routesNative` is passed to `createNativeStackNavigator` and wrapped with `createStaticNavigation` in `playground/app/src/app.native.tsx`. On web, Next.js file-system routing handles everything under `playground/web/src/app/[locale]/`.
 
 `route-paths.ts` is kept separate from `routes.native.ts` to avoid circular imports between the route map and page components.
 
-The typed `Link` at `playground/src/components/link.tsx` wraps the framework's `LinkUntyped` with the app's `Routes` and `RoutesData` types. On web it prepends the current locale to the pathname.
+The typed `Link` at `playground/app/src/components/link.tsx` wraps the framework's `LinkUntyped` with the app's `Routes` and `RoutesData` types. On web it prepends the current locale to the pathname.

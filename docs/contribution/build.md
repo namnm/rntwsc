@@ -67,23 +67,6 @@ dist/
     ...
 ```
 
-## Consumer setup
-
-Add to `package.json` dependencies, pinning to a commit hash on the dist branch:
-
-```json
-{
-  "dependencies": {
-    "@rntwsc/shared": "github:org/repo#<hash>&path:shared",
-    "@rntwsc/nodejs": "github:org/repo#<hash>&path:nodejs",
-    "@rntwsc/rn": "github:org/repo#<hash>&path:rn",
-    "@rntwsc/devtools": "github:org/repo#<hash>&path:devtools"
-  }
-}
-```
-
-And register tsconfig-paths at runtime (e.g. via `node -r tsconfig-paths/register`).
-
 ## tsconfig approach
 
 Each module gets a temporary `tsconfig.<mod>.dist.local.json` (deleted after build).

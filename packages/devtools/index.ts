@@ -54,6 +54,7 @@ export const run = async (o: Options) => {
   checkAndPush(promises, 'prettier', o)
   checkAndPush(promises, 'tsc', o)
   checkAndPush(promises, 'type-coverage', o)
+  checkAndPush(promises, 'build-dist', o)
 
   await Promise.all(promises).catch((err: Error) => log.stack(err, 'fatal'))
 }

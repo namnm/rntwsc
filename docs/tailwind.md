@@ -106,7 +106,7 @@ These class names compile to RN props instead of style:
 
 ## Minify
 
-On web, class names can be minified with [postcss-rename](https://github.com/google/postcss-rename) since the Babel plugin captures all references. See `playground-web/postcss.config.js` - emits the minified class name map to `playground/src/codegen/class-names.min.json`.
+On web, class names can be minified with [postcss-rename](https://github.com/google/postcss-rename) since the Babel plugin captures all references. See `playground/web/postcss.config.js` - emits the minified class name map to `playground/app/src/codegen/class-names.min.json`.
 
 ## cva convention
 

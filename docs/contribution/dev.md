@@ -12,11 +12,12 @@
 pnpm install
 
 # Web (Next.js)
-pnpm --filter playground-web dev
+cd playground/web
+pnpm start
 
 # React Native (Metro)
-pnpm --filter playground start
-# then press i (iOS) or a (Android)
+cd playground/app
+pnpm start
 ```
 
 ## Building packages
@@ -30,10 +31,10 @@ Compiles all four modules (`shared`, `nodejs`, `rn`, `devtools`) to `dist/` in d
 ## Workspace layout
 
 ```
-packages/rn/          framework source
-playground/           React Native app + shared pages
-playground-web/       Next.js app
-dist/                 dist output (committed on dist branch)
+packages/rn           framework source
+playground/app        React Native app + shared pages
+playground/web        Next.js app
+dist                  dist output (committed on dist branch)
 ```
 
 ## Adding an SVG icon

@@ -5,7 +5,7 @@
 - **Theme** - no docs on how dark mode works, how to switch themes, how to add a custom theme. The 10 built-in themes are mentioned in README but undocumented.
 - **Development workflow** - no docs on how to start the playground (RN + web), run tests, or build for production.
 - **Adding an SVG icon** - `docs/assets.md` covers usage but not how to add a new icon to `packages/rn/svg-icons/`.
-- **Polyfill system** - no docs on what platform polyfills exist or where to add new ones (`playground/src/polyfill/`).
+- **Polyfill system** - no docs on what platform polyfills exist or where to add new ones (`playground/app/src/polyfill/`).
 
 ## Gaps in existing docs
 

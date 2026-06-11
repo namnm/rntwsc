@@ -13,7 +13,7 @@ const distRoot = path.join(repoRoot, dist)
 const scope = '@rntwsc'
 const version = '0.0.0'
 
-// our private packages modules with import paths start with '@/...'
+// our private packages modules with import paths start with @/..
 const aliasRegex = /(['"])(@\/[^'"]+)\1/g
 
 type ModuleName = 'shared' | 'nodejs' | 'rn' | 'devtools'
@@ -24,6 +24,74 @@ const cross: Record<ModuleName, ModuleName[]> = {
   nodejs: ['shared'],
   rn: ['shared'],
   devtools: ['shared', 'nodejs', 'rn'],
+}
+
+// ---------------------------------------------------------------------------
+// main
+
+export const run = async () => {
+  await prepareTypes()
+  await fs.remove(distRoot)
+  await fs.ensureDir(distRoot)
+  for (const mod of modules) {
+    await build(mod)
+  }
+}
+
+const build = async (mod: ModuleName): Promise<void> => {
+  const tsconfigPath = await writeTsconfig(mod)
+  try {
+    await compile(mod, tsconfigPath)
+    await Promise.all([
+      copyAssets(mod),
+      rewriteAlias(mod),
+      writePackageJson(mod),
+    ])
+  } finally {
+    await fs.remove(tsconfigPath)
+  }
+}
+
+// ---------------------------------------------------------------------------
+// prepare types
+
+// those packages have their own declaration without @types
+const prepareTypesExtra = new Set(['ulidx'])
+
+const prepareTypes = async () => {
+  const paths = await glob('**/package.json')
+  const repoRootNodeModules = path.join(repoRoot, 'node_modules')
+
+  const promises = paths.map(async p => {
+    const pkg = (await fs.readJson(p)) as SubPkgJson
+    const pkgDir = path.dirname(p)
+
+    const allPkgNames = Object.keys({
+      ...pkg.dependencies,
+      ...pkg.peerDependencies,
+      ...pkg.devDependencies,
+    })
+    const toLink = allPkgNames.filter(
+      k => k.startsWith('@types/') || prepareTypesExtra.has(k),
+    )
+
+    await Promise.all(
+      toLink.map(async typesPkg => {
+        const src = path.join(pkgDir, 'node_modules', typesPkg)
+        const dst = path.join(repoRootNodeModules, typesPkg)
+        const [srcExists] = await Promise.all([
+          fs.exists(src),
+          fs.ensureDir(path.dirname(dst)),
+        ])
+        if (!srcExists) {
+          return
+        }
+        return fs.symlink(src, dst).catch(() => {})
+      }),
+    )
+  })
+
+  await Promise.all(promises)
 }
 
 // ---------------------------------------------------------------------------
@@ -89,48 +157,6 @@ const writePackageJson = async (mod: ModuleName) => {
     })
 
   await fs.writeJson(path.join(distRoot, mod, 'package.json'), pkg)
-}
-
-// ---------------------------------------------------------------------------
-// prepare types
-
-// those packages have their own declaration without @types
-const prepareTypesExtra = new Set(['ulidx'])
-
-const prepareTypes = async () => {
-  const paths = await glob('**/package.json')
-  const repoRootNodeModules = path.join(repoRoot, 'node_modules')
-
-  const promises = paths.map(async p => {
-    const pkg = (await fs.readJson(p)) as SubPkgJson
-    const pkgDir = path.dirname(p)
-
-    const allPkgNames = Object.keys({
-      ...pkg.dependencies,
-      ...pkg.peerDependencies,
-      ...pkg.devDependencies,
-    })
-    const toLink = allPkgNames.filter(
-      k => k.startsWith('@types/') || prepareTypesExtra.has(k),
-    )
-
-    await Promise.all(
-      toLink.map(async typesPkg => {
-        const src = path.join(pkgDir, 'node_modules', typesPkg)
-        const dst = path.join(repoRootNodeModules, typesPkg)
-        const [srcExists] = await Promise.all([
-          fs.exists(src),
-          fs.ensureDir(path.dirname(dst)),
-        ])
-        if (!srcExists) {
-          return
-        }
-        return fs.symlink(src, dst).catch(() => {})
-      }),
-    )
-  })
-
-  await Promise.all(promises)
 }
 
 // ---------------------------------------------------------------------------
@@ -206,12 +232,37 @@ const copyAssets = async (mod: ModuleName) => {
 // ---------------------------------------------------------------------------
 // Import rewriting
 
-const rewriteFile = async (
-  filePath: string,
+const rewriteAlias = async (mod: ModuleName): Promise<void> => {
+  const distMod = path.join(distRoot, mod)
+
+  const files: string[] = await globby('**/*.{js,d.ts}', {
+    cwd: distMod,
+    gitignore: false,
+    absolute: true,
+    onlyFiles: true,
+  })
+
+  const results = await Promise.all(
+    files.map(f => rewriteAliasInFile(f, mod, distMod)),
+  )
+
+  const errs = results.flat()
+  if (!errs.length) {
+    return
+  }
+
+  for (const e of errs) {
+    log.error(e)
+  }
+  log.fatal(`${errs.length} unresolvable import(s) in module "${mod}"`)
+}
+
+const rewriteAliasInFile = async (
+  f: string,
   mod: ModuleName,
-  distModDir: string,
+  distMod: string,
 ): Promise<string[]> => {
-  const original = await fs.readFile(filePath, 'utf8')
+  const original = await fs.readFile(f, 'utf8')
   const errs: string[] = []
 
   const rewritten = original.replace(
@@ -224,7 +275,7 @@ const rewriteFile = async (
       const subPath = slashIdx === -1 ? '' : withoutAt.slice(slashIdx + 1)
 
       if (importMod !== mod && !cross[mod].includes(importMod as ModuleName)) {
-        const relative = path.relative(packagesRoot, filePath)
+        const relative = path.relative(packagesRoot, f)
         errs.push(
           `${relative}: unresolvable import "${importPath}" - "${importMod}" is not in cross deps for "${mod}"`,
         )
@@ -232,8 +283,8 @@ const rewriteFile = async (
       }
 
       if (importMod === mod) {
-        const fileDir = path.dirname(filePath)
-        const target = subPath ? path.join(distModDir, subPath) : distModDir
+        const fileDir = path.dirname(f)
+        const target = subPath ? path.join(distMod, subPath) : distMod
         let rel = path.relative(fileDir, target).replace(/\\/g, '/')
         if (!rel.startsWith('.')) {
           rel = `./${rel}`
@@ -249,54 +300,8 @@ const rewriteFile = async (
   )
 
   if (rewritten !== original) {
-    await fs.writeFile(filePath, rewritten)
+    await fs.writeFile(f, rewritten)
   }
 
   return errs
 }
-
-const rewriteAll = async (mod: ModuleName): Promise<void> => {
-  const distModDir = path.join(distRoot, mod)
-
-  const files = await globby('**/*.{js,d.ts}', {
-    cwd: distModDir,
-    gitignore: false,
-    absolute: true,
-    onlyFiles: true,
-  })
-
-  const results = await Promise.all(
-    files.map(fileFull => rewriteFile(fileFull, mod, distModDir)),
-  )
-
-  const errs = results.flat()
-  if (errs.length > 0) {
-    for (const e of errs) {
-      log.error(e)
-    }
-    log.fatal(`${errs.length} unresolvable import(s) in module "${mod}"`)
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Main
-
-const build = async (mod: ModuleName): Promise<void> => {
-  const tsconfigPath = await writeTsconfig(mod)
-  try {
-    await compile(mod, tsconfigPath)
-    await Promise.all([copyAssets(mod), rewriteAll(mod), writePackageJson(mod)])
-  } finally {
-    await fs.remove(tsconfigPath)
-  }
-}
-
-const main = async () => {
-  await prepareTypes()
-  await fs.remove(distRoot)
-  await fs.ensureDir(distRoot)
-  for (const mod of modules) {
-    await build(mod)
-  }
-}
-main().catch(err => log.stack(err, 'fatal'))

@@ -2,14 +2,14 @@
 
 ## Key locations
 
-| What                               | Where                                             |
-| ---------------------------------- | ------------------------------------------------- |
-| Framework components               | `packages/rn/components/<name>/index.tsx`         |
-| Playground pages (shared RN + web) | `playground/src/pages/<name>/index.tsx`           |
-| Web routes                         | `playground-web/src/app/[locale]/<name>/page.tsx` |
-| Route constants                    | `playground/src/pages/route-paths.ts`             |
-| RN route map                       | `playground/src/pages/routes.native.ts`           |
-| Sidebar nav                        | `playground/src/components/nav-layout/index.tsx`  |
+| What                               | Where                                                |
+| ---------------------------------- | ---------------------------------------------------- |
+| Framework components               | `packages/rn/components/<name>/index.tsx`            |
+| Playground pages (shared RN + web) | `playground/app/src/pages/<name>/index.tsx`          |
+| Web routes                         | `playground/web/src/app/[locale]/<name>/page.tsx`    |
+| Route constants                    | `playground/app/src/pages/route-paths.ts`            |
+| RN route map                       | `playground/app/src/pages/routes.native.ts`          |
+| Sidebar nav                        | `playground/app/src/components/nav-layout/index.tsx` |
 
 ## Reference components
 
@@ -30,11 +30,11 @@ All components live under `packages/rn/components/`.
 ## Adding a component
 
 1. `packages/rn/components/<name>/index.tsx` - component
-2. `playground/src/pages/<name>/index.tsx` - demo page, show all variants
-3. `playground/src/pages/route-paths.ts` - `export const rFoo = '/foo'`
-4. `playground/src/pages/routes.native.ts` - import page + add to `routesNative`
-5. `playground-web/src/app/[locale]/<name>/page.tsx` - `export { FooPage as default } from '#/pages/<name>'`
-6. `playground/src/components/nav-layout/index.tsx` - `<NavSidebarLink href={rFoo} label='Foo' />`
+2. `playground/app/src/pages/<name>/index.tsx` - demo page, show all variants
+3. `playground/app/src/pages/route-paths.ts` - `export const rFoo = '/foo'`
+4. `playground/app/src/pages/routes.native.ts` - import page + add to `routesNative`
+5. `playground/web/src/app/[locale]/<name>/page.tsx` - `export { FooPage as default } from '#/pages/<name>'`
+6. `playground/app/src/components/nav-layout/index.tsx` - `<NavSidebarLink href={rFoo} label='Foo' />`
 
 When editing a component, update the playground demo if the API changed.
 
