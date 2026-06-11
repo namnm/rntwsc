@@ -230,7 +230,7 @@ export const config = ({
       'import/no-extraneous-dependencies': [
         warn,
         {
-          ignore: ['tsconfig-paths', 'json5'],
+          ignore: ['tsconfig-paths', 'json5', 'typescript'],
           includeTypes: true,
         },
       ],

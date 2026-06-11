@@ -127,20 +127,20 @@ const writeTsconfigBase = async (gitignore: string) => {
     .map(l => l.trim())
     .filter(l => l && !l.startsWith('#'))
 
-  const pad = '    '
-  const tsBeginMarker = `${pad}// ${beginMarkerMsg}`
-  const tsEndMarker = `${pad}// ${endMarkerMsg}`
+  const tsBeginMarker = `// ${beginMarkerMsg}`
+  const tsEndMarker = `// ${endMarkerMsg}`
 
   const managed = [
     tsBeginMarker,
-    ...dirs.map(d => `${pad}"${d}",`),
-    `${pad}// match with eslint`,
-    ...eslint.map(l => `${pad}"${l}",`),
+    ...dirs.map(d => `"${d}",`),
+    '// match with eslint',
+    ...eslint.map(l => `"${l}",`),
     tsEndMarker,
   ].join('\n')
 
   const beginIdx = existing.indexOf(tsBeginMarker)
   const endIdx = existing.indexOf(tsEndMarker)
+  const excludeKeyIdx = existing.indexOf('"exclude"')
 
   let result: string
   if (beginIdx !== -1 && endIdx !== -1) {
@@ -148,8 +148,17 @@ const writeTsconfigBase = async (gitignore: string) => {
       existing.slice(0, beginIdx) +
       managed +
       existing.slice(endIdx + tsEndMarker.length)
+  } else if (excludeKeyIdx === -1) {
+    const rootCloseIdx = existing.lastIndexOf('}')
+    result = [
+      existing.slice(0, rootCloseIdx).trimEnd() + ',',
+      '"exclude": [',
+      managed,
+      ']',
+      '}',
+      '',
+    ].join('\n')
   } else {
-    const excludeKeyIdx = existing.indexOf('"exclude"')
     const openIdx = existing.indexOf('[', excludeKeyIdx)
     let depth = 1
     let pos = openIdx + 1
@@ -164,7 +173,7 @@ const writeTsconfigBase = async (gitignore: string) => {
     result = [
       existing.slice(0, openIdx + 1),
       managed,
-      '  ' + existing.slice(pos - 1),
+      existing.slice(pos - 1),
     ].join('\n')
   }
 

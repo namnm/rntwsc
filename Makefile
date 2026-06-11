@@ -5,19 +5,37 @@ extract:
 	@export NEXT_PUBLIC_MINIFY_CLASS_NAMES=1 \
 	&& node ./babel-extract;
 
+publish:
+	@((git diff --quiet \
+	&& git diff --cached --quiet) \
+	|| (echo "error: uncommitted changes" \
+	&& exit 1)) \
+	&& pnpm dist \
+	&& printf '/*\n!/dist\n' > .gitignore \
+	&& git branch -D dist 2>/dev/null \
+	&& git checkout --orphan dist \
+	&& git rm -rf --cached . \
+	&& git add dist/ .gitignore \
+	&& git commit -m "dist" \
+	&& git push -uf origin dist \
+	&& git log -1 --format="%H" \
+	&& git checkout master;
+
 ###############################################################################
 # clean
 
 clean:
 	@make clean_rm \
-	&& pnpm ci && pnpm dedupe \
-	&& cd ./playground \
+	&& pnpm clean \
+	&& pnpm dedupe \
+	&& cd ./playground/app \
 	&& cd ./ios \
 	&& pod install --repo-update \
-	&& cd ../android && ./gradlew clean;
+	&& cd ../android \
+	&& ./gradlew clean;
 
 clean_rm:
-	@cd ./playground \
+	@cd ./playground/app \
 	&& rm -rf \
 		./ios/build \
 		./ios/Pods \
@@ -29,8 +47,9 @@ clean_rm:
 
 clean_deep:
 	@make clean_deep_rm \
-	&& pnpm ci && pnpm dedupe \
-	&& cd ./playground \
+	&& pnpm clean \
+	&& pnpm dedupe \
+	&& cd ./playground/app \
 	&& cd ./ios \
 	&& pod cache clean --all \
 	&& pod deintegrate \
