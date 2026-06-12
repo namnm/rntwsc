@@ -62,8 +62,9 @@ type PkgJson = Partial<Deps> & {
   name: string
   version: string
   type: string
-  exports: Record<string, string>
+  exports: Record<string, ExportsValue>
 }
+type ExportsValue = string | Record<string, string>
 type SubPkgJson = Partial<Deps>
 
 // Merge dependencies from all sub-package.json files within a module into one
@@ -97,13 +98,19 @@ const mergeDeps = async (mod: ModuleName) => {
   return merged
 }
 
+// Platform-specific file suffixes mapped to their exports condition names.
+// 'default' is not listed here - it is used for files with no platform suffix.
+const platformSuffixes: Record<string, string> = {
+  '.native': 'react-native',
+}
+
 // Build an explicit exports map from source files so Node can resolve both
 // bare directory imports (e.g. @rntwsc/nodejs/entrypoint -> index.ts) and
 // exact file imports without relying on wildcard fallback arrays, which many
 // runtimes (tsx, older Metro) do not implement correctly.
 const buildExports = async (
   mod: ModuleName,
-): Promise<Record<string, string>> => {
+): Promise<Record<string, ExportsValue>> => {
   const srcMod = path.join(packagesRoot, mod)
   const [codeFiles, assetFiles] = await Promise.all([
     glob('**/*.{ts,tsx,js,jsx}', {
@@ -117,27 +124,70 @@ const buildExports = async (
     }),
   ])
 
-  const result: Record<string, string> = {}
+  const codeExtRegex = /\.(tsx?|jsx?)$/
+  codeFiles.push(...extraCopy[mod].filter(f => codeExtRegex.test(f)))
+  assetFiles.push(...extraCopy[mod].filter(f => !codeExtRegex.test(f)))
+
+  const map: Record<string, ExportsValue> = {}
+
+  // Accumulate conditional exports: key -> { condition -> file }
+  const conditions = new Map<string, Record<string, string>>()
+  const addCondition = (key: string, file: string, condition: string) => {
+    conditions.getOrInsert(key, {})[condition] = file
+  }
 
   for (const f of codeFiles) {
-    const noExt = f.replace(/\.(tsx?|jsx?)$/, '')
-    result[`./${f}`] = `./${f}`
-    result[`./${noExt}`] = `./${f}`
-    if (path.basename(noExt) === 'index') {
-      const dir = path.dirname(noExt)
-      result[dir === '.' ? '.' : `./${dir}`] = `./${f}`
+    const noExt = f.replace(codeExtRegex, '')
+    // Detect platform suffix (e.g. foo.native -> base=foo, condition=react-native)
+    let base = noExt
+    let platform: string | undefined
+    for (const [suffix, condition] of Object.entries(platformSuffixes)) {
+      if (noExt.endsWith(suffix)) {
+        base = noExt.slice(0, -suffix.length)
+        platform = condition
+        break
+      }
+    }
+    if (!platform) {
+      platform = 'default'
+    }
+    // Exact file entry - always a direct string, never conditional
+    map[`./${f}`] = `./${f}`
+    // Explicit platform path without extension (e.g. ./foo.native)
+    map[`./${noExt}`] = `./${f}`
+    // Base path entry with condition (./foo -> react-native or default)
+    addCondition(`./${base}`, `./${f}`, platform)
+    // Directory entry when the base filename is 'index'
+    if (path.basename(base) === 'index') {
+      const dir = path.dirname(base)
+      addCondition(dir === '.' ? '.' : `./${dir}`, `./${f}`, platform)
+    }
+  }
+
+  // Emit conditional entries. Entries with only a 'default' stay as plain strings.
+  // 'default' must be last in the conditions object per the exports spec.
+  for (const [k, c] of conditions) {
+    const { default: d, ...platforms } = c
+    if (Object.keys(platforms).length) {
+      if (d) {
+        // default must be last
+        map[k] = {
+          ...platforms,
+          default: d,
+        }
+      } else {
+        map[k] = platforms
+      }
+    } else if (d) {
+      map[k] = d
     }
   }
 
   for (const f of assetFiles) {
-    result[`./${f}`] = `./${f}`
+    map[`./${f}`] = `./${f}`
   }
 
-  for (const f of extraCopy[mod]) {
-    result[`./${f}`] = `./${f}`
-  }
-
-  return result
+  return map
 }
 
 // Write the dist package.json with merged deps and exports map.
