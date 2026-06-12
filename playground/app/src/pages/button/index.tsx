@@ -5,6 +5,7 @@ import { H1, Span } from '@/rn/components/text'
 import { ScrollView } from '@/rn/core/components/scroll-view'
 import { View } from '@/rn/core/components/view'
 import { useSafeAreaPadding } from '@/rn/core/responsive/use-safe-area'
+import { isWeb } from '@/rn/core/utils/platform'
 import { NavLayout } from '#/components/nav-layout'
 
 const types = [
@@ -68,17 +69,21 @@ export const ButtonPage = async () => {
             <Span className='text-foreground text-lg font-semibold transition'>
               as child
             </Span>
-            <View className='gap-4'>
-              <Button asChild>
-                <a
-                  href='https://google.com'
-                  target='_blank'
-                  className='relative'
-                >
-                  <Span>Google</Span>
-                </a>
-              </Button>
-            </View>
+            {isWeb ? (
+              <View className='gap-4'>
+                <Button asChild>
+                  <a
+                    href='https://google.com'
+                    target='_blank'
+                    className='relative'
+                  >
+                    <Span>Google</Span>
+                  </a>
+                </Button>
+              </View>
+            ) : (
+              <Span>TODO: add example on native</Span>
+            )}
           </View>
 
           <View className='gap-3'>

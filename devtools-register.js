@@ -1,4 +1,8 @@
 // reexport config at root to be compatible with vscode intellisense
+// shortcut to run devtools scripts
+
+// current working directory can be different in vscode shell
+// we need to call register manually instead of tsconfig-paths/register
 const paths = () => {
   // treat json extension as json5 to import json with comments
   require('json5/lib/register')
@@ -8,9 +12,6 @@ const paths = () => {
   })
   return require('./tsconfig.json').compilerOptions.paths
 }
-
-// current working directory can be different in vscode shell
-// we need to call register manually instead of tsconfig-paths/register
 require('tsconfig-paths').register({
   paths: paths(),
   baseUrl: __dirname,

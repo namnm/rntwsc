@@ -17,12 +17,12 @@ const badgeCva = cva({
         text: 'text-xs',
       },
       md: {
-        container: 'px-2 py-0.5',
-        text: 'text-xs',
+        container: 'px-2.5 py-0.5',
+        text: 'text-sm',
       },
       lg: {
-        container: 'px-2.5 py-1',
-        text: 'text-sm',
+        container: 'px-3.5 py-1',
+        text: 'text-md',
       },
     },
     shape: {

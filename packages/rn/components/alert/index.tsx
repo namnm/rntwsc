@@ -28,7 +28,7 @@ const alertCva = cva({
     container: 'flex-row items-start gap-3',
     content: 'flex-1',
     icon: 'shrink-0',
-    title: 'text-base font-medium',
+    title: 'text-md font-medium',
     description: 'text-sm',
     action: 'ml-auto shrink-0',
   },

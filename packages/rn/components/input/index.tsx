@@ -51,8 +51,8 @@ const classNames = cva({
         slot: 'w-7',
       },
       lg: {
-        input: 'h-11 px-3 text-base',
-        icon: 'text-base',
+        input: 'h-11 px-3 text-md',
+        icon: 'text-md',
         slot: 'w-8',
       },
     },

@@ -1,6 +1,5 @@
 // nextjs doesnt support typescript in this file
 // we need to use js here
-
 require('tsconfig-paths/register')
 require('@/nodejs/entrypoint')({
   target: __dirname,

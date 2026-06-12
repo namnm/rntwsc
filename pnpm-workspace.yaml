@@ -16,6 +16,7 @@ overrides:
   react-native-worklets: 0.8.3
 
 patchedDependencies:
-  react-native-web: patches/react-native-web.patch
-  eslint-plugin-import: patches/eslint-plugin-import.patch
-  eslint-plugin-react: patches/eslint-plugin-react.patch
+  eslint-plugin-import: packages/devtools/patches/eslint-plugin-import.patch
+  eslint-plugin-react: packages/devtools/patches/eslint-plugin-react.patch
+  react-native-web: packages/rn/patches/react-native-web.patch
+  unicorn-magic: packages/nodejs/patches/unicorn-magic.patch

@@ -5,8 +5,7 @@ import { H1, Span } from '@/rn/components/text'
 import { ScrollView } from '@/rn/core/components/scroll-view'
 import { View } from '@/rn/core/components/view'
 import { useSafeAreaPadding } from '@/rn/core/responsive/use-safe-area'
-import { Eye } from '@/rn/svg-icons/eye'
-import { upperFirst } from '@/shared/lodash'
+import { Plus } from '@/rn/svg-icons/plus'
 import { NavLayout } from '#/components/nav-layout'
 
 const types = [
@@ -50,7 +49,7 @@ export const BadgePage = async () => {
                 <View className='flex-row flex-wrap gap-3'>
                   {types.map(type => (
                     <Badge key={type} type={type} appearance={appearance}>
-                      <Span>{upperFirst(type)}</Span>
+                      <Span>{type}</Span>
                     </Badge>
                   ))}
                 </View>
@@ -65,7 +64,7 @@ export const BadgePage = async () => {
             <View className='flex-row flex-wrap items-center gap-3'>
               {sizes.map(size => (
                 <Badge key={size} size={size}>
-                  <Span>{upperFirst(size)} badge</Span>
+                  <Span>size: {size}</Span>
                 </Badge>
               ))}
             </View>
@@ -78,7 +77,7 @@ export const BadgePage = async () => {
             <View className='flex-row flex-wrap items-center gap-3'>
               {shapes.map(shape => (
                 <Badge key={shape} shape={shape}>
-                  <Span>{upperFirst(shape)} badge</Span>
+                  <Span>shape: {shape}</Span>
                 </Badge>
               ))}
             </View>
@@ -90,12 +89,12 @@ export const BadgePage = async () => {
             </Span>
             <View className='flex-row flex-wrap gap-3'>
               <Badge>
-                <Span>Right icon</Span>
-                <Eye />
+                <Span>right icon</Span>
+                <Plus />
               </Badge>
               <Badge>
-                <Eye />
-                <Span>Left icon</Span>
+                <Plus />
+                <Span>left icon</Span>
               </Badge>
             </View>
           </View>

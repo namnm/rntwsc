@@ -1,5 +1,4 @@
 // tsconfig-paths and json5 were installed at the repo root
-
 declare module 'tsconfig-paths/register' {
   const m: never
   export = m

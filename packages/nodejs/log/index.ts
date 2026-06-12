@@ -1,6 +1,6 @@
 import { bold, cyan, gray, magenta, red, yellow } from 'colors/safe'
 import type { StackFrame } from 'stack-trace'
-import stacktrace from 'stack-trace'
+import * as stacktrace from 'stack-trace'
 
 import { repoRoot } from '@/nodejs/entrypoint/root'
 import { killSelfChildren } from '@/nodejs/kill'
@@ -174,7 +174,7 @@ export class Log {
   }
 
   private getLocation = (frame: StackFrame) => {
-    let fileName = frame.getFileName().trim()
+    let fileName = frame.getFileName()?.trim()
     if (!fileName) {
       return ''
     }
@@ -209,12 +209,12 @@ export class Log {
     }
     const stacks: Stack[] = []
     const frames = err instanceof Error ? stacktrace.parse(err) : []
-    frames.forEach(frame => {
-      const location = this.getLocation(frame)
+    frames.forEach(f => {
+      const location = this.getLocation(f)
       if (!location) {
         return
       }
-      let fn = frame.getFunctionName() || frame.getMethodName()
+      let fn = f.getFunctionName() || f.getMethodName()
       fn = fn ? fn.replace(/\S+\./g, '') : '<anonymous>'
       stacks.push({
         fn,

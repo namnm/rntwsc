@@ -17,7 +17,7 @@ export const PasswordInput = (props: PasswordInputProps) => {
     <TextInput
       {...props}
       secureTextEntry={secureText}
-      suffix={<SuffixIcon className='text-base' />}
+      suffix={<SuffixIcon className='text-md' />}
       onSuffixPress={() => setSecureText(prev => !prev)}
     />
   )

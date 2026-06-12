@@ -6,21 +6,17 @@ extract:
 	&& node ./babel-extract;
 
 publish:
-	@((git diff --quiet \
-	&& git diff --cached --quiet) \
-	|| (echo "error: uncommitted changes" \
-	&& exit 1)) \
-	&& pnpm dist \
-	&& printf '/*\n!/dist\n' > .gitignore \
-	&& (git branch -D dist 2>/dev/null \
-	|| true) \
-	&& git checkout --orphan dist \
-	&& git rm -rf --cached . \
-	&& git add dist \
+	@mv ./dist ../ \
+	&& cd ../dist \
+	&& git init \
+	&& git checkout -b dist \
+	&& git add -A \
 	&& git commit -m "dist" \
+	&& git remote add origin git@github.com:namnm/rntwsc.git \
 	&& git push -uf origin dist \
 	&& git log -1 --format="%H" \
-	&& git checkout master;
+	&& cd .. \
+	&& rm -rf ./dist;
 
 ###############################################################################
 # clean

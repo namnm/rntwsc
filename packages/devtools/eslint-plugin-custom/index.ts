@@ -3,6 +3,7 @@ import type { ESLint } from 'eslint'
 import { concatClassnameStrings } from '@/devtools/eslint-plugin-custom/concat-classname-strings'
 import { enforceUseClient } from '@/devtools/eslint-plugin-custom/enforce-use-client'
 import { errName } from '@/devtools/eslint-plugin-custom/err-name'
+import { kebabCaseImportPaths } from '@/devtools/eslint-plugin-custom/kebab-case-import-paths'
 import { noAccessProperty } from '@/devtools/eslint-plugin-custom/no-access-property'
 import { noImportDefault } from '@/devtools/eslint-plugin-custom/no-import-default'
 import { noImportInvalidVariant } from '@/devtools/eslint-plugin-custom/no-import-invalid-variant'
@@ -25,6 +26,7 @@ export const customPlugin = {
     'concat-classname-strings': concatClassnameStrings,
     'enforce-use-client': enforceUseClient,
     'err-name': errName,
+    'kebab-case-import-paths': kebabCaseImportPaths,
     'no-access-property': noAccessProperty,
     'no-import-default': noImportDefault,
     'no-interface': noInterface,

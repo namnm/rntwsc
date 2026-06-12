@@ -5,7 +5,6 @@ module.exports = ({
   env,
   alias = true,
   babel = true,
-  override,
   req,
 } = {}) => {
   if (!target) {
@@ -111,30 +110,6 @@ module.exports = ({
   } else {
     require('tsx/cjs')
   }
-
-  // --------------------------------------------------------------------------
-  // override to also transpile published @rntwsc packages in node_modules
-  if (override) {
-    const jsH = exts['.js']
-    const tsH = exts['.ts']
-    const jsxH = exts['.jsx']
-    const tsxH = exts['.tsx']
-    /** @typedef {(m: import('module').Module, filename: string) => void} ExtHandler */
-    /** @type {(js: ExtHandler, ts: ExtHandler) => ExtHandler} */
-    const overrideExtHandler = (js, ts) => (m, filename) => {
-      if (filename.includes('@rntwsc')) {
-        return ts(m, filename)
-      }
-      return js(m, filename)
-    }
-    if (tsH) {
-      exts['.js'] = overrideExtHandler(jsH, tsH)
-    }
-    if (tsxH) {
-      exts['.jsx'] = overrideExtHandler(jsxH || tsxH, tsxH)
-    }
-  }
-
   // --------------------------------------------------------------------------
   // now we should be able to import typescript from now on
   // req is the shortcut to require a module together in this call

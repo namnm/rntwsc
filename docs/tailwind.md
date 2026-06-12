@@ -25,7 +25,7 @@ const button = cva({
   attributes: {
     size: {
       sm: { root: 'h-8', label: 'text-sm' },
-      lg: { root: 'h-12', label: 'text-base' },
+      lg: { root: 'h-12', label: 'text-md' },
     },
   },
   compoundVariants: [{ size: 'sm', classNames: { root: 'rounded' } }],

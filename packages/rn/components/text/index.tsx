@@ -54,7 +54,7 @@ export const H6 = ({ className, ...props }: TextProps) => (
     {...props}
     accessibilityRole='header'
     aria-level='6'
-    className={['text-base font-medium', className]}
+    className={['text-md font-medium', className]}
   />
 )
 

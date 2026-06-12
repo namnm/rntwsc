@@ -44,10 +44,10 @@ export const inputCva = cva({
         chevron: 'text-sm',
       },
       lg: {
-        container: 'h-11 px-3 text-base',
-        label: 'text-base',
-        placeholder: 'text-base',
-        chevron: 'text-base',
+        container: 'h-11 px-3 text-md',
+        label: 'text-md',
+        placeholder: 'text-md',
+        chevron: 'text-md',
       },
     },
     shape: {

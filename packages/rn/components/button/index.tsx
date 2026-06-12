@@ -60,7 +60,7 @@ const buttonCva = cva({
       },
       md: {
         button: 'h-8 px-3',
-        text: 'text-base',
+        text: 'text-md',
       },
       lg: {
         button: 'h-10 px-4',

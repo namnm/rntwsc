@@ -133,7 +133,12 @@ const buildExports = async (
   // Accumulate conditional exports: key -> { condition -> file }
   const conditions = new Map<string, Record<string, string>>()
   const addCondition = (key: string, file: string, condition: string) => {
-    conditions.getOrInsert(key, {})[condition] = file
+    let m = conditions.get(key)
+    if (!m) {
+      m = {}
+      conditions.set(key, m)
+    }
+    m[condition] = file
   }
 
   for (const f of codeFiles) {
@@ -221,7 +226,7 @@ const copy = async (mod: ModuleName) => {
 
   await fs.ensureDir(dst)
 
-  const srcFiles = await glob('**/*.{ts,tsx,js,jsx,svg,css,scss}', {
+  const srcFiles = await glob('**/*.{ts,tsx,js,jsx,svg,css,scss,patch}', {
     cwd: src,
     ignore: ['**/*.test.*'],
   })

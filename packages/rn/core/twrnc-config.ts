@@ -1,3 +1,4 @@
+import defaultTheme from 'tailwindcss/defaultTheme'
 import type { TwConfig } from 'twrnc'
 
 import type { ThemeConfig } from '@/rn/core/theme/config'
@@ -57,6 +58,9 @@ export const twrncConfig: TwConfig = {
   theme: {
     extend: {
       colors: twrncThemeColors,
+      fontSize: {
+        md: defaultTheme.fontSize.base as any,
+      },
     },
   },
 }

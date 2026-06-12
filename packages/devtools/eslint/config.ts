@@ -6,7 +6,6 @@ import * as importPlugin from 'eslint-plugin-import'
 import preferArrowPlugin from 'eslint-plugin-prefer-arrow'
 import reactPlugin from 'eslint-plugin-react'
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort'
-import unicornPlugin from 'eslint-plugin-unicorn'
 import globals from 'globals'
 
 import { restrictedImports } from '@/devtools/eslint/config-restricted-imports'
@@ -129,7 +128,6 @@ export const config = ({
       import: importPlugin,
       'simple-import-sort': simpleImportSortPlugin,
       'prefer-arrow': preferArrowPlugin,
-      unicorn: unicornPlugin,
       custom: customPlugin,
       ...extraPlugins,
     },
@@ -230,14 +228,16 @@ export const config = ({
       'import/no-extraneous-dependencies': [
         warn,
         {
-          ignore: ['tsconfig-paths', 'json5', 'typescript'],
+          ignore: [
+            'tsconfig-paths',
+            'json5',
+            'typescript',
+            '@rntwsc/shared',
+            '@rntwsc/nodejs',
+            '@rntwsc/rn',
+            '@rntwsc/devtools',
+          ],
           includeTypes: true,
-        },
-      ],
-      'unicorn/filename-case': [
-        warn,
-        {
-          case: 'kebabCase',
         },
       ],
 
@@ -272,6 +272,7 @@ export const config = ({
       ],
 
       'custom/err-name': warn,
+      'custom/kebab-case-import-paths': warn,
       'custom/no-missing-export': warn,
       'custom/no-access-property': off,
       'custom/no-import-default': [warn, ['react']],

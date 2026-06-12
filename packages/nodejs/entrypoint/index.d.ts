@@ -4,7 +4,6 @@ type EntrypointOptions = {
   env?: true
   alias?: bool
   babel?: bool
-  override?: true
   req?: string
 }
 
