@@ -5,7 +5,7 @@ import { H1, Span } from '@/rn/components/text'
 import { ScrollView } from '@/rn/core/components/scroll-view'
 import { View } from '@/rn/core/components/view'
 import { useSafeAreaPadding } from '@/rn/core/responsive/use-safe-area'
-import { isWeb } from '@/rn/core/utils/platform'
+import { isWeb } from '@/rn/platform'
 import { NavLayout } from '#/components/nav-layout'
 
 const types = [
@@ -93,7 +93,7 @@ export const ButtonPage = async () => {
             <View className='flex-row flex-wrap items-center gap-3'>
               {sizes.map(size => (
                 <Button key={size} size={size}>
-                  {size}
+                  size: {size}
                 </Button>
               ))}
             </View>
@@ -106,7 +106,7 @@ export const ButtonPage = async () => {
             <View className='flex-row flex-wrap gap-3'>
               {shapes.map(shape => (
                 <Button key={shape} shape={shape}>
-                  {shape}
+                  shape: {shape}
                 </Button>
               ))}
             </View>

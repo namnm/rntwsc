@@ -4,7 +4,7 @@ import { ScrollView } from '@/rn/core/components/scroll-view'
 import { View } from '@/rn/core/components/view'
 import { useTranslationUntyped } from '@/rn/core/i18n'
 import { useSafeAreaPadding } from '@/rn/core/responsive/use-safe-area'
-import { isWeb } from '@/rn/core/utils/platform'
+import { isWeb } from '@/rn/platform'
 import { NavLayout } from '#/components/nav-layout'
 
 export const HomePage = async () => {

@@ -6,4 +6,5 @@ export const isWeb = platform === 'web'
 export const isAndroid = platform === 'android'
 export const isIos = platform === 'ios'
 
-export const isServer = typeof window === 'undefined'
+export const isServer = isWeb && typeof window === 'undefined'
+export const isBrowser = isWeb && !isServer

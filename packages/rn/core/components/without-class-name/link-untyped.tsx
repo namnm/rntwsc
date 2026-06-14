@@ -1,8 +1,8 @@
 /* eslint-disable no-restricted-imports */
 
 import Link from 'next/link'
-import type { PropsWithChildren } from 'react'
-import type { TextStyle } from 'react-native'
+import type { MouseEvent as MouseEventReact, PropsWithChildren } from 'react'
+import type { GestureResponderEvent, TextStyle } from 'react-native'
 
 import { useCurrentLocaleUntyped } from '@/rn/core/i18n'
 import { getDefaultLocaleUntyped } from '@/rn/core/i18n/config'
@@ -19,12 +19,16 @@ export type LinkPropsWocn<
   pathname: K
   scroll?: boolean
   style?: TextStyle
+  onPress?: (
+    e: MouseEventReact<HTMLAnchorElement, MouseEvent> | GestureResponderEvent,
+  ) => void
 }> &
   (NonUndefinedKeys<Q> extends never ? { query?: Q } : { query: Q })
 
 export const LinkUntypedWocn = async ({
   pathname,
   query,
+  onPress,
   ...props
 }: LinkPropsWocn) => {
   const locale = await useCurrentLocaleUntyped()
@@ -35,5 +39,5 @@ export const LinkUntypedWocn = async ({
   const q = query && qsStableStringify(query)
   const href = q ? `${pathname}?${q}` : pathname
 
-  return <Link {...(props as any)} href={href} />
+  return <Link onClick={onPress} {...(props as any)} href={href} />
 }

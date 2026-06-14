@@ -17,7 +17,7 @@ import type { ClassName } from '@/rn/core/tw/class-name'
 import type { Variant } from '@/rn/core/tw/cva'
 import { cva } from '@/rn/core/tw/cva'
 import { composeHandlers } from '@/rn/core/utils/compose-handlers'
-import { isWeb } from '@/rn/core/utils/platform'
+import { isWeb } from '@/rn/platform'
 
 const buttonCva = cva({
   classNames: {

@@ -10,7 +10,7 @@ import { View } from '@/rn/core/components/view'
 import type { ClassName } from '@/rn/core/tw/class-name'
 import type { Variant } from '@/rn/core/tw/cva'
 import { cva } from '@/rn/core/tw/cva'
-import { isWeb } from '@/rn/core/utils/platform'
+import { isWeb } from '@/rn/platform'
 
 const drawerCva = cva({
   classNames: {

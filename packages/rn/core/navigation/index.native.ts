@@ -1,15 +1,23 @@
 /* eslint-disable no-restricted-imports */
 
-import {
-  useIsFocused,
-  useRoute as useRouteNative,
-} from '@react-navigation/native'
+import { useIsFocused, useNavigationState } from '@react-navigation/native'
+
+import type { StrMap } from '@/shared/ts-utils'
+
+type State = {
+  routes: {
+    name: string
+    params?: StrMap
+  }[]
+  index: number
+}
 
 export const useRoute = () => {
-  const r = useRouteNative()
+  const state: State = useNavigationState((s: State) => s)
+  const r = state.routes[state.index]
   return {
-    pathname: r.name,
-    query: r.params,
+    pathname: r?.name || '',
+    query: r?.params,
   }
 }
 

@@ -10,7 +10,7 @@ import { getTwrnc } from '@/rn/core/tw/config'
 import { twUnminifyWeb } from '@/rn/core/tw/lib/class-name-minified'
 import { classNameToNative } from '@/rn/core/tw/lib/class-name-to-native'
 import { hexToRgba } from '@/rn/core/utils/hex-to-rgba'
-import { platform } from '@/rn/core/utils/platform'
+import { platform } from '@/rn/platform'
 import type { Nullish, StrMap } from '@/shared/ts-utils'
 
 export type ClassNameToStylesOptions = {

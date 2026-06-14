@@ -6,7 +6,11 @@ import { View } from '@/rn/core/components/view'
 import { useDarkModeUser, useSetDarkMode } from '@/rn/core/dark-mode'
 import { useTranslationUntyped } from '@/rn/core/i18n'
 
-export const DarkModeSwitcher = async () => {
+export const DarkModeSwitcher = async ({
+  onPress,
+}: {
+  onPress?: () => void
+}) => {
   const [t, dark] = await Promise.all([
     useTranslationUntyped('common'),
     useDarkModeUser(),
@@ -38,7 +42,10 @@ export const DarkModeSwitcher = async () => {
         return (
           <Pressable
             key={`${v.value}`}
-            onPress={() => setDarkMode(v.value)}
+            onPress={() => {
+              setDarkMode(v.value)
+              onPress?.()
+            }}
             className='flex-row items-center gap-2.5 rounded-md px-2 py-2'
           >
             <View

@@ -2,7 +2,7 @@ import {
   animationMap,
   transitionTimingFunctionMap,
 } from '@/rn/core/tw/lib/normalize-style-config'
-import { isWeb } from '@/rn/core/utils/platform'
+import { isWeb } from '@/rn/platform'
 import { camelCase } from '@/shared/lodash'
 import type { Falsish, FnAny, StrMap } from '@/shared/ts-utils'
 

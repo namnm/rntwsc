@@ -3,8 +3,9 @@
 import { useEffect } from 'react'
 
 import { rnwClassName } from '@/rn/core/tw/lib/react-native-web'
+import { isBrowser } from '@/rn/platform'
 
-if (typeof window === 'object' && window) {
+if (isBrowser) {
   // @ts-ignore
   window.rnwClassName = rnwClassName
 }

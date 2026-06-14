@@ -518,6 +518,12 @@ importers:
         specifier: '*'
         version: 16.2.6(@babel/core@7.29.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.99.0)
 
+  packages/rn/platform:
+    dependencies:
+      react-native:
+        specifier: 0.85.3
+        version: 0.85.3(@babel/core@7.29.0)(@react-native-community/cli@20.1.3(typescript@6.0.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.0))(@types/react@19.2.14)(react@19.2.3)
+
   packages/rn/storage:
     dependencies:
       '@react-native-async-storage/async-storage':

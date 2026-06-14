@@ -5,7 +5,7 @@ import { getLangUntyped } from '@/rn/core/i18n/config'
 import { useI18nSwitcherProps } from '@/rn/core/i18n/use-i18n-switcher-props'
 import { languages } from '#/i18n/config'
 
-export const I18nSwitcher = async () => {
+export const I18nSwitcher = async ({ onPress }: { onPress?: () => void }) => {
   const { currentLang, LinkWeb, onPressNative } = await useI18nSwitcherProps()
 
   return (
@@ -54,7 +54,13 @@ export const I18nSwitcher = async () => {
         return (
           <Pressable
             key={lang}
-            onPress={onPressNative && (() => onPressNative(lang))}
+            onPress={
+              onPressNative &&
+              (() => {
+                onPressNative(lang)
+                onPress?.()
+              })
+            }
             className='flex-row items-center gap-2.5 rounded-md px-2 py-2'
           >
             {dot}

@@ -1,7 +1,7 @@
-import { isServer, isWeb } from '@/rn/core/utils/platform'
 import { dehydrateDataKey, dehydrateDataValueKey } from '@/rn/fetch/config'
 import type { FetchData, UseFetchData } from '@/rn/fetch/store'
 import { useRsc } from '@/rn/fetch/use-rsc'
+import { isServer, isWeb } from '@/rn/platform'
 import { jsonSafe } from '@/shared/json-safe'
 
 // will be used on browser rehydrate to mark

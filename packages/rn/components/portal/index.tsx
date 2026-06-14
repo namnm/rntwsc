@@ -10,8 +10,8 @@ import {
   removePortal,
   usePortalItems,
 } from '@/rn/components/portal/store'
-import { isWeb } from '@/rn/core/utils/platform'
 import { useIsMounted } from '@/rn/core/utils/use-is-mounted'
+import { isWeb } from '@/rn/platform'
 
 export type PortalProps = PropsWithChildren<
   Pick<PortalItem, 'disableBodyScroll'>

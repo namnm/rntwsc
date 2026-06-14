@@ -7,8 +7,8 @@ import {
   darkModeCompose,
   toClassNameDarkModeState,
 } from '@/rn/core/dark-mode/config'
-import { isWeb } from '@/rn/core/utils/platform'
 import { useIsMounted } from '@/rn/core/utils/use-is-mounted'
+import { isWeb } from '@/rn/platform'
 
 // this is only available in client and native
 // !mounted to make sure the data is matched with ssr

@@ -5,6 +5,7 @@ import { useCallback, useSyncExternalStore } from 'react'
 
 import { dehydrateDataKey, dehydrateDataValueKey } from '@/rn/fetch/config'
 import { dehydrated } from '@/rn/fetch/dehydrate'
+import { isBrowser } from '@/rn/platform'
 import type { StrMap } from '@/shared/ts-utils'
 
 export type FetchData<T = unknown> = {
@@ -51,7 +52,7 @@ export const clearAllFetchData = () => {
   notify()
 }
 
-if (typeof window !== 'undefined') {
+if (isBrowser) {
   document.querySelectorAll(`template[${dehydrateDataKey}]`).forEach(e => {
     const k = e.getAttribute(dehydrateDataKey)
     const v = e.getAttribute(dehydrateDataValueKey)

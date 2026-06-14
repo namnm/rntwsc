@@ -18,6 +18,6 @@ export type LinkComponent<Routes, Data> = <K extends keyof Routes>(
   p: LinkProps<Routes, Data, K>,
 ) => ReactNode
 
-export const LinkUntyped = createClassNameComponent({
+export const LinkUntyped: LinkComponent<any, any> = createClassNameComponent({
   LinkUntypedWocn,
 })

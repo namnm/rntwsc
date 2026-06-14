@@ -7,7 +7,7 @@ import { useSetTheme, useTheme } from '@/rn/core/theme'
 import { getAvailableThemes } from '@/rn/core/theme/config'
 import { capitalCase } from '@/shared/lodash'
 
-export const ThemeSwitcher = async () => {
+export const ThemeSwitcher = async ({ onPress }: { onPress?: () => void }) => {
   const themes = getAvailableThemes()
   const theme = await useTheme()
   const setTheme = useSetTheme()
@@ -22,7 +22,10 @@ export const ThemeSwitcher = async () => {
         return (
           <Pressable
             key={v.name}
-            onPress={() => setTheme(v.name)}
+            onPress={() => {
+              setTheme(v.name)
+              onPress?.()
+            }}
             className='flex-row items-center gap-2.5 rounded-md px-2 py-2'
           >
             <View

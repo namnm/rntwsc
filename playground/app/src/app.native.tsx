@@ -28,6 +28,12 @@ const RootStack = createNativeStackNavigator({
     headerShown: false,
     contentStyle: tw`bg-white`,
   },
+  layout: ({ children }: PropsWithChildren) => (
+    <>
+      {children}
+      <Portal.Root />
+    </>
+  ),
 })
 const Navigation = createStaticNavigation(RootStack)
 
@@ -48,12 +54,7 @@ const LoadingProvider = ({ children }: PropsWithChildren) => {
     return null
   }
 
-  return (
-    <>
-      {children}
-      <Portal.Root />
-    </>
-  )
+  return children
 }
 
 export const App = composeProviders(

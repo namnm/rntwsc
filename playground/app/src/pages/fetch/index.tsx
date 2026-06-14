@@ -8,7 +8,7 @@ import { FetchClient } from '#/pages/fetch/fetch-client'
 import type { HelloData } from '#/pages/fetch/fetch-ui'
 import { FetchUi } from '#/pages/fetch/fetch-ui'
 
-const API_URL = 'http://localhost:3001/api/fetch'
+const API_URL = 'http://192.168.5.199:3001/api/fetch'
 
 export const FetchPage = async () => {
   const r = await useFetch<HelloData>(API_URL)
