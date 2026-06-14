@@ -4,6 +4,7 @@ import { repoRoot } from '@/nodejs/entrypoint/root'
 import { fs } from '@/nodejs/fs'
 import { path } from '@/nodejs/path'
 import { jsonSafe } from '@/shared/json-safe'
+import type { StrMap } from '@/shared/ts-utils'
 
 const tsconfigBasePath = path.join(repoRoot, 'tsconfig.base.json')
 
@@ -23,10 +24,9 @@ const options: CompilerOption[] = (ts as any).optionDeclarations
 export const normalizeTsconfigJson = async () => {
   const raw = await fs.readFile(tsconfigBasePath, 'utf8')
   const config = require(tsconfigBasePath)
-  const existingCompilerOptions: Record<string, unknown> =
-    config.compilerOptions || {}
+  const existingCompilerOptions: StrMap<unknown> = config.compilerOptions || {}
 
-  const groups: Record<string, CompilerOption[]> = {}
+  const groups: StrMap<CompilerOption[]> = {}
   for (const o of options) {
     if (o.isCommandLineOnly) {
       continue

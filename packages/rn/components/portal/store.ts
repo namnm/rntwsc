@@ -11,6 +11,7 @@ export type PortalItem = {
 
 let items: PortalItem[] = []
 const listeners = new Set<() => void>()
+const notify = () => listeners.forEach(cb => cb())
 
 const subscribe = (cb: () => void) => {
   listeners.add(cb)
@@ -49,13 +50,13 @@ export const addPortal = (
             disableBodyScroll,
           },
         ]
-  listeners.forEach(cb => cb())
+  notify()
 }
 
 export const removePortal = (id: string) => {
   const next = items.filter(e => e.id !== id)
   if (next.length < items.length) {
     items = next
-    listeners.forEach(cb => cb())
+    notify()
   }
 }

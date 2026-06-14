@@ -15,6 +15,7 @@ import { Controller } from 'react-hook-form'
 import { Span } from '@/rn/components/text'
 import type { ViewProps } from '@/rn/core/components/view'
 import { View } from '@/rn/core/components/view'
+import type { StrMap } from '@/shared/ts-utils'
 
 type Rules<T extends FieldValues> = Omit<
   RegisterOptions<T, Path<T>>,
@@ -39,9 +40,7 @@ export type FormFieldProps<T extends FieldValues, K extends Path<T>> = Omit<
   requiredMask?: boolean
   valuePropName?: string
   onChangePropName?: string
-  children:
-    | ReactElement<Record<string, any>>
-    | ((props: RenderProps<T, K>) => ReactElement)
+  children: ReactElement<StrMap> | ((props: RenderProps<T, K>) => ReactElement)
 }
 
 export const FormField = <T extends FieldValues, K extends Path<T>>({

@@ -1,5 +1,3 @@
-'use client'
-
 import { useSyncExternalStore } from 'react'
 
 import { themeCookieKey, toValidTheme } from '@/rn/core/theme/config'
@@ -7,6 +5,7 @@ import { storage } from '@/rn/storage'
 
 let currentTheme: string | undefined = undefined
 const listeners = new Set<() => void>()
+const notify = () => listeners.forEach(cb => cb())
 
 const subscribe = (cb: () => void) => {
   listeners.add(cb)
@@ -28,7 +27,7 @@ export const useSetTheme = () => async (v: string | undefined) => {
     await storage.removeItem(themeCookieKey)
   }
   currentTheme = v
-  listeners.forEach(cb => cb())
+  notify()
 }
 
 export const initThemeNative = async () => {

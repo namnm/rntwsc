@@ -7,6 +7,7 @@ import { ButtonToggleGroupPage } from '#/pages/button/button-toggle-group'
 import { CheckboxPage } from '#/pages/checkbox'
 import { DatePickerPage } from '#/pages/date-picker'
 import { DrawerPage } from '#/pages/drawer'
+import { FetchPage } from '#/pages/fetch'
 import { FormPage } from '#/pages/form'
 import { GridPage } from '#/pages/grid'
 import { HomePage } from '#/pages/home'
@@ -23,6 +24,7 @@ import {
   rCheckbox,
   rDatePicker,
   rDrawer,
+  rFetch,
   rForm,
   rGrid,
   rHome,
@@ -46,6 +48,7 @@ import { ViewportPage } from '#/pages/viewport'
 // accidentally import all routes into web bundle
 export const routesNative = {
   [rHome]: HomePage,
+  [rFetch]: FetchPage,
   [rAccordion]: AccordionPage,
   [rBadge]: BadgePage,
   [rButton]: ButtonPage,

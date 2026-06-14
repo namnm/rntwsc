@@ -9,8 +9,8 @@ import { glob } from '@/nodejs/glob'
 import { jsonSafe } from '@/shared/json-safe'
 
 const resolveAlias = {
-  'next-unchecked/headers': '@/rn/core/polyfill/next/headers',
-  'next-unchecked/navigation': '@/rn/core/polyfill/next/navigation',
+  'next-unchecked/headers': '@/rn/next/unchecked/headers',
+  'next-unchecked/navigation': '@/rn/next/unchecked/navigation',
   'react-native': 'react-native-web',
   'react-native-svg': 'react-native-svg-web',
 }

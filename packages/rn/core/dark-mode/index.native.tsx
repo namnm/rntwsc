@@ -10,6 +10,7 @@ import { storage } from '@/rn/storage'
 
 let currentDarkMode: boolean | undefined = undefined
 const listeners = new Set<() => void>()
+const notify = () => listeners.forEach(cb => cb())
 
 const subscribe = (cb: () => void) => {
   listeners.add(cb)
@@ -32,7 +33,7 @@ export const useSetDarkMode = () => async (v: boolean | undefined) => {
     await storage.removeItem(darkModeCookieKey)
   }
   currentDarkMode = v
-  listeners.forEach(cb => cb())
+  notify()
 }
 
 export const initDarkModeNative = async () => {

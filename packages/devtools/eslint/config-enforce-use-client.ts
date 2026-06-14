@@ -5,6 +5,7 @@ export const enforceUseClient = [
   'createContext',
   'useContext',
   'useSyncExternalStore',
+  'useCallback',
   'useImmer',
   'useClassState',
   'useRefConstruct',

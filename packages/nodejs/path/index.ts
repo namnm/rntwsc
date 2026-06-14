@@ -14,10 +14,23 @@ export const isInDir = (
     return false
   }
   const relative = path.relative(dir, abs)
-  return !path.isAbsolute(relative) && !relative.startsWith('..')
+  if (path.isAbsolute(relative) || relative.startsWith('..')) {
+    return false
+  }
+  return true
 }
 export const isInRepo = (abs: string | Falsish): abs is NonFalsish<string> =>
   isInDir(repoRoot, abs)
+export const stripRepoRoot = (abs: string) => {
+  if (!abs) {
+    return abs
+  }
+  const relative = path.relative(repoRoot, abs)
+  if (path.isAbsolute(relative) || relative.startsWith('..')) {
+    return abs
+  }
+  return relative.replace(/^[.\\/]+/, '')
+}
 
 export const isSameDir = (abs1: string, abs2: string | Falsish) =>
   !!abs2 && !path.relative(abs1, abs2)

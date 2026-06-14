@@ -2,7 +2,11 @@ import type { TSESLint, TSESTree } from '@typescript-eslint/utils'
 
 import { shouldTranspileExtension } from '@/devtools/babel-config/should-transpile'
 
-type MessageId = 'enforceUseClient' | 'wrongPosition' | 'missingNewlines'
+type MessageId =
+  | 'enforceUseClient'
+  | 'wrongPosition'
+  | 'missingNewlines'
+  | 'disallowUseClient'
 
 export const enforceUseClient: TSESLint.RuleModule<MessageId, [string[]]> = {
   meta: {
@@ -12,9 +16,11 @@ export const enforceUseClient: TSESLint.RuleModule<MessageId, [string[]]> = {
       description: "Enforce 'use client' directive when required",
     },
     messages: {
-      enforceUseClient: "File must start with 'use client' directive",
-      wrongPosition: "'use client' directive must be at the top of the file",
-      missingNewlines: "'use client' directive must be followed by 2 newlines",
+      enforceUseClient: "File should start with 'use client' directive",
+      wrongPosition: "'use client' directive should be at the top of the file",
+      missingNewlines:
+        "'use client' directive should be followed by 2 newlines",
+      disallowUseClient: "File should not contain 'use client' directive",
     },
     schema: [
       {
@@ -35,7 +41,29 @@ export const enforceUseClient: TSESLint.RuleModule<MessageId, [string[]]> = {
       !shouldTranspileExtension.test(c.filename) ||
       /\.(ios|android|native)\.tsx?$/.test(c.filename)
     ) {
-      return {}
+      return {
+        ExpressionStatement: n => {
+          if (
+            n.expression.type !== 'Literal' ||
+            n.expression.value !== 'use client'
+          ) {
+            return
+          }
+          c.report({
+            node: n,
+            messageId: 'disallowUseClient',
+            fix: f => {
+              const text = c.sourceCode.getText()
+              const [start, end] = n.range
+              let removeEnd = end
+              while (removeEnd < text.length && text[removeEnd] === '\n') {
+                removeEnd++
+              }
+              return f.removeRange([start, removeEnd])
+            },
+          })
+        },
+      }
     }
 
     let hasUseClient = false

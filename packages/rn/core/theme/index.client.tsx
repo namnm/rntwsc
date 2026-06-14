@@ -16,6 +16,7 @@ let initialized = false
 // so we set it undefined here and let useTheme handle it after initTheme is called
 let currentTheme: string | undefined = undefined
 const listeners = new Set<() => void>()
+const notify = () => listeners.forEach(cb => cb())
 
 const subscribe = (cb: () => void) => {
   listeners.add(cb)
@@ -55,5 +56,5 @@ export const useSetTheme = () => (v: string | undefined) => {
   }
 
   currentTheme = v
-  listeners.forEach(cb => cb())
+  notify()
 }

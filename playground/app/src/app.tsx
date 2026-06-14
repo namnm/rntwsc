@@ -33,19 +33,21 @@ export const App = async ({ children }: PropsWithChildren) => {
   ) as string
 
   return (
-    <html lang={lang} className={htmlClassName}>
-      <head>
-        <meta
-          name='viewport'
-          content='width=device-width,initial-scale=1.0,viewport-fit=cover'
-        />
-      </head>
+    <>
       {/**
-       * need to render client enhancer on top so the client scripts can load
-       * before body content and others which depend on the client scripts
+       * need to render enhancers on top so they can load before any other code
+       * they should always return null and contain side effect injection
        */}
       <ClientEnhancer />
-      <body className='flex min-h-dvh w-full flex-col'>{children}</body>
-    </html>
+      <html lang={lang} className={htmlClassName}>
+        <head>
+          <meta
+            name='viewport'
+            content='width=device-width,initial-scale=1.0,viewport-fit=cover'
+          />
+        </head>
+        <body className='flex min-h-dvh w-full flex-col'>{children}</body>
+      </html>
+    </>
   )
 }

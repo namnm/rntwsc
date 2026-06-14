@@ -62,9 +62,9 @@ type PkgJson = Partial<Deps> & {
   name: string
   version: string
   type: string
-  exports: Record<string, ExportsValue>
+  exports: StrMap<ExportsValue>
 }
-type ExportsValue = string | Record<string, string>
+type ExportsValue = string | StrMap<string>
 type SubPkgJson = Partial<Deps>
 
 // Merge dependencies from all sub-package.json files within a module into one
@@ -100,7 +100,7 @@ const mergeDeps = async (mod: ModuleName) => {
 
 // Platform-specific file suffixes mapped to their exports condition names.
 // 'default' is not listed here - it is used for files with no platform suffix.
-const platformSuffixes: Record<string, string> = {
+const platformSuffixes: StrMap<string> = {
   '.native': 'react-native',
 }
 
@@ -108,9 +108,7 @@ const platformSuffixes: Record<string, string> = {
 // bare directory imports (e.g. @rntwsc/nodejs/entrypoint -> index.ts) and
 // exact file imports without relying on wildcard fallback arrays, which many
 // runtimes (tsx, older Metro) do not implement correctly.
-const buildExports = async (
-  mod: ModuleName,
-): Promise<Record<string, ExportsValue>> => {
+const buildExports = async (mod: ModuleName): Promise<StrMap<ExportsValue>> => {
   const srcMod = path.join(packagesRoot, mod)
   const [codeFiles, assetFiles] = await Promise.all([
     glob('**/*.{ts,tsx,js,jsx}', {
@@ -128,10 +126,10 @@ const buildExports = async (
   codeFiles.push(...extraCopy[mod].filter(f => codeExtRegex.test(f)))
   assetFiles.push(...extraCopy[mod].filter(f => !codeExtRegex.test(f)))
 
-  const map: Record<string, ExportsValue> = {}
+  const map: StrMap<ExportsValue> = {}
 
   // Accumulate conditional exports: key -> { condition -> file }
-  const conditions = new Map<string, Record<string, string>>()
+  const conditions = new Map<string, StrMap<string>>()
   const addCondition = (key: string, file: string, condition: string) => {
     let m = conditions.get(key)
     if (!m) {

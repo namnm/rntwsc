@@ -8,6 +8,7 @@ import reactPlugin from 'eslint-plugin-react'
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort'
 import globals from 'globals'
 
+import { enforceUseClient } from '@/devtools/eslint/config-enforce-use-client'
 import { restrictedImports } from '@/devtools/eslint/config-restricted-imports'
 import { customPlugin } from '@/devtools/eslint-plugin-custom'
 import { pnpmWorkspaceSync } from '@/devtools/normalize/pnpm-workspace'
@@ -198,6 +199,7 @@ export const config = ({
       'custom/concat-classname-strings': warn,
       'custom/no-interface': warn,
       'custom/no-single-item-array-prop': [warn, ['style', 'className']],
+      'custom/enforce-use-client': [warn, enforceUseClient],
     }),
   }
 

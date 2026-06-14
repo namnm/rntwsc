@@ -1,3 +1,5 @@
+/* eslint-disable custom/no-import-invalid-variant */
+
 import type { PropsWithChildren } from 'react'
 import { createContext, useContext } from 'react'
 

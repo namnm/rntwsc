@@ -15,6 +15,7 @@ import { darkClassName, lightClassName } from '@/rn/core/tailwind'
 let initialized = false
 let currentDarkMode: boolean | undefined = undefined
 const listeners = new Set<() => void>()
+const notify = () => listeners.forEach(cb => cb())
 
 const subscribe = (cb: () => void) => {
   listeners.add(cb)
@@ -54,5 +55,5 @@ export const useSetDarkMode = () => (v: boolean | undefined) => {
   }
 
   currentDarkMode = v
-  listeners.forEach(cb => cb())
+  notify()
 }

@@ -8,7 +8,7 @@ import { isReanimated } from '@/rn/core/components/lib/is-reanimated'
 import { normalizePropsNative } from '@/rn/core/components/lib/normalize-props-native'
 import { renderReanimated } from '@/rn/core/components/lib/render-reanimated'
 import type { InputPropsWocn } from '@/rn/core/components/without-class-name/input'
-import { useAnimatedColor } from '@/rn/core/utils/use-animated-color.native'
+import { useAnimatedColor } from '@/rn/core/utils/use-animated-color'
 
 const styleProps = ['placeholderTextColor', 'caretHidden']
 

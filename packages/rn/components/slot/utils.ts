@@ -3,8 +3,9 @@ import { isValidElement } from 'react'
 
 import type { ClassName } from '@/rn/core/tw/class-name'
 import { clsx } from '@/rn/core/tw/clsx'
+import type { StrMap } from '@/shared/ts-utils'
 
-export type AnyProps = Record<string, unknown>
+export type AnyProps = StrMap<unknown>
 
 export const SLOTTABLE_TYPE = Symbol('Slottable')
 
@@ -65,7 +66,7 @@ export const mergeProps = (
   return merged
 }
 
-export const flattenStyle = (style: unknown): Record<string, unknown> => {
+export const flattenStyle = (style: unknown): StrMap<unknown> => {
   if (!style) {
     return {}
   }
@@ -73,7 +74,7 @@ export const flattenStyle = (style: unknown): Record<string, unknown> => {
     return Object.assign({}, ...style.map(flattenStyle))
   }
   if (typeof style === 'object') {
-    return style as Record<string, unknown>
+    return style as StrMap<unknown>
   }
   return {}
 }

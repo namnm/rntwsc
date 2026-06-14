@@ -1,3 +1,5 @@
+/* eslint-disable custom/no-import-invalid-variant */
+
 import { useDarkModeState } from '@/rn/core/dark-mode/use-dark-mode-state'
 import { useResponsiveState } from '@/rn/core/responsive/use-responsive-state'
 import {

@@ -1,5 +1,4 @@
 /* eslint-disable no-restricted-imports */
-
 declare module 'next-unchecked/navigation' {
   import m from 'next/navigation'
 

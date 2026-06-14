@@ -1,0 +1,20 @@
+{
+  "name": "@rntwsc/playground-server",
+  "version": "0.0.0-locked",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node ."
+  },
+  "engines": {
+    "node": ">=24.11",
+    "pnpm": ">=11"
+  },
+  "dependencies": {
+    "express": "5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.6"
+  },
+  "ignoreTsc": true
+}

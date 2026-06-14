@@ -1,3 +1,5 @@
+/* eslint-disable custom/no-import-invalid-variant */
+
 import { useWindowDimensions } from '@/rn/core/responsive/use-window-dimensions'
 import { useThemeVariables } from '@/rn/core/theme/use-theme-variables'
 import type { ClassName } from '@/rn/core/tw/class-name'

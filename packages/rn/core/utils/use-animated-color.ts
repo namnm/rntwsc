@@ -1,3 +1,5 @@
+'use client'
+
 import BezierEasing from 'bezier-easing'
 import parseColor from 'color-rgba'
 import { useEffect, useRef, useState } from 'react'

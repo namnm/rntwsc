@@ -14,7 +14,7 @@ export const kebabCaseImportPaths: TSESLint.RuleModule<
     },
     messages: {
       kebabCaseImportPaths:
-        "Import path segment '{{segment}}' must be in kebab-case",
+        "Import path segment '{{segment}}' should be in kebab-case",
     },
     schema: [
       {

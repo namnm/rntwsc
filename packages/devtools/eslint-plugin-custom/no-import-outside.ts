@@ -22,13 +22,23 @@ export const noImportOutside: TSESLint.RuleModule<
     },
     schema: [
       {
-        type: 'array',
-        items: {
-          type: 'string',
-          required: true,
+        type: 'object',
+        properties: {
+          rootDir: {
+            type: 'string',
+          },
+          alias: {
+            type: 'string',
+          },
+          dirs: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+            minItems: 1,
+          },
         },
-        minItems: 1,
-        uniqueItems: true,
+        additionalProperties: false,
         required: true,
       },
     ],
@@ -42,7 +52,7 @@ export const noImportOutside: TSESLint.RuleModule<
     if (!rootDir) {
       throw new Error('Missing rootDir')
     }
-    if (!rootDir) {
+    if (!alias) {
       throw new Error('Missing alias')
     }
     if (!dirs.length) {

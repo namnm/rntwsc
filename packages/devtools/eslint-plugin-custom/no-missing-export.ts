@@ -138,7 +138,7 @@ const collectExports = (program: TSESTree.Program) => {
   for (const node of program.body) {
     if (node.type === 'ExportAllDeclaration') {
       // export * from '...' - cannot statically know names, skip comparison
-      return null
+      return
     }
     if (node.type === 'ExportDefaultDeclaration') {
       set.add('default')
@@ -181,10 +181,14 @@ const collectExports = (program: TSESTree.Program) => {
 }
 
 const getFileExports = (filepath: string) => {
-  const content = fs.readFileSync(filepath, 'utf-8')
-  // @ts-ignore - parse is not typed properly, but it actually exists
-  const ast: TSESTree.Program = tsParser.parse(content, {
-    jsx: filepath.endsWith('.tsx'),
-  })
-  return collectExports(ast)
+  try {
+    const content = fs.readFileSync(filepath, 'utf-8')
+    const ast: TSESTree.Program =
+      // @ts-ignore - parse is not typed properly, but it actually exists
+      tsParser.parse(content, {
+        jsx: filepath.endsWith('.tsx'),
+      })
+    return collectExports(ast)
+  } catch {}
+  return
 }

@@ -22,6 +22,7 @@ import {
   rCheckbox,
   rDatePicker,
   rDrawer,
+  rFetch,
   rForm,
   rGrid,
   rHome,
@@ -105,6 +106,7 @@ const NavLayoutWithEffects = ({
           <NavSidebarLink href={rNativeRefs} label='Native Refs' />
           <NavSidebarLink href={rRuntime} label='Runtime Style' />
           <NavSidebarLink href={rViewport} label='Viewport' />
+          <NavSidebarLink href={rFetch} label='Fetch' />
           <Separator />
           <ThemeSwitcher />
           <Separator />
