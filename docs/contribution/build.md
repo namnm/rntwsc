@@ -5,12 +5,12 @@ without publishing to npm. Consumers install via pnpm git URL with a path select
 
 ## Modules
 
-| Module              | Package            | Deps               |
-| ------------------- | ------------------ | ------------------ |
-| `packages/shared`   | `@rntwsc/shared`   | -                  |
-| `packages/nodejs`   | `@rntwsc/nodejs`   | shared             |
-| `packages/rn`       | `@rntwsc/rn`       | shared, nodejs     |
-| `packages/devtools` | `@rntwsc/devtools` | shared, nodejs, rn |
+| Module              | Package            | Deps                 |
+| ------------------- | ------------------ | -------------------- |
+| `packages/shared`   | `@rntwsc/shared`   | -                    |
+| `packages/nodejs`   | `@rntwsc/nodejs`   | shared               |
+| `packages/core`     | `@rntwsc/core`     | shared, nodejs       |
+| `packages/devtools` | `@rntwsc/devtools` | shared, nodejs, core |
 
 Each module is a collection of sub-packages (e.g. `nodejs/exec`, `nodejs/log`).
 The build merges them into one installable package.
@@ -53,7 +53,7 @@ dist/
     exec/index.js + index.d.ts
     log/index.js + index.d.ts
     ...
-  rn/           <- @rntwsc/rn
+  core/           <- @rntwsc/core
     package.json  (depends on @rntwsc/shared, @rntwsc/nodejs)
     core/...
     components/...
@@ -61,7 +61,7 @@ dist/
     themes/*.scss (copied)
     ...
   devtools/     <- @rntwsc/devtools
-    package.json  (depends on @rntwsc/shared, @rntwsc/nodejs, @rntwsc/rn)
+    package.json  (depends on @rntwsc/shared, @rntwsc/nodejs, @rntwsc/core)
     eslint/index.js + index.d.ts
     babel-plugin-tw/...
     ...
@@ -77,13 +77,13 @@ Key design decisions:
 
 - **Cross-module paths point to `dist/<dep>/`** - TypeScript reads already-compiled
   `.d.ts` files for type info, not source. This is why build order matters
-  (shared -> nodejs -> rn -> devtools).
+  (shared -> nodejs -> core -> devtools).
 
 ## Build order dependency
 
 ```
 shared (no deps)
   -> nodejs (needs dist/shared/)
-  -> rn     (needs dist/shared/, dist/nodejs/)
-     -> devtools (needs dist/shared/, dist/nodejs/, dist/rn/)
+  -> core     (needs dist/shared/, dist/nodejs/)
+     -> devtools (needs dist/shared/, dist/nodejs/, dist/core/)
 ```

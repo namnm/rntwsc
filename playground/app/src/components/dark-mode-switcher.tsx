@@ -1,10 +1,10 @@
 'use client'
 
-import { Span } from '@/rn/components/text'
-import { Pressable } from '@/rn/core/components/pressable'
-import { View } from '@/rn/core/components/view'
-import { useDarkModeUser, useSetDarkMode } from '@/rn/core/dark-mode'
-import { useTranslationUntyped } from '@/rn/core/i18n'
+import { Span } from '@/core/components/text'
+import { useDarkModeUser, useSetDarkMode } from '@/core/dark-mode'
+import { useTranslationUntyped } from '@/core/i18n'
+import { Pressable } from '@/core/tw/components/pressable'
+import { View } from '@/core/tw/components/view'
 
 export const DarkModeSwitcher = async ({
   onPress,

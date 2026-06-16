@@ -1,20 +1,20 @@
 # RSC + SSR
 
-## Client extension
+## Browser extension
 
-Works like Metro's `.native`/`.ios`/`.android` - but for the client bundle. A Babel plugin (`babel-plugin-client-extension`) and webpack plugin (`webpack-resolve-client-extension`) rewrite import paths: `./foo` -> `./foo.client` when a `.client` file exists.
+Works like Metro's `.native`/`.ios`/`.android` - but for the browser bundle. A Babel plugin (`babel-plugin-browser-extension`) and webpack plugin (`webpack-resolve-browser-extension`) rewrite import paths: `./foo` -> `./foo.browser` when a `.browser` file exists.
 
 To bypass Next.js RSC metadata validation (which runs before Babel), `next/..` imports are aliased to `next-unchecked/..`. `babel-plugin-rsc-validation` handles those checks instead.
 
-**Cache gotcha**: adding or removing a `.client` file requires deleting `.next/` and restarting the dev server - the transpiled path gets cached.
+**Cache gotcha**: adding or removing a `.browser` file requires deleting `.next/` and restarting the dev server - the transpiled path gets cached.
 
 **Export parity**: a custom ESLint rule `custom/no-missing-export` checks that each variant exports the same names as the default. To intentionally allow a variant-only export, suffix its name with the variant (e.g. `somethingNative` in `.native`).
 
-**No `.web.client`**: only `.client` is supported. Default = server (broadest), then `.client`, then `.native`.
+**No `.web.browser`**: only `.browser` is supported. Default = server (broadest), then `.browser`, then `.native`.
 
 ## Async components
 
-Async components are transpiled to sync for client and native bundles. Only async components that call `await use..` hooks are affected:
+Async components are transpiled to sync for browser and native bundles. Only async components that call `await use..` hooks are affected:
 
 ```tsx
 // source (server)
@@ -24,20 +24,10 @@ export const Hello = async () => {
   return <Text>{t('hello')}</Text>
 }
 
-// transpiled (client / native) - import path rewritten to .client variant
-import { useTranslation } from '@/i18n/index.client'
+// transpiled (browser / native) - import path rewritten to .browser variant
+import { useTranslation } from '@/i18n/index.browser'
 export const Hello = () => {
   const t = useTranslation('common')
   return <Text>{t('hello')}</Text>
 }
 ```
-
-## Context
-
-Avoid global React Context - it marks all children as client components and defeats RSC streaming.
-
-| Bundle | Strategy                                                                    |
-| ------ | --------------------------------------------------------------------------- |
-| Server | Async methods: `next/headers`, `fetch`, etc.                                |
-| Client | Same export shape via `next/navigation`, singletons, `useSyncExternalStore` |
-| Native | React Context is fine; add Provider at the native entry point               |

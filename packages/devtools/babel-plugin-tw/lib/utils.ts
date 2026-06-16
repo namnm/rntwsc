@@ -1,4 +1,4 @@
-import { omitEmptyObject } from '@/rn/core/tw/lib/class-name-to-native'
+import { omitEmptyObject } from '@/core/tw/lib/class-name-to-native'
 
 export const safeIncludes = (className: string, k: string) =>
   className === k ||

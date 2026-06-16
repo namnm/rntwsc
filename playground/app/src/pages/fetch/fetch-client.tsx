@@ -1,17 +1,34 @@
 'use client'
 
-import { Button } from '@/rn/components/button'
-import { View } from '@/rn/core/components/view'
-import { useFetch } from '@/rn/fetch'
+import { Button } from '@/core/components/button'
+import { Span } from '@/core/components/text'
+import { useFetch } from '@/core/fetch'
+import { View } from '@/core/tw/components/view'
+import { playgroundFetchUrl } from '#/pages/fetch/config'
 import type { HelloData } from '#/pages/fetch/fetch-ui'
 import { FetchUi } from '#/pages/fetch/fetch-ui'
 
-export const FetchClient = async ({ url }: { url: string }) => {
-  const r = await useFetch<HelloData>(url + '?client=true')
+type Props = {
+  label: string
+  refetch?: boolean
+}
+export const FetchClient = async ({ label, refetch }: Props) => {
+  const r = await useFetch<HelloData>({
+    url: playgroundFetchUrl + '?client=true',
+  })
   return (
     <View className='gap-2'>
-      <FetchUi {...r} />
-      <Button onPress={r.refetch}>Refetch</Button>
+      <Span className='text-foreground text-lg font-semibold transition'>
+        {label}
+      </Span>
+      <View className='gap-2'>
+        <FetchUi {...r} />
+        {refetch && (
+          <View className='flex-row'>
+            <Button onPress={r.refetch}>Refetch</Button>
+          </View>
+        )}
+      </View>
     </View>
   )
 }

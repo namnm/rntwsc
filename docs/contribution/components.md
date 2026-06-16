@@ -4,7 +4,7 @@
 
 | What                               | Where                                                |
 | ---------------------------------- | ---------------------------------------------------- |
-| Framework components               | `packages/rn/components/<name>/index.tsx`            |
+| Framework components               | `packages/core/components/<name>/index.tsx`          |
 | Playground pages (shared RN + web) | `playground/app/src/pages/<name>/index.tsx`          |
 | Web routes                         | `playground/web/src/app/[locale]/<name>/page.tsx`    |
 | Route constants                    | `playground/app/src/pages/route-paths.ts`            |
@@ -25,11 +25,11 @@ Read the closest existing component before building a new one:
 | Trigger -> Drawer + custom UI inside       | `date-picker/index.tsx` |
 | Single/Multiple props union                | `accordion/index.tsx`   |
 
-All components live under `packages/rn/components/`.
+All components live under `packages/core/components/`.
 
 ## Adding a component
 
-1. `packages/rn/components/<name>/index.tsx` - component
+1. `packages/core/components/<name>/index.tsx` - component
 2. `playground/app/src/pages/<name>/index.tsx` - demo page, show all variants
 3. `playground/app/src/pages/route-paths.ts` - `export const rFoo = '/foo'`
 4. `playground/app/src/pages/routes.native.ts` - import page + add to `routesNative`
@@ -92,4 +92,4 @@ The `as any` casts are correct here - same pattern used in `accordion/index.tsx`
 
 ## SVG icons
 
-Icons live in `packages/rn/svg-icons/`. `className` controls color (`text-*` -> fill) and size (`text-*` -> width/height). Use dedicated directional icons (`chevron-left`, `chevron-bottom`, etc.) - do not rotate `chevron-right`.
+Icons live in `packages/core/svg-icons/`. `className` controls color (`text-*` -> fill) and size (`text-*` -> width/height). Use dedicated directional icons (`chevron-left`, `chevron-bottom`, etc.) - do not rotate `chevron-right`.

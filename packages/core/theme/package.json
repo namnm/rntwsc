@@ -1,0 +1,21 @@
+{
+  "name": "@rntwsc/core-theme",
+  "version": "0.0.0-locked",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=24.11",
+    "pnpm": ">=11"
+  },
+  "dependencies": {
+    "js-cookie": "3.0.5"
+  },
+  "peerDependencies": {
+    "next": "*",
+    "react": "*"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "3.0.6",
+    "@types/react": "19.2.14"
+  }
+}

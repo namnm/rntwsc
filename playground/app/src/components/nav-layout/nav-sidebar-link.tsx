@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react'
 
-import { Span } from '@/rn/components/text'
-import type { LinkProps } from '@/rn/core/components/link-untyped'
-import { LinkUntyped } from '@/rn/core/components/link-untyped'
-import { View } from '@/rn/core/components/view'
-import { useRoute } from '@/rn/core/navigation'
+import { Span } from '@/core/components/text'
+import { useRoute } from '@/core/navigation'
+import type { LinkProps } from '@/core/tw/components/link-untyped'
+import { LinkUntyped } from '@/core/tw/components/link-untyped'
+import { View } from '@/core/tw/components/view'
 
 type NavSidebarLinkProps = Omit<LinkProps, 'query'> & {
   label: string

@@ -1,5 +1,5 @@
-import { initTheme } from '@/rn/core/theme/config'
-import { allBuiltinThemes } from '@/rn/themes/all'
-import { corporateTheme } from '@/rn/themes/corporate'
+import { initTheme } from '@/core/theme/config'
+import { allBuiltinThemes } from '@/core/themes/all'
+import { corporateTheme } from '@/core/themes/corporate'
 
 initTheme(allBuiltinThemes, corporateTheme)

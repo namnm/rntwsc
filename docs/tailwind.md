@@ -100,7 +100,7 @@ These class names compile to RN props instead of style:
 
 **Props**: `disabled:` `checked:` - pass fields to hook options `props`/`childrenProps`
 
-**Group/peer**: `group-<selector>:` `group-<key>-<selector>:` `peer-<selector>:` `peer-<key>-<selector>:`. Use `TwPeerProvider` to isolate peer contexts.
+**Group/peer**: `group-<selector>:` `group-<key>-<selector>:` `peer-<selector>:` `peer-<key>-<selector>:`. Use `TwClassNamePeerProvider` to isolate peer contexts.
 
 **Nested**: `<sel1>:<sel2>:<class>` - deeper nesting wins.
 

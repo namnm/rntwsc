@@ -1,6 +1,6 @@
 # Theme
 
-10 built-in themes, each with a dark mode variant. Works across server, client, and native.
+10 built-in themes, each with a dark mode variant. Works across server, browser, and native.
 
 Built-in themes: `ruby`, `phoenix`, `sunny`, `forest`, `ocean`, `corporate`, `blossom`, `mystic`, `coffee`, `stone`.
 
@@ -9,9 +9,9 @@ Built-in themes: `ruby`, `phoenix`, `sunny`, `forest`, `ocean`, `corporate`, `bl
 Initialize once at app startup (e.g. in your polyfill entry):
 
 ```ts
-import { initTheme } from '@/rn/core/theme/config'
-import { allBuiltinThemes } from '@/rn/themes/all'
-import { corporateTheme } from '@/rn/themes/corporate'
+import { initTheme } from '@/core/theme/config'
+import { allBuiltinThemes } from '@/core/themes/all'
+import { corporateTheme } from '@/core/themes/corporate'
 
 // (available themes, default theme)
 initTheme(allBuiltinThemes, corporateTheme)
@@ -20,12 +20,12 @@ initTheme(allBuiltinThemes, corporateTheme)
 ## Reading the current theme
 
 ```tsx
-import { useTheme, useSetTheme } from '@/rn/core/theme'
+import { useTheme, useSetTheme } from '@/core/theme'
 
 // server component (async)
 const theme = await useTheme()
 
-// client component (sync, useSyncExternalStore)
+// browser component (sync, useSyncExternalStore)
 const theme = useTheme()
 const setTheme = useSetTheme()
 ```
@@ -52,8 +52,8 @@ import { ThemeSwitcher } from '#/components/theme-switcher'
 ## Custom theme
 
 ```ts
-import type { ThemeConfig } from '@/rn/core/theme/config'
-import { tw } from '@/rn/core/tw/tw'
+import type { ThemeConfig } from '@/core/theme/config'
+import { tw } from '@/core/tw/tw'
 
 export const myTheme: ThemeConfig = {
   name: 'my-theme',

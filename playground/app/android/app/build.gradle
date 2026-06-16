@@ -31,7 +31,7 @@ react {
     // bundleCommand = "ram-bundle"
     //
     //   The path to the CLI configuration file. Default is empty.
-    // bundleConfig = file(../rn-cli.config.js)
+    // bundleConfig = file(../core-cli.config.js)
     //
     //   The name of the generated asset file containing your JS bundle
     // bundleAssetName = "MyApplication.android.bundle"

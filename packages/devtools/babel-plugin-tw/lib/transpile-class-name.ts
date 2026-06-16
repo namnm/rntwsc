@@ -1,12 +1,12 @@
 import type { Node, NodePath } from '@babel/core'
 
-import type { Ctx } from '@/devtools/babel-plugin-tw/lib/context'
-import { moveToRootScope } from '@/devtools/babel-plugin-tw/lib/move-to-root-scope'
-import type { ClassName } from '@/rn/core/tw/class-name'
+import type { ClassName } from '@/core/tw/class-name'
 import {
   classNameToNative,
   stripSelector,
-} from '@/rn/core/tw/lib/class-name-to-native'
+} from '@/core/tw/lib/class-name-to-native'
+import type { Ctx } from '@/devtools/babel-plugin-tw/lib/context'
+import { moveToRootScope } from '@/devtools/babel-plugin-tw/lib/move-to-root-scope'
 
 type Options = {
   className: string

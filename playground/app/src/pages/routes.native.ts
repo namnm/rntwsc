@@ -9,6 +9,7 @@ import { DatePickerPage } from '#/pages/date-picker'
 import { DrawerPage } from '#/pages/drawer'
 import { FetchPage } from '#/pages/fetch'
 import { FormPage } from '#/pages/form'
+import { GraphQLPage } from '#/pages/graphql'
 import { GridPage } from '#/pages/grid'
 import { HomePage } from '#/pages/home'
 import { ModalPage } from '#/pages/modal'
@@ -26,6 +27,7 @@ import {
   rDrawer,
   rFetch,
   rForm,
+  rGraphQL,
   rGrid,
   rHome,
   rModal,
@@ -49,6 +51,7 @@ import { ViewportPage } from '#/pages/viewport'
 export const routesNative = {
   [rHome]: HomePage,
   [rFetch]: FetchPage,
+  [rGraphQL]: GraphQLPage,
   [rAccordion]: AccordionPage,
   [rBadge]: BadgePage,
   [rButton]: ButtonPage,

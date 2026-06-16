@@ -30,14 +30,14 @@ export const getCallerIsServer = (api: ConfigAPI): boolean | undefined => {
   return v
 }
 
-export const getCallerClientOnly = (api: ConfigAPI): boolean | undefined => {
+export const getCallerBrowserOnly = (api: ConfigAPI): boolean | undefined => {
   let v: boolean | undefined = undefined
   // could be empty in traverse only mode without api
   if (typeof api?.caller !== 'function') {
     return
   }
   api.caller(c => {
-    v = get(c, 'clientOnly')
+    v = get(c, 'browserOnly')
     if (typeof v !== 'boolean') {
       v = undefined
     }
@@ -46,14 +46,14 @@ export const getCallerClientOnly = (api: ConfigAPI): boolean | undefined => {
   return v
 }
 
-export const getCallerClients = (api: ConfigAPI): string[] | undefined => {
+export const getCallerBrowsers = (api: ConfigAPI): string[] | undefined => {
   let v: string[] | undefined = undefined
   // could be empty in traverse only mode without api
   if (typeof api?.caller !== 'function') {
     return
   }
   api.caller(c => {
-    v = get(c, 'clients')
+    v = get(c, 'browsers')
     try {
       v = v && JSON.parse(v)
     } catch {

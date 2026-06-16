@@ -1,10 +1,10 @@
 import type { ConfigAPI } from '@babel/core'
 
 import { getAlias } from '@/devtools/babel-config/get-alias'
-import { getCallerClientOnly } from '@/devtools/babel-config/is-server'
+import { getCallerBrowserOnly } from '@/devtools/babel-config/is-server'
 import { asyncHookPlugin } from '@/devtools/babel-plugin-async-hook'
-import { clientExtensionPlugin } from '@/devtools/babel-plugin-client-extension'
-import { rscValidationPlugin } from '@/devtools/babel-plugin-rsc-validation'
+import { browserExtensionPlugin } from '@/devtools/babel-plugin-browser-extension'
+import { browserValidationPlugin } from '@/devtools/babel-plugin-browser-validation'
 import { twPlugin } from '@/devtools/babel-plugin-tw'
 import { path } from '@/nodejs/path'
 
@@ -30,8 +30,8 @@ export const config = ({
     return (api: ConfigAPI) => {
       const plugins: any[] = [
         //
-        rscValidationPlugin,
-        clientExtensionPlugin,
+        browserValidationPlugin,
+        browserExtensionPlugin,
         asyncHookPlugin,
       ]
       const presets: any[] = [
@@ -39,7 +39,7 @@ export const config = ({
         require.resolve('@babel/preset-typescript'),
       ]
 
-      if (getCallerClientOnly(api)) {
+      if (getCallerBrowserOnly(api)) {
         plugins.push(
           //
           require.resolve('babel-plugin-react-compiler'),
@@ -84,7 +84,7 @@ export const config = ({
   return {
     plugins: [
       //
-      rscValidationPlugin,
+      browserValidationPlugin,
       [asyncHookPlugin, asyncHookOptions],
       [twPlugin, twOptions],
       require.resolve('babel-plugin-react-compiler'),

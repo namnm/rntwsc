@@ -1,0 +1,20 @@
+{
+  "name": "@rntwsc/core-graphql",
+  "version": "0.0.0-locked",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=24.11",
+    "pnpm": ">=11"
+  },
+  "dependencies": {
+    "@apollo/client": "4.2.3",
+    "graphql": "16.14.2"
+  },
+  "peerDependencies": {
+    "react": "*"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.14"
+  }
+}

@@ -2,12 +2,12 @@
 
 import { useCallback, useState } from 'react'
 
-import type { SelectItem } from '@/rn/components/select'
-import { Select } from '@/rn/components/select'
-import { H1, Span } from '@/rn/components/text'
-import { ScrollView } from '@/rn/core/components/scroll-view'
-import { View } from '@/rn/core/components/view'
-import { useSafeAreaPadding } from '@/rn/core/responsive/use-safe-area'
+import type { SelectItem } from '@/core/components/select'
+import { Select } from '@/core/components/select'
+import { H1, Span } from '@/core/components/text'
+import { useSafeAreaPadding } from '@/core/responsive/use-safe-area'
+import { ScrollView } from '@/core/tw/components/scroll-view'
+import { View } from '@/core/tw/components/view'
 import { upperFirst } from '@/shared/lodash'
 import { NavLayout } from '#/components/nav-layout'
 

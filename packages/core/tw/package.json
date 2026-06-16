@@ -1,0 +1,26 @@
+{
+  "name": "@rntwsc/core-tw",
+  "version": "0.0.0-locked",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=24.11",
+    "pnpm": ">=11"
+  },
+  "dependencies": {
+    "react-native-css-animations": "0.1.1",
+    "tailwind-merge": "3.6.0"
+  },
+  "peerDependencies": {
+    "@react-navigation/native": "*",
+    "next": "*",
+    "react": "*",
+    "react-native": "*",
+    "react-native-fast-image": "*",
+    "react-native-reanimated": "*",
+    "tailwindcss": "*"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.14"
+  }
+}

@@ -3,14 +3,14 @@
 import type { PropsWithChildren } from 'react'
 import { useState } from 'react'
 
-import { Portal } from '@/rn/components/portal'
-import { Separator } from '@/rn/components/separator'
-import { Span } from '@/rn/components/text'
-import { Pressable } from '@/rn/core/components/pressable'
-import { ScrollView } from '@/rn/core/components/scroll-view'
-import { View } from '@/rn/core/components/view'
-import { useRoute } from '@/rn/core/navigation'
-import { isWeb } from '@/rn/platform'
+import { Portal } from '@/core/components/portal'
+import { Separator } from '@/core/components/separator'
+import { Span } from '@/core/components/text'
+import { useRoute } from '@/core/navigation'
+import { isWeb } from '@/core/platform'
+import { Pressable } from '@/core/tw/components/pressable'
+import { ScrollView } from '@/core/tw/components/scroll-view'
+import { View } from '@/core/tw/components/view'
 import { DarkModeSwitcher } from '#/components/dark-mode-switcher'
 import { I18nSwitcher } from '#/components/i18n-switcher'
 import { NavSidebarLink } from '#/components/nav-layout/nav-sidebar-link'
@@ -27,6 +27,7 @@ import {
   rDrawer,
   rFetch,
   rForm,
+  rGraphQL,
   rGrid,
   rHome,
   rModal,
@@ -140,6 +141,7 @@ const NavLayoutWithEffects = ({
           label='Viewport'
         />
         <NavSidebarLink onPress={onPress} pathname={rFetch} label='Fetch' />
+        <NavSidebarLink onPress={onPress} pathname={rGraphQL} label='GraphQL' />
         <Separator />
         <ThemeSwitcher onPress={onPress} />
         <Separator />
@@ -153,7 +155,7 @@ const NavLayoutWithEffects = ({
   return (
     <View className='relative flex-1 sm:flex-row'>
       {/* Native Modal blocks touches even when transparent; only mount when open */}
-      {(isWeb || sidebarOpen) && <Portal>{sidebar}</Portal>}
+      {isWeb ? sidebar : sidebarOpen && <Portal>{sidebar}</Portal>}
 
       <View className='flex-1 flex-col sm:ml-60'>
         <View className='flex-1'>{children}</View>

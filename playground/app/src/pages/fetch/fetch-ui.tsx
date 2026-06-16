@@ -1,17 +1,17 @@
-import { Span } from '@/rn/components/text'
-import { View } from '@/rn/core/components/view'
-import type { UseFetchData } from '@/rn/fetch/store'
+import { Span } from '@/core/components/text'
+import type { UseHydrationData } from '@/core/hydration/config'
+import { View } from '@/core/tw/components/view'
 
 export type HelloData = { message: string; timestamp: number }
 
-type Props = UseFetchData<HelloData>
+type Props = UseHydrationData<HelloData>
 
-export const FetchUi = ({ data, loading, err, dehydrateJsx }: Props) => {
+export const FetchUi = ({ data, loading, error, dehydrateJsx }: Props) => {
   let children = null
   if (loading) {
     children = <Span className='text-foreground transition'>loading..</Span>
-  } else if (err) {
-    children = <Span className='text-red-500 transition'>{String(err)}</Span>
+  } else if (error) {
+    children = <Span className='text-red-500 transition'>{String(error)}</Span>
   } else {
     children = (
       <View className='gap-2'>

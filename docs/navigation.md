@@ -1,6 +1,6 @@
 # Navigation
 
-Works across server, client, and native with a unified API.
+Works across server, browser, and native with a unified API.
 
 ## Add a route
 
@@ -46,7 +46,7 @@ import { Link } from '#/components/link'
 ## Read the current route
 
 ```tsx
-import { useRoute, useIsRouteFocused } from '@/rn/core/navigation'
+import { useRoute, useIsRouteFocused } from '@/core/navigation'
 
 const { pathname, query } = await useRoute()
 const focused = useIsRouteFocused() // always true on web, useIsFocused() on native
@@ -54,13 +54,13 @@ const focused = useIsRouteFocused() // always true on web, useIsFocused() on nat
 
 ## Internals
 
-Platform entry points in `packages/rn/core/navigation/`:
+Platform entry points in `packages/core/navigation/`:
 
-| File              | Used by           | How                                                                    |
-| ----------------- | ----------------- | ---------------------------------------------------------------------- |
-| `index.ts`        | Server components | Reads `x-request-url` header, strips locale prefix, parses query       |
-| `index.client.ts` | Client components | `usePathname()` + `useSearchParams()` from `next-unchecked/navigation` |
-| `index.native.ts` | React Native      | Wraps `useRoute` + `useIsFocused` from `@react-navigation/native`      |
+| File               | Used by            | How                                                                    |
+| ------------------ | ------------------ | ---------------------------------------------------------------------- |
+| `index.ts`         | Server components  | Reads `x-request-url` header, strips locale prefix, parses query       |
+| `index.browser.ts` | Browser components | `usePathname()` + `useSearchParams()` from `next-unchecked/navigation` |
+| `index.native.ts`  | React Native       | Wraps `useRoute` + `useIsFocused` from `@react-navigation/native`      |
 
 On native, `routesNative` is passed to `createNativeStackNavigator` and wrapped with `createStaticNavigation` in `playground/app/src/app.native.tsx`. On web, Next.js file-system routing handles everything under `playground/web/src/app/[locale]/`.
 

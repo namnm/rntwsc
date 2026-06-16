@@ -1,6 +1,18 @@
-const message = 'Use `@/rn/core` instead'
+const message = 'Use `@/core/tw` instead'
 
 export const restrictedImports = [
+  {
+    name: 'react',
+    importNames: ['Suspense'],
+    message:
+      'Suspense is not compatible with fetching hydration and react native current status, please use traditional loading conditional render instead',
+  },
+  {
+    name: 'react',
+    importNames: ['cache'],
+    message:
+      'React cache only works correctly in rsc component tree, in realistic we also need to cover ssr client bundle component tree, please use `@/core/cache` instead',
+  },
   {
     name: 'react-native',
     importNames: [

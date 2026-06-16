@@ -1,10 +1,10 @@
-import { Button } from '@/rn/components/button'
-import { H1, Span } from '@/rn/components/text'
-import { ScrollView } from '@/rn/core/components/scroll-view'
-import { View } from '@/rn/core/components/view'
-import { useTranslationUntyped } from '@/rn/core/i18n'
-import { useSafeAreaPadding } from '@/rn/core/responsive/use-safe-area'
-import { isWeb } from '@/rn/platform'
+import { Button } from '@/core/components/button'
+import { H1, Span } from '@/core/components/text'
+import { useTranslationUntyped } from '@/core/i18n'
+import { isWeb } from '@/core/platform'
+import { useSafeAreaPadding } from '@/core/responsive/use-safe-area'
+import { ScrollView } from '@/core/tw/components/scroll-view'
+import { View } from '@/core/tw/components/view'
 import { NavLayout } from '#/components/nav-layout'
 
 export const HomePage = async () => {

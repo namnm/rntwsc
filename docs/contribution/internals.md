@@ -6,8 +6,8 @@ Currently webpack-only. Turbopack uses ESM and a unified RSC graph for all envir
 
 - Prebuilt CommonJS for all packages
 - CSS theme variables generated in a build step
-- `resolveAlias` glob for all `.client` extension files in next config
-- Rebuild CSS or restart Next.js when adding/removing `.client` files
+- `resolveAlias` glob for all `.browser` extension files in next config
+- Rebuild CSS or restart Next.js when adding/removing `.browser` files
 
 Turbopack also has known issues with bundle chunk sizes. Not recommended for now.
 
@@ -26,6 +26,6 @@ Changes made:
 - Add `rnwTag`, `rnwClassNameData`, `className` to `forwardedProps`
 - Update `createElement` to use `rnwTag`
 - Add `rnwClassNameData` to each patched component
-- Update `createDOMProps` to call a global `rnwClassName` function (injected in `packages/rn/core/polyfill/react-native-web.ts` - functions cannot be passed as props in RSC streaming)
+- Update `createDOMProps` to call a global `rnwClassName` function (injected in `packages/core/tw/polyfill/react-native-web.ts` - functions cannot be passed as props in RSC streaming)
 
 Props prefixed `data-` are merged into `dataSet` (react-native-web only supports `dataSet`).

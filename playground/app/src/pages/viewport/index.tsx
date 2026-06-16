@@ -1,9 +1,9 @@
 'use client'
 
-import { H1, Span } from '@/rn/components/text'
-import { ScrollView } from '@/rn/core/components/scroll-view'
-import { View } from '@/rn/core/components/view'
-import { useSafeAreaPadding } from '@/rn/core/responsive/use-safe-area'
+import { H1, Span } from '@/core/components/text'
+import { useSafeAreaPadding } from '@/core/responsive/use-safe-area'
+import { ScrollView } from '@/core/tw/components/scroll-view'
+import { View } from '@/core/tw/components/view'
 import { NavLayout } from '#/components/nav-layout'
 
 const DemoBox = ({

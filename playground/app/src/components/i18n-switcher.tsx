@@ -1,8 +1,8 @@
-import { Span } from '@/rn/components/text'
-import { Pressable } from '@/rn/core/components/pressable'
-import { View } from '@/rn/core/components/view'
-import { getLangUntyped } from '@/rn/core/i18n/config'
-import { useI18nSwitcherProps } from '@/rn/core/i18n/use-i18n-switcher-props'
+import { Span } from '@/core/components/text'
+import { getLangUntyped } from '@/core/i18n/config'
+import { useI18nSwitcherProps } from '@/core/i18n/use-i18n-switcher-props'
+import { Pressable } from '@/core/tw/components/pressable'
+import { View } from '@/core/tw/components/view'
 import { languages } from '#/i18n/config'
 
 export const I18nSwitcher = async ({ onPress }: { onPress?: () => void }) => {

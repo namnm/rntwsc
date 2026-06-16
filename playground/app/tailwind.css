@@ -1,3 +1,3 @@
 @import 'tailwindcss';
 @config './tailwind.config.js';
-@import '../../packages/rn/core/tailwind.css';
+@import '../../packages/core/tw/tailwind.css';

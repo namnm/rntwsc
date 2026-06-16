@@ -24,7 +24,3 @@ declare module '*.svg' {
   const m: any
   export = m
 }
-declare module 'bezier-easing' {
-  const m: Function
-  export = m
-}

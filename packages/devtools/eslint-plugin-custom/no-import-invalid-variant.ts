@@ -3,7 +3,7 @@ import type { TSESLint, TSESTree } from '@typescript-eslint/utils'
 import { fs } from '@/nodejs/fs'
 import { stripRepoRoot } from '@/nodejs/path'
 
-const variants = ['native', 'ios', 'android', 'client'] as const
+const variants = ['native', 'ios', 'android', 'browser'] as const
 
 export const noImportInvalidVariant: TSESLint.RuleModule<
   'noImportInvalidVariant' | 'missingBaseFile' | 'missingNativeFile',
@@ -50,7 +50,7 @@ export const noImportInvalidVariant: TSESLint.RuleModule<
 
     return {
       Program: n => {
-        if (fileVariant === 'native' || fileVariant === 'client') {
+        if (fileVariant === 'native' || fileVariant === 'browser') {
           const base = getSiblingPath(c.filename, fileVariant, '')
           if (base && !fs.existsSync(base)) {
             c.report({
@@ -63,7 +63,7 @@ export const noImportInvalidVariant: TSESLint.RuleModule<
             })
           }
         }
-        if (fileVariant === 'client') {
+        if (fileVariant === 'browser') {
           const native = getSiblingPath(c.filename, fileVariant, '.native')
           if (native && !fs.existsSync(native)) {
             c.report({

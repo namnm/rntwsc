@@ -1,17 +1,12 @@
-import { H1, Span } from '@/rn/components/text'
-import { ScrollView } from '@/rn/core/components/scroll-view'
-import { View } from '@/rn/core/components/view'
-import { useSafeAreaPadding } from '@/rn/core/responsive/use-safe-area'
-import { useFetch } from '@/rn/fetch'
+import { H1 } from '@/core/components/text'
+import { useSafeAreaPadding } from '@/core/responsive/use-safe-area'
+import { ScrollView } from '@/core/tw/components/scroll-view'
+import { View } from '@/core/tw/components/view'
 import { NavLayout } from '#/components/nav-layout'
 import { FetchClient } from '#/pages/fetch/fetch-client'
-import type { HelloData } from '#/pages/fetch/fetch-ui'
-import { FetchUi } from '#/pages/fetch/fetch-ui'
+import { FetchServer } from '#/pages/fetch/fetch-server'
 
-const API_URL = 'http://192.168.5.199:3001/api/fetch'
-
-export const FetchPage = async () => {
-  const r = await useFetch<HelloData>(API_URL)
+export const FetchPage = () => {
   const padding = useSafeAreaPadding()
 
   return (
@@ -24,20 +19,12 @@ export const FetchPage = async () => {
           <H1 className='text-foreground text-2xl font-semibold transition'>
             Fetch
           </H1>
-
-          <View className='gap-2'>
-            <Span className='text-foreground text-lg font-semibold transition'>
-              server
-            </Span>
-            <FetchUi {...r} />
-          </View>
-
-          <View className='gap-2'>
-            <Span className='text-foreground text-lg font-semibold transition'>
-              client
-            </Span>
-            <FetchClient url={API_URL} />
-          </View>
+          <FetchServer label='server 1' />
+          <FetchClient label='client 1' refetch />
+          <FetchServer label='server 2' />
+          <FetchClient label='client 2' />
+          <FetchServer label='server 3' />
+          <FetchClient label='client 3' />
         </View>
       </ScrollView>
     </NavLayout>

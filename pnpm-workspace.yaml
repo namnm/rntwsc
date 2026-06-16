@@ -18,5 +18,5 @@ overrides:
 patchedDependencies:
   eslint-plugin-import: packages/devtools/patches/eslint-plugin-import.patch
   eslint-plugin-react: packages/devtools/patches/eslint-plugin-react.patch
-  react-native-web: packages/rn/patches/react-native-web.patch
+  react-native-web: packages/core/patches/react-native-web.patch
   unicorn-magic: packages/nodejs/patches/unicorn-magic.patch

@@ -1,10 +1,10 @@
 import type { Node, NodePath } from '@babel/core'
 import { types as t } from '@babel/core'
 
+import type { ClassName } from '@/core/tw/class-name'
 import type { Ctx } from '@/devtools/babel-plugin-tw/lib/context'
 import { jsToNode } from '@/devtools/babel-plugin-tw/lib/js-to-node'
 import { omitEmpty } from '@/devtools/babel-plugin-tw/lib/utils'
-import type { ClassName } from '@/rn/core/tw/class-name'
 
 export const transpileClassNameJsx = (
   ctx: Ctx,

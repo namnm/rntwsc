@@ -1,0 +1,25 @@
+{
+  "name": "@rntwsc/core-utils",
+  "version": "0.0.0-locked",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=24.11",
+    "pnpm": ">=11"
+  },
+  "dependencies": {
+    "bezier-easing": "3.0.0",
+    "color-rgba": "3.0.0",
+    "immer": "11.1.8",
+    "twrnc": "4.16.0",
+    "use-immer": "0.11.0"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native-reanimated": "*"
+  },
+  "devDependencies": {
+    "@types/color-rgba": "2.1.3",
+    "@types/react": "19.2.14"
+  }
+}

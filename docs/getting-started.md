@@ -7,7 +7,7 @@ Install the packages by pinning to a tagged version or commit hash:
   "dependencies": {
     "@rntwsc/shared": "github:namnm/rntwsc#<version>&path:shared",
     "@rntwsc/nodejs": "github:namnm/rntwsc#<version>&path:nodejs",
-    "@rntwsc/rn": "github:namnm/rntwsc#<version>&path:rn",
+    "@rntwsc/core": "github:namnm/rntwsc#<version>&path:core",
     "@rntwsc/devtools": "github:namnm/rntwsc#<version>&path:devtools"
   }
 }
@@ -19,7 +19,7 @@ Install the packages by pinning to a tagged version or commit hash:
 | ------------------ | ---------------------------------------------------------- |
 | `@rntwsc/shared`   | Shared utils                                               |
 | `@rntwsc/nodejs`   | Node.js utils                                              |
-| `@rntwsc/rn`       | React Native components, hooks, icons, themes..            |
+| `@rntwsc/core`     | React Native components, hooks, icons, themes..            |
 | `@rntwsc/devtools` | Built in utils and configs: Babel, ESLint, NextJS, Metro.. |
 
 ## VS Code Intellisense

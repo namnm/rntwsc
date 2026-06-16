@@ -1,10 +1,10 @@
 'use client'
 
-import { Span } from '@/rn/components/text'
-import { Pressable } from '@/rn/core/components/pressable'
-import { View } from '@/rn/core/components/view'
-import { useSetTheme, useTheme } from '@/rn/core/theme'
-import { getAvailableThemes } from '@/rn/core/theme/config'
+import { Span } from '@/core/components/text'
+import { useSetTheme, useTheme } from '@/core/theme'
+import { getAvailableThemes } from '@/core/theme/config'
+import { Pressable } from '@/core/tw/components/pressable'
+import { View } from '@/core/tw/components/view'
 import { capitalCase } from '@/shared/lodash'
 
 export const ThemeSwitcher = async ({ onPress }: { onPress?: () => void }) => {

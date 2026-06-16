@@ -12,9 +12,9 @@ import {
   i18nCookieMaxAge,
   i18nHeaderKey,
   isValidLocaleUntyped,
-} from '@/rn/core/i18n/config'
-import { urlHeaderKey } from '@/rn/core/navigation/config'
-import { normalizePathname } from '@/rn/core/utils/normalize-pathname'
+} from '@/core/i18n/config'
+import { urlHeaderKey } from '@/core/navigation/config'
+import { normalizePathname } from '@/core/navigation/normalize-pathname'
 
 const locales = getLocalesUntyped()
 const langs = getLangsUntyped()

@@ -14,6 +14,8 @@
     "ts": "node ./devtools tsc,type-coverage",
     "tsc": "node ./devtools tsc",
     "type-coverage": "node ./devtools type-coverage",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "dist": "node ./devtools build-dist"
   },
   "engines": {
@@ -26,7 +28,8 @@
   },
   "devDependencies": {
     "@types/node": "25.8.0",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "vitest": "4.1.6"
   },
   "ignoreTsc": true
 }

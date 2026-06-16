@@ -1,13 +1,13 @@
 import type { Node, NodePath, types as t } from '@babel/core'
 import type { Platform } from 'react-native'
 
+import type { ClassName } from '@/core/tw/class-name'
 import { readTwExtractOutput } from '@/devtools/babel-plugin-tw/lib/config'
 import type { Twrnc } from '@/devtools/babel-plugin-tw/lib/create-twrnc'
 import { createTwrnc } from '@/devtools/babel-plugin-tw/lib/create-twrnc'
 import type { WithPath } from '@/devtools/babel-plugin-tw/lib/path-to-js'
 import { transpileClassName } from '@/devtools/babel-plugin-tw/lib/transpile-class-name'
 import type { TwPluginOptions } from '@/devtools/babel-plugin-tw/visitor'
-import type { ClassName } from '@/rn/core/tw/class-name'
 import type { StrMap } from '@/shared/ts-utils'
 
 export type Ctx = {

@@ -5,15 +5,15 @@ import '#/polyfill/server'
 import type { PropsWithChildren } from 'react'
 
 import '../tailwind.css'
-import '@/rn/themes/all.scss'
+import '@/core/themes/all.scss'
 
-import { useDarkModeUser } from '@/rn/core/dark-mode'
-import { useCurrentLangUntyped } from '@/rn/core/i18n'
-import { darkClassName, lightClassName, webClassName } from '@/rn/core/tailwind'
-import { useTheme } from '@/rn/core/theme'
-import { getThemeClassName } from '@/rn/core/theme/config'
-import { clsx } from '@/rn/core/tw/clsx'
-import { ClientEnhancer } from '#/polyfill/client'
+import { useDarkModeUser } from '@/core/dark-mode'
+import { useCurrentLangUntyped } from '@/core/i18n'
+import { useTheme } from '@/core/theme'
+import { getThemeClassName } from '@/core/theme/config'
+import { clsx } from '@/core/tw/clsx'
+import { darkClassName, lightClassName, webClassName } from '@/core/tw/tailwind'
+import { BrowserEnhancers } from '#/polyfill/browser'
 
 export const App = async ({ children }: PropsWithChildren) => {
   const [lang, theme, dark] = await Promise.all([
@@ -38,7 +38,7 @@ export const App = async ({ children }: PropsWithChildren) => {
        * need to render enhancers on top so they can load before any other code
        * they should always return null and contain side effect injection
        */}
-      <ClientEnhancer />
+      <BrowserEnhancers />
       <html lang={lang} className={htmlClassName}>
         <head>
           <meta

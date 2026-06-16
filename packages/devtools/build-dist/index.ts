@@ -15,19 +15,19 @@ const version = '0.0.0'
 // Our private packages modules with import paths start with @/..
 const aliasRegex = /(['"`])(@\/[^'"`]+)\1/g
 
-type ModuleName = 'shared' | 'nodejs' | 'rn' | 'devtools'
-const modules: ModuleName[] = ['shared', 'nodejs', 'rn', 'devtools']
+type ModuleName = 'shared' | 'nodejs' | 'core' | 'devtools'
+const modules: ModuleName[] = ['shared', 'nodejs', 'core', 'devtools']
 
 const cross: Record<ModuleName, ModuleName[]> = {
   shared: [],
   nodejs: ['shared'],
-  rn: ['shared'],
-  devtools: ['shared', 'nodejs', 'rn'],
+  core: ['shared'],
+  devtools: ['shared', 'nodejs', 'core'],
 }
 const extraCopy: Record<ModuleName, string[]> = {
   shared: [],
   nodejs: [],
-  rn: [],
+  core: [],
   devtools: ['tsconfig.base.json'],
 }
 

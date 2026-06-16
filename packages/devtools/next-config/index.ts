@@ -3,14 +3,14 @@ import type { NextConfig } from 'next'
 import { getAlias } from '@/devtools/babel-config/get-alias'
 import { shouldTranspileExtension } from '@/devtools/babel-config/should-transpile'
 import { cssExtractVariablesRegex } from '@/devtools/webpack-css-extract-variables/transform'
-import { ResolveClientExtension } from '@/devtools/webpack-resolve-client-extension'
+import { ResolveBrowserExtension } from '@/devtools/webpack-resolve-browser-extension'
 import { repoRoot } from '@/nodejs/entrypoint/root'
 import { glob } from '@/nodejs/glob'
 import { jsonSafe } from '@/shared/json-safe'
 
 const resolveAlias = {
-  'next-unchecked/headers': '@/rn/next/unchecked/headers',
-  'next-unchecked/navigation': '@/rn/next/unchecked/navigation',
+  'next-unchecked/headers': '@/core/next/unchecked/headers',
+  'next-unchecked/navigation': '@/core/next/unchecked/navigation',
   'react-native': 'react-native-web',
   'react-native-svg': 'react-native-svg-web',
 }
@@ -32,7 +32,7 @@ export const config = async (o: Options): Promise<NextConfig> => ({
 
 const webpack = async (o: Options): Promise<NextConfig> => {
   const alias = getAlias(o.dir)
-  const clients = await glob('**/*.client.{ts,tsx}')
+  const browsers = await glob('**/*.browser.{ts,tsx}')
   const cssExtractVariablesLoader =
     require.resolve('@/devtools/webpack-css-extract-variables')
 
@@ -67,12 +67,12 @@ const webpack = async (o: Options): Promise<NextConfig> => {
 
       if (!isServer) {
         c.resolve.plugins = c.resolve.plugins || []
-        c.resolve.plugins.push(new ResolveClientExtension(o.dir, clients))
+        c.resolve.plugins.push(new ResolveBrowserExtension(o.dir, browsers))
 
         // since the loader is cached
-        // we can not use one babel loader for both client and server code
+        // we can not use one babel loader for both browser and server code
         // nextjs uses a different builtin babel loader
-        // we will use this loader to handle client-only code
+        // we will use this loader to handle browser-only code
         c.module.rules.push({
           test: shouldTranspileExtension,
           use: {
@@ -80,9 +80,9 @@ const webpack = async (o: Options): Promise<NextConfig> => {
             options: {
               caller: {
                 isServer,
-                clientOnly: true,
+                browserOnly: true,
                 alias: jsonSafe(alias),
-                clients: jsonSafe(clients),
+                browsers: jsonSafe(browsers),
               },
             },
           },
@@ -105,7 +105,7 @@ const traverseWebpackRule = (rule: any): any => {
 
   for (const [k, v] of Object.entries(rule)) {
     // since the loader is cached
-    // we can not use one babel loader for both client and server code
+    // we can not use one babel loader for both browser and server code
     // thus can not remove nextjs built in babel loader
     // // remove babel loader since we already have above
     // if (typeof v === 'string' && /babel[/-]loader/.test(v)) {

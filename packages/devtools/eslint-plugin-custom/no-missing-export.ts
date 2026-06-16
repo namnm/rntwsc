@@ -5,7 +5,7 @@ import { fs } from '@/nodejs/fs'
 import { path } from '@/nodejs/path'
 import { upperFirst } from '@/shared/lodash'
 
-const variants = ['native', 'ios', 'android', 'client'] as const
+const variants = ['native', 'ios', 'android', 'browser'] as const
 type Variant = (typeof variants)[number]
 const exts = ['ts', 'tsx'] as const
 
@@ -45,7 +45,7 @@ export const noMissingExport: TSESLint.RuleModule<
         }
 
         const variantPaths = getVariantPaths(base)
-        const validThisSuffix = variantPaths.some(v => v.variant === 'client')
+        const validThisSuffix = variantPaths.some(v => v.variant === 'browser')
           ? 'Server'
           : 'Web'
 

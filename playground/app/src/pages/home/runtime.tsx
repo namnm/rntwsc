@@ -1,5 +1,5 @@
-import { Span } from '@/rn/components/text'
-import { runtimeStyle } from '@/rn/core/tw/runtime-style'
+import { Span } from '@/core/components/text'
+import { runtimeStyle } from '@/core/tw/runtime-style'
 import { jsonSafe } from '@/shared/json-safe'
 
 export const DemoRuntime = () => {

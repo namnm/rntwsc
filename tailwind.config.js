@@ -4,6 +4,6 @@ const { mergeWithArray } = require('@/shared/lodash')
 
 module.exports = mergeWithArray(
   {},
-  require('@/rn/core/tw-config').twConfig,
-  require('@/rn/core/twrnc-config').twrncConfig,
+  require('@/core/tw/tailwind-config').config,
+  require('@/core/tw/twrnc-config').twrncConfig,
 )

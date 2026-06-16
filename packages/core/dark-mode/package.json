@@ -1,0 +1,22 @@
+{
+  "name": "@rntwsc/core-dark-mode",
+  "version": "0.0.0-locked",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=24.11",
+    "pnpm": ">=11"
+  },
+  "dependencies": {
+    "js-cookie": "3.0.5"
+  },
+  "peerDependencies": {
+    "next": "*",
+    "react": "*",
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "3.0.6",
+    "@types/react": "19.2.14"
+  }
+}

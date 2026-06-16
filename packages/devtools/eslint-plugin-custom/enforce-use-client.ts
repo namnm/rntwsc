@@ -8,7 +8,12 @@ type MessageId =
   | 'missingNewlines'
   | 'disallowUseClient'
 
-export const enforceUseClient: TSESLint.RuleModule<MessageId, [string[]]> = {
+type Options = {
+  imports?: string[]
+  global?: string[]
+}
+
+export const enforceUseClient: TSESLint.RuleModule<MessageId, [Options]> = {
   meta: {
     type: 'problem',
     fixable: 'code',
@@ -24,14 +29,24 @@ export const enforceUseClient: TSESLint.RuleModule<MessageId, [string[]]> = {
     },
     schema: [
       {
-        type: 'array',
-        items: {
-          type: 'string',
-          required: true,
+        type: 'object',
+        properties: {
+          imports: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+            uniqueItems: true,
+          },
+          global: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+            uniqueItems: true,
+          },
         },
-        minItems: 1,
-        uniqueItems: true,
-        required: true,
+        additionalProperties: false,
       },
     ],
   },
@@ -68,8 +83,10 @@ export const enforceUseClient: TSESLint.RuleModule<MessageId, [string[]]> = {
 
     let hasUseClient = false
     let useClientNode: TSESTree.ExpressionStatement | null = null
-    let shouldEnforce = /\.client\.tsx?$/.test(c.filename)
-    const importMatches = new Set(c.options[0] || [])
+    let shouldEnforce = /\.browser\.tsx?$/.test(c.filename)
+    const { imports, global } = c.options[0] || {}
+    const importMatches = new Set(imports || [])
+    const globalMatches = new Set(global || [])
 
     return {
       Program: n => {
@@ -116,6 +133,64 @@ export const enforceUseClient: TSESLint.RuleModule<MessageId, [string[]]> = {
             shouldEnforce = true
           }
         }
+      },
+
+      // Identifier referencing a name in the global list -> use client
+      Identifier: (n: TSESTree.Identifier) => {
+        if (shouldEnforce || hasUseClient || !globalMatches.has(n.name)) {
+          return
+        }
+        const p = n.parent
+        // typeof window -> safe guard, not actual usage
+        if (p.type === 'UnaryExpression' && p.operator === 'typeof') {
+          return
+        }
+        // Skip when used as a static property name, not a value reference
+        if (p.type === 'MemberExpression' && !p.computed && p.property === n) {
+          return
+        }
+        if (p.type === 'Property' && !p.computed && p.key === n) {
+          return
+        }
+        if (p.type === 'MethodDefinition' && !p.computed && p.key === n) {
+          return
+        }
+        if (
+          p.type === 'ImportSpecifier' ||
+          p.type === 'ImportDefaultSpecifier' ||
+          p.type === 'ImportNamespaceSpecifier'
+        ) {
+          return
+        }
+        // Skip TypeScript type-only positions (not runtime value references)
+        if (
+          (p.type === 'TSPropertySignature' ||
+            p.type === 'TSMethodSignature') &&
+          p.key === n
+        ) {
+          return
+        }
+        if (
+          p.type === 'TSTypeReference' ||
+          p.type === 'TSTypeQuery' ||
+          p.type === 'TSTypeParameter'
+        ) {
+          return
+        }
+        // Skip if the name is declared as a local variable anywhere in scope chain
+        let scope = c.sourceCode.getScope(n)
+        while (scope) {
+          if (
+            scope.variables.some(v => v.name === n.name && v.defs.length > 0)
+          ) {
+            return
+          }
+          if (!scope.upper) {
+            break
+          }
+          scope = scope.upper
+        }
+        shouldEnforce = true
       },
 
       'Program:exit': n => {
