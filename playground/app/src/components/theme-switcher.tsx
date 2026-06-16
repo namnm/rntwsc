@@ -1,13 +1,17 @@
 'use client'
 
 import { Span } from '@/core/components/text'
+import { useTranslationUntyped } from '@/core/i18n'
 import { useSetTheme, useTheme } from '@/core/theme'
 import { getAvailableThemes } from '@/core/theme/config'
 import { Pressable } from '@/core/tw/components/pressable'
 import { View } from '@/core/tw/components/view'
-import { capitalCase } from '@/shared/lodash'
 
 export const ThemeSwitcher = async ({ onPress }: { onPress?: () => void }) => {
+  const [t, tThemes] = await Promise.all([
+    useTranslationUntyped('sidebar'),
+    useTranslationUntyped('themes'),
+  ])
   const themes = getAvailableThemes()
   const theme = await useTheme()
   const setTheme = useSetTheme()
@@ -15,7 +19,7 @@ export const ThemeSwitcher = async ({ onPress }: { onPress?: () => void }) => {
   return (
     <>
       <Span className='mb-1 px-2 text-xs font-semibold text-gray-400 transition dark:text-gray-500'>
-        THEME
+        {t('section_theme')}
       </Span>
       {themes.map(v => {
         const active = v.name === theme
@@ -42,7 +46,7 @@ export const ThemeSwitcher = async ({ onPress }: { onPress?: () => void }) => {
                   : 'text-gray-600 dark:text-gray-400',
               ]}
             >
-              {capitalCase(v.name)}
+              {tThemes(v.name)}
             </Span>
           </Pressable>
         )

@@ -5,6 +5,7 @@
 import { usePathname, useSearchParams } from 'next-unchecked/navigation'
 
 import { useCurrentLocaleUntyped } from '@/core/i18n/index.browser'
+import { normalizePathname } from '@/core/navigation/normalize-pathname'
 import type { ParsedQs } from '@/shared/qs'
 import { qsParse } from '@/shared/qs'
 
@@ -16,7 +17,7 @@ export const useRoute = () => {
   let pathWithoutLocale = currentPath
   const prefix = `/${currentLocale}`
   if (pathWithoutLocale.startsWith(prefix)) {
-    pathWithoutLocale = pathWithoutLocale.replace(prefix, '')
+    pathWithoutLocale = normalizePathname(pathWithoutLocale.replace(prefix, ''))
   }
 
   let query: ParsedQs | undefined = undefined

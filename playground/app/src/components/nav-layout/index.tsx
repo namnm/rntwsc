@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { Portal } from '@/core/components/portal'
 import { Separator } from '@/core/components/separator'
 import { Span } from '@/core/components/text'
-import { useRoute } from '@/core/navigation'
+import { useTranslationUntyped } from '@/core/i18n'
 import { isWeb } from '@/core/platform'
 import { Pressable } from '@/core/tw/components/pressable'
 import { ScrollView } from '@/core/tw/components/scroll-view'
@@ -40,12 +40,12 @@ import {
   rViewport,
 } from '#/pages/route-paths'
 
-const NavLayoutWithEffects = ({
+const NavLayoutWithoutEffects = async ({
   children,
   setSidebarOpen,
   sidebarOpen,
-  pathname,
 }: any) => {
+  const t = await useTranslationUntyped('sidebar')
   const onPress = () => setSidebarOpen(false)
 
   const sidebar = (
@@ -61,87 +61,131 @@ const NavLayoutWithEffects = ({
           onPress={() => setSidebarOpen(false)}
           className='mr-3 sm:hidden'
         >
-          <Span className='text-primary font-semibold'>{'<- Back'}</Span>
+          <Span className='text-primary font-semibold'>{t('back')}</Span>
         </Pressable>
         <Span className='font-semibold text-gray-800 transition dark:text-gray-100'>
-          Menu
+          {t('menu')}
         </Span>
       </View>
       <ScrollView className='flex-1 p-1'>
-        <NavSidebarLink onPress={onPress} pathname={rHome} label='Home' />
+        <NavSidebarLink onPress={onPress} pathname={rHome} label={t('home')} />
         <Separator />
         <Span className='mb-1 px-2 text-xs font-semibold text-gray-400 transition dark:text-gray-500'>
-          DISPLAY
+          {t('section_display')}
         </Span>
         <NavSidebarLink
           onPress={onPress}
           pathname={rAccordion}
-          label='Accordion'
+          label={t('accordion')}
         />
-        <NavSidebarLink onPress={onPress} pathname={rBadge} label='Badge' />
-        <NavSidebarLink onPress={onPress} pathname={rAlert} label='Alert' />
-        <NavSidebarLink onPress={onPress} pathname={rButton} label='Button' />
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rBadge}
+          label={t('badge')}
+        />
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rAlert}
+          label={t('alert')}
+        />
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rButton}
+          label={t('button')}
+        />
         <NavSidebarLink
           onPress={onPress}
           pathname={rButtonGroup}
-          label='Button Group'
+          label={t('button_group')}
         />
         <NavSidebarLink
           onPress={onPress}
           pathname={rButtonToggleGroup}
-          label='Button Toggle Group'
+          label={t('button_toggle_group')}
         />
         <Separator />
         <Span className='mb-1 px-2 text-xs font-semibold text-gray-400 transition dark:text-gray-500'>
-          OVERLAY
+          {t('section_overlay')}
         </Span>
-        <NavSidebarLink onPress={onPress} pathname={rDrawer} label='Drawer' />
-        <NavSidebarLink onPress={onPress} pathname={rModal} label='Modal' />
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rDrawer}
+          label={t('drawer')}
+        />
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rModal}
+          label={t('modal')}
+        />
         <Separator />
         <Span className='mb-1 px-2 text-xs font-semibold text-gray-400 transition dark:text-gray-500'>
-          FORM
+          {t('section_form')}
         </Span>
         <NavSidebarLink
           onPress={onPress}
           pathname={rTextInput}
-          label='Text Input'
+          label={t('text_input')}
         />
-        <NavSidebarLink onPress={onPress} pathname={rSelect} label='Select' />
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rSelect}
+          label={t('select')}
+        />
         <NavSidebarLink
           onPress={onPress}
           pathname={rDatePicker}
-          label='Date Picker'
+          label={t('date_picker')}
         />
-        <NavSidebarLink onPress={onPress} pathname={rRadio} label='Radio' />
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rRadio}
+          label={t('radio')}
+        />
         <NavSidebarLink
           onPress={onPress}
           pathname={rCheckbox}
-          label='Checkbox'
+          label={t('checkbox')}
         />
-        <NavSidebarLink onPress={onPress} pathname={rSwitch} label='Switch' />
-        <NavSidebarLink onPress={onPress} pathname={rForm} label='Form' />
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rSwitch}
+          label={t('switch')}
+        />
+        <NavSidebarLink onPress={onPress} pathname={rForm} label={t('form')} />
         <Separator />
         <Span className='mb-1 px-2 text-xs font-semibold text-gray-400 transition dark:text-gray-500'>
-          OTHERS
+          {t('section_others')}
         </Span>
-        <NavSidebarLink onPress={onPress} pathname={rGrid} label='Grid' />
+        <NavSidebarLink onPress={onPress} pathname={rGrid} label={t('grid')} />
         <NavSidebarLink
           onPress={onPress}
           pathname={rNativeRefs}
-          label='Native Refs'
+          label={t('native_refs')}
         />
         <NavSidebarLink
           onPress={onPress}
           pathname={rRuntime}
-          label='Runtime Style'
+          label={t('runtime_style')}
         />
         <NavSidebarLink
           onPress={onPress}
           pathname={rViewport}
-          label='Viewport'
+          label={t('viewport')}
         />
-        <NavSidebarLink onPress={onPress} pathname={rFetch} label='Fetch' />
-        <NavSidebarLink onPress={onPress} pathname={rGraphQL} label='GraphQL' />
+        <Separator />
+        <Span className='mb-1 px-2 text-xs font-semibold text-gray-400 transition dark:text-gray-500'>
+          {t('section_hydration')}
+        </Span>
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rFetch}
+          label={t('fetch')}
+        />
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rGraphQL}
+          label={t('graphql')}
+        />
         <Separator />
         <ThemeSwitcher onPress={onPress} />
         <Separator />
@@ -165,7 +209,7 @@ const NavLayoutWithEffects = ({
             className='flex-1 items-center gap-1 py-3'
           >
             <Span className='text-primary text-xs font-medium transition'>
-              Open Menu
+              {t('open_menu')}
             </Span>
           </Pressable>
         </View>
@@ -176,14 +220,12 @@ const NavLayoutWithEffects = ({
 
 type NavLayoutProps = PropsWithChildren
 
-export const NavLayout = async ({ children }: NavLayoutProps) => {
+export const NavLayout = ({ children }: NavLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { pathname } = await useRoute()
   const props = {
     children,
     sidebarOpen,
     setSidebarOpen,
-    pathname,
   }
-  return <NavLayoutWithEffects {...props} />
+  return <NavLayoutWithoutEffects {...props} />
 }

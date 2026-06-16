@@ -12,7 +12,7 @@ export const DarkModeSwitcher = async ({
   onPress?: () => void
 }) => {
   const [t, dark] = await Promise.all([
-    useTranslationUntyped('common'),
+    useTranslationUntyped('sidebar'),
     useDarkModeUser(),
   ])
   const setDarkMode = useSetDarkMode()
@@ -35,7 +35,7 @@ export const DarkModeSwitcher = async ({
   return (
     <>
       <Span className='text-foreground mb-1 px-2 text-xs font-semibold transition'>
-        DARK MODE
+        {t('section_dark_mode')}
       </Span>
       {options.map(v => {
         const active = v.value === dark
