@@ -15,8 +15,8 @@ export type HydrationKey<T> = {
 export const hydrationKey = <T>(type: string): HydrationKey<T> => ({
   key: d =>
     jsonStable({
-      type,
       ...d,
+      type,
     }),
   parse: k => {
     try {

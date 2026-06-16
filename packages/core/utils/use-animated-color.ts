@@ -99,7 +99,7 @@ export const useAnimatedColor = (
       }
       rafRef.current = 0
     }
-  }, [transitionProperty, transitionDuration, color])
+  }, [transitionProperty, transitionDuration, transitionTimingFunction, color])
 
   return transitionColor
 }

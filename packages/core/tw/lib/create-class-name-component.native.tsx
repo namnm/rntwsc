@@ -39,6 +39,7 @@ import {
   useMarkerPeerState,
 } from '@/core/tw/lib/marker.native'
 import { runtimeStyle } from '@/core/tw/runtime-style'
+import { useOnUnmounted } from '@/core/utils/use-mounted'
 import { get, isEqual } from '@/shared/lodash'
 import type { Falsish, StrMap } from '@/shared/ts-utils'
 
@@ -361,7 +362,7 @@ const withPeerProvider = (Inner: FC<InnerProps>) => (props: InnerProps) => {
   const state = getMarkerProviderState('peer', props)
   const stateRef = useRef<ClassNameMarkerState>(undefined)
 
-  const stateState = useMarkerPeerSetState()
+  const setState = useMarkerPeerSetState()
 
   useEffect(() => {
     if (isEqual(state, stateRef.current)) {
@@ -369,7 +370,7 @@ const withPeerProvider = (Inner: FC<InnerProps>) => (props: InnerProps) => {
     }
     const prev = stateRef.current
     stateRef.current = state
-    stateState(d => {
+    setState(d => {
       if (prev) {
         for (const k in prev) {
           delete d[k]
@@ -381,20 +382,17 @@ const withPeerProvider = (Inner: FC<InnerProps>) => (props: InnerProps) => {
     })
   })
 
-  useEffect(
-    () => () => {
-      const prev = stateRef.current
-      if (!prev) {
-        return
+  useOnUnmounted(() => {
+    const prev = stateRef.current
+    if (!prev) {
+      return
+    }
+    setState(d => {
+      for (const k in prev) {
+        delete d[k]
       }
-      stateState(d => {
-        for (const k in prev) {
-          delete d[k]
-        }
-      })
-    },
-    [],
-  )
+    })
+  })
 
   return <Inner {...props} />
 }

@@ -64,7 +64,9 @@ if (isBrowser) {
     if (!k || !v) {
       return
     }
-    store[k] = JSON.parse(v)
-    rehydrated.add(k)
+    try {
+      store[k] = JSON.parse(v)
+      rehydrated.add(k)
+    } catch {}
   })
 }

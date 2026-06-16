@@ -10,7 +10,7 @@ import type { DehydrateProps } from '@/core/hydration/dehydrate'
 import { dehydrated, rehydrated } from '@/core/hydration/dehydrate'
 import { setHydration } from '@/core/hydration/store'
 import { isBrowser } from '@/core/platform'
-import { useIsMounted } from '@/core/utils/use-is-mounted'
+import { useIsMounted } from '@/core/utils/use-mounted'
 import { jsonSafe } from '@/shared/json-safe'
 
 type Props = Required<DehydrateProps> & {

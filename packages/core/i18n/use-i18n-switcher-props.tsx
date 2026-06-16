@@ -1,6 +1,6 @@
 import type { FC, PropsWithChildren } from 'react'
 
-import { useCurrentLangUntyped, useCurrentLocaleUntyped } from '@/core/i18n'
+import { useCurrentLangUntyped } from '@/core/i18n'
 import { getLocaleUntyped } from '@/core/i18n/config'
 import { useRoute } from '@/core/navigation'
 import { normalizePathname } from '@/core/navigation/normalize-pathname'
@@ -30,22 +30,13 @@ const I18nSwitcherLink = async ({
   className,
   children,
 }: I18nSwitcherLinkProps) => {
-  const [route, currentLocale] = await Promise.all([
-    useRoute(),
-    useCurrentLocaleUntyped(),
-  ])
-  const { pathname: currentPath, query } = route
-
-  let pathWithoutLocale = currentPath
-  const prefix = `/${currentLocale}`
-  if (pathWithoutLocale.startsWith(prefix)) {
-    pathWithoutLocale = pathWithoutLocale.replace(prefix, '')
-  }
+  const { pathname: currentPath, query } = await useRoute()
 
   // when switching lang, always render link with locale explicitly
   // to set cookie in proxy
+  // currentPath is already locale-stripped by useRoute
   const locale = getLocaleUntyped(lang)
-  const pathname = normalizePathname(`/${locale}${pathWithoutLocale}`)
+  const pathname = normalizePathname(`/${locale}${currentPath}`)
   const q = query && qsStableStringify(query)
   const href = q ? `${pathname}?${q}` : pathname
 

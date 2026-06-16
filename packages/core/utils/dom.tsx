@@ -1,17 +1,19 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
+
+import { useOnMounted } from '@/core/utils/use-mounted'
 
 export const useParentDOM = (fn: (dom: HTMLElement) => () => void) => {
   const r = useRef<HTMLSpanElement>(null)
 
-  useEffect(() => {
+  useOnMounted(() => {
     const parent = r.current?.parentElement
     if (!parent) {
       return
     }
     return fn(parent)
-  }, [])
+  })
 
   return <span ref={r} className='hidden' />
 }

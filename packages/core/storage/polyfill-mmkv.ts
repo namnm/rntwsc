@@ -7,8 +7,13 @@ import { setAdapter } from '@/core/storage'
 const mmkv = createMMKV()
 
 setAdapter({
-  getItem: async key => mmkv.getString(key) || null,
-  setItem: async (key, value) => mmkv.set(key, value),
+  getItem: async key => {
+    const v = mmkv.getString(key)
+    return v !== undefined ? v : null
+  },
+  setItem: async (key, value) => {
+    mmkv.set(key, value)
+  },
   removeItem: async key => {
     mmkv.remove(key)
   },

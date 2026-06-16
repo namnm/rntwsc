@@ -1,9 +1,9 @@
 import type { Falsish, StrMap } from '@/shared/ts-utils'
 
-export const mergeDefault = (
-  value: StrMap<unknown>,
-  defaultValue: StrMap<unknown> | Falsish,
-): any => {
+export const mergeDefault = <T extends StrMap<unknown>>(
+  value: T,
+  defaultValue: Partial<T> | Falsish,
+): T => {
   if (!defaultValue) {
     return value
   }
@@ -12,6 +12,7 @@ export const mergeDefault = (
   }
   Object.keys(defaultValue).forEach(k => {
     if (value[k] === undefined) {
+      // @ts-ignore
       value[k] = defaultValue[k]
     }
   })

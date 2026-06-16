@@ -2,9 +2,11 @@ import type { ConfigWithExtends } from '@eslint/config-helpers'
 import { defineConfig, includeIgnoreFile } from '@eslint/config-helpers'
 import tsPlugin from '@typescript-eslint/eslint-plugin'
 import * as tsParser from '@typescript-eslint/parser'
+import type { ESLint } from 'eslint'
 import * as importPlugin from 'eslint-plugin-import'
 import preferArrowPlugin from 'eslint-plugin-prefer-arrow'
 import reactPlugin from 'eslint-plugin-react'
+import reactHooksPlugin from 'eslint-plugin-react-hooks'
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort'
 import globals from 'globals'
 
@@ -130,6 +132,7 @@ export const config = ({
     plugins: {
       '@typescript-eslint': tsPlugin,
       react: reactPlugin,
+      'react-hooks': reactHooksPlugin as ESLint.Plugin,
       import: importPlugin,
       'simple-import-sort': simpleImportSortPlugin,
       'prefer-arrow': preferArrowPlugin,
@@ -274,6 +277,8 @@ export const config = ({
           destructureInSignature: 'always',
         },
       ],
+
+      'react-hooks/exhaustive-deps': warn,
 
       'custom/err-name': warn,
       'custom/kebab-case-import-paths': warn,

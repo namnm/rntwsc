@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 
 import { Span } from '@/core/components/text'
 import { isWeb } from '@/core/platform'
@@ -17,6 +17,7 @@ import { TextWithoutContext } from '@/core/tw/components/text'
 import type { ViewRn } from '@/core/tw/components/view'
 import { View } from '@/core/tw/components/view'
 import { useImmer } from '@/core/utils/immer'
+import { useOnMounted } from '@/core/utils/use-mounted'
 import { camelCase } from '@/shared/lodash'
 import type { StrMap } from '@/shared/ts-utils'
 
@@ -30,7 +31,7 @@ export const RefsClient = () => {
   const inputRef = useRef<InputRn>(null)
   const flatListRef = useRef<FlatListRn>(null)
 
-  useEffect(() => {
+  useOnMounted(() => {
     setState(d => {
       if (textRef.current?.measureLayout) {
         d.text = true
@@ -51,7 +52,7 @@ export const RefsClient = () => {
         d.flatList = true
       }
     })
-  }, [])
+  })
 
   const comma = (
     <Span className='text-foreground text-center transition'>{', '}</Span>

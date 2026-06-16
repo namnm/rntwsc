@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@apollo/client/react'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 
 import type { GraphQLResponse, UseApollo } from '@/core/graphql/config'
 import { hk } from '@/core/graphql/config'
@@ -38,10 +38,13 @@ export const useApollo = <T>({
   })
   const hydrationErr = useHydrationErr(k)
 
+  const refetchRef = useRef(r.refetch)
+  refetchRef.current = r.refetch
+
   const refetch = useCallback(() => {
     clearHydrationErr(k)
-    return r.refetch(variables)
-  }, [k, variables, r.refetch])
+    return refetchRef.current(variables)
+  }, [k, variables])
 
   const v: HydrationData<GraphQLResponse<T>> = useMemo(() => {
     // only set data when apollo has result or there are graphql errors to surface

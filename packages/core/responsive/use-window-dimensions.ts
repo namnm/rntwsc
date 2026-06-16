@@ -6,7 +6,7 @@ import {
 } from 'react-native'
 
 import { isWeb } from '@/core/platform'
-import { useIsMounted } from '@/core/utils/use-is-mounted'
+import { useIsMounted } from '@/core/utils/use-mounted'
 
 export type DimensionsSize = {
   width: number
