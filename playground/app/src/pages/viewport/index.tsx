@@ -1,5 +1,3 @@
-'use client'
-
 import { H1, Span } from '@/core/components/text'
 import { useSafeAreaPadding } from '@/core/responsive/use-safe-area'
 import { ScrollView } from '@/core/tw/components/scroll-view'

@@ -391,6 +391,19 @@ importers:
         specifier: 7.20.5
         version: 7.20.5
 
+  packages/devtools/babel-plugin-i18n-labels-validation:
+    dependencies:
+      '@babel/core':
+        specifier: 7.29.0
+        version: 7.29.0
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
+    devDependencies:
+      '@types/babel__core':
+        specifier: 7.20.5
+        version: 7.20.5
+
   packages/devtools/babel-plugin-tw:
     dependencies:
       '@babel/core':
