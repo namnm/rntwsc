@@ -31,5 +31,8 @@
     "typescript": "6.0.3",
     "vitest": "4.1.6"
   },
+  "dist": {
+    "version": "0.0.1"
+  },
   "ignoreTsc": true
 }

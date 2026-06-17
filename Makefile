@@ -1,5 +1,6 @@
 ###############################################################################
 # dev utils
+V := $(shell jq -r ".dist.version" package.json)
 
 extract:
 	@export NEXT_PUBLIC_MINIFY_CLASS_NAMES=1 \
@@ -9,11 +10,11 @@ publish:
 	@mv ./dist ../ \
 	&& cd ../dist \
 	&& git init \
-	&& git checkout -b dist \
+	&& git checkout -b $(V) \
 	&& git add -A \
-	&& git commit -m "dist" \
+	&& git commit -m "Release $(V)" \
 	&& git remote add origin git@github.com:namnm/rntwsc.git \
-	&& git push -uf origin dist \
+	&& git push -uf origin HEAD \
 	&& git log -1 --format="%H" \
 	&& cd .. \
 	&& rm -rf ./dist;
