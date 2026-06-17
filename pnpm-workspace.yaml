@@ -4,7 +4,7 @@ packages:
 
 allowBuilds:
   '@parcel/watcher': false
-  esbuild: true
+  esbuild: false
   sharp: false
 
 overrides:
