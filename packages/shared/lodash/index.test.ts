@@ -1,0 +1,66 @@
+import { describe, expect, it } from 'vitest'
+
+import { camelCase, kebabCase, pascalCase, snakeCase } from '@/shared/lodash'
+
+describe('kebabCase', () => {
+  const e = (v: string, expected: string) => expect(kebabCase(v)).toBe(expected)
+  it('lowercase stays unchanged', () => e('hello', 'hello'))
+  it('empty string', () => e('', ''))
+  it('camelCase', () => e('helloWorld', 'hello-world'))
+  it('PascalCase', () => e('HelloWorld', 'hello-world'))
+  it('snake_case', () => e('hello_world', 'hello-world'))
+  it('all caps acronym', () => e('abcXYZ', 'abc-xyz'))
+  it('acronym before word', () => e('abcXYZDef', 'abc-xyz-def'))
+  it('leading acronym', () => e('ABCDef', 'abc-def'))
+  it('does not break on numbers', () => e('i18n', 'i18n'))
+  it('does not break letter-number boundary', () => e('v2', 'v2'))
+  it('number in middle', () => e('myI18nKey', 'my-i18n-key'))
+  it('already kebab', () => e('already-kebab', 'already-kebab'))
+})
+
+describe('camelCase', () => {
+  const e = (v: string, expected: string) => expect(camelCase(v)).toBe(expected)
+  it('lowercase stays unchanged', () => e('hello', 'hello'))
+  it('empty string', () => e('', ''))
+  it('kebab-case', () => e('hello-world', 'helloWorld'))
+  it('snake_case', () => e('hello_world', 'helloWorld'))
+  it('PascalCase', () => e('HelloWorld', 'helloWorld'))
+  it('already camel', () => e('helloWorld', 'helloWorld'))
+  it('leading acronym', () => e('ABCDef', 'abcDef'))
+  it('all caps acronym', () => e('abcXYZ', 'abcXyz'))
+  it('acronym before word', () => e('abcXYZDef', 'abcXyzDef'))
+  it('does not break on numbers', () => e('i18n', 'i18n'))
+  it('does not break letter-number boundary', () => e('v2', 'v2'))
+  it('number in middle', () => e('myI18nKey', 'myI18nKey'))
+})
+
+describe('snakeCase', () => {
+  const e = (v: string, expected: string) => expect(snakeCase(v)).toBe(expected)
+  it('lowercase stays unchanged', () => e('hello', 'hello'))
+  it('empty string', () => e('', ''))
+  it('camelCase', () => e('helloWorld', 'hello_world'))
+  it('kebab-case', () => e('hello-world', 'hello_world'))
+  it('PascalCase', () => e('HelloWorld', 'hello_world'))
+  it('already snake', () => e('hello_world', 'hello_world'))
+  it('leading acronym', () => e('ABCDef', 'abc_def'))
+  it('all caps acronym', () => e('abcXYZ', 'abc_xyz'))
+  it('acronym before word', () => e('abcXYZDef', 'abc_xyz_def'))
+  it('does not break on numbers', () => e('i18n', 'i18n'))
+  it('does not break letter-number boundary', () => e('v2', 'v2'))
+  it('number in middle', () => e('myI18nKey', 'my_i18n_key'))
+})
+
+describe('pascalCase', () => {
+  const e = (v: string, expected: string) =>
+    expect(pascalCase(v)).toBe(expected)
+  it('single word', () => e('hello', 'Hello'))
+  it('camelCase', () => e('helloWorld', 'HelloWorld'))
+  it('kebab-case', () => e('hello-world', 'HelloWorld'))
+  it('snake_case', () => e('hello_world', 'HelloWorld'))
+  it('already pascal', () => e('HelloWorld', 'HelloWorld'))
+  it('leading acronym', () => e('ABCDef', 'AbcDef'))
+  it('all caps acronym', () => e('abcXYZ', 'AbcXyz'))
+  it('acronym before word', () => e('abcXYZDef', 'AbcXyzDef'))
+  it('does not break on numbers', () => e('i18n', 'I18n'))
+  it('number in middle', () => e('myI18nKey', 'MyI18nKey'))
+})

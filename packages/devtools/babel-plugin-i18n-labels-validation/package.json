@@ -1,5 +1,5 @@
 {
-  "name": "@rntwsc/devtools-babel-plugin-i-18-n-labels-validation",
+  "name": "@rntwsc/devtools-babel-plugin-i18n-labels-validation",
   "version": "0.0.0-locked",
   "private": true,
   "type": "commonjs",

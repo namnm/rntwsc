@@ -1,9 +1,9 @@
 import type { ConfigAPI, NodePath, PluginObj } from '@babel/core'
 import { parse, traverse, types as t } from '@babel/core'
-import { readFileSync } from 'node:fs'
 import { z } from 'zod'
 
 import { shouldTranspile } from '@/devtools/babel-config/should-transpile'
+import { fs } from '@/nodejs/fs'
 
 // ============================================================
 // Types
@@ -272,7 +272,7 @@ export const i18nLabelsValidation = ({
     if (!shouldTranspile(file)) {
       continue
     }
-    const code = readFileSync(file, 'utf-8')
+    const code = fs.readFileSync(file, 'utf-8')
     scanFile(code, file, usages)
   }
 
