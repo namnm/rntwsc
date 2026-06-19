@@ -70,6 +70,10 @@
 # testing
 **/coverage/
 
+# python
+**/__pycache__/
+**/.venv/
+
 # misc
 **/.DS_Store
 **/.env

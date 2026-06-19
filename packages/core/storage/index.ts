@@ -17,8 +17,5 @@ export const setAdapter = (storage: StorageAdapter) => {
 }
 
 export const storage: StorageAdapter = new Proxy({} as StorageAdapter, {
-  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-  get(_, prop: keyof StorageAdapter) {
-    return adapter[prop]
-  },
+  get: (_, prop: keyof StorageAdapter) => adapter[prop],
 })

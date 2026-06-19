@@ -8,9 +8,9 @@ import type { ViewProps } from '@/core/tw/components/view'
 import { View } from '@/core/tw/components/view'
 import { useSafeContext } from '@/core/utils/use-safe-context'
 
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 // FormContext
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 
 type FormContextType = {
   onSubmit?: () => void
@@ -21,9 +21,9 @@ const FormContext = createContext<FormContextType | undefined>(undefined)
 
 const useFormContext = () => useSafeContext(FormContext)
 
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 // Form
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 
 type FormProps = ViewProps & FormContextType
 
@@ -37,9 +37,9 @@ const Form = ({ onSubmit, ...props }: FormProps) => (
   </FormContext.Provider>
 )
 
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 // FormTrigger
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 
 type FormTriggerProps = ButtonProps
 
@@ -58,9 +58,9 @@ const FormTrigger = ({ onPress, ...props }: FormTriggerProps) => {
   )
 }
 
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 // Exports
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 
 export { Form, FormTrigger }
 export type { FormProps, FormTriggerProps }

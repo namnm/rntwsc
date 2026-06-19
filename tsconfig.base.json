@@ -293,6 +293,8 @@
     "**/ios/Pods/",
     "**/vendor/bundle/",
     "**/coverage/",
+    "**/__pycache__/",
+    "**/.venv/",
     "**/.vscode/",
     "**/.next/",
     "**/.vercel/",

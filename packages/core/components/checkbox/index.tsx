@@ -12,9 +12,9 @@ import { cva } from '@/core/tw/cva'
 import { useControllableState } from '@/core/utils/use-controllable-state'
 import { useSafeContext } from '@/core/utils/use-safe-context'
 
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 // context
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 
 type CheckboxIndicatorContextType = {
   cn: ReturnType<typeof checkboxCva>
@@ -26,9 +26,9 @@ const CheckboxIndicatorContext = createContext<
 >(undefined)
 const useCheckboxIndicator = () => useSafeContext(CheckboxIndicatorContext)
 
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 // cva
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 
 const checkboxCva = cva({
   classNames: {
@@ -130,9 +130,9 @@ const checkboxCva = cva({
   ],
 })
 
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 // Root
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 
 export type CheckboxProps = Omit<PressableProps, 'onPress'> &
   Variant<typeof checkboxCva> & {
@@ -184,9 +184,9 @@ const Root = ({
   )
 }
 
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 // Indicator
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 
 export type CheckboxIndicatorProps = {
   asChild?: boolean
@@ -200,9 +200,9 @@ const Indicator = ({ asChild, ...props }: CheckboxIndicatorProps) => {
   return checked && <Comp className={cn.icon} {...props} />
 }
 
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 // export
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 
 export const Checkbox = Object.assign(Root, {
   Indicator,

@@ -25,7 +25,7 @@ export const mergeProps = (
     const slotVal = slotProps[key]
     const childVal = childProps[key]
 
-    // Event handlers — chain both, child last
+    // Event handlers - chain both, child last
     if (
       typeof slotVal === 'function' &&
       typeof childVal === 'function' &&
@@ -38,14 +38,14 @@ export const mergeProps = (
       continue
     }
 
-    // className — space-join (web)
+    // className - space-join (web)
     if (key === 'className') {
       // merged[key] = [slotVal, childVal].filter(Boolean).join(' ') || undefined
       merged[key] = clsx(slotVal as ClassName, childVal as ClassName)
       continue
     }
 
-    // style — merge objects (works for both CSSProperties and RN StyleSheet)
+    // style - merge objects (works for both CSSProperties and RN StyleSheet)
     if (key === 'style') {
       if (slotVal || childVal) {
         // Flatten arrays (React Native allows style arrays)
@@ -59,7 +59,7 @@ export const mergeProps = (
       continue
     }
 
-    // Default — child wins
+    // Default - child wins
     merged[key] = childVal
   }
 

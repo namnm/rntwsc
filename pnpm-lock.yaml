@@ -460,9 +460,6 @@ importers:
       eslint-plugin-import:
         specifier: 2.32.0
         version: 2.32.0(patch_hash=7f5c1b3ac0419b772c3abd1152f946a5f6c8f5ebf558cb49b732215630c2f48b)(@typescript-eslint/parser@8.59.3(eslint@10.3.0(jiti@2.6.1))(typescript@6.0.3))(eslint@10.3.0(jiti@2.6.1))
-      eslint-plugin-prefer-arrow:
-        specifier: 1.2.3
-        version: 1.2.3(eslint@10.3.0(jiti@2.6.1))
       eslint-plugin-react:
         specifier: 7.37.5
         version: 7.37.5(patch_hash=24ed0c82b63c09560e6a640404cb8b5769455a704db5068d2ac54d9c68e9b43e)(eslint@10.3.0(jiti@2.6.1))
@@ -859,7 +856,7 @@ importers:
         version: 10.1.1(@babel/core@7.29.0)(webpack@5.106.2)
       baseline-browser-mapping:
         specifier: latest
-        version: 2.10.37
+        version: 2.10.38
       cross-env:
         specifier: 10.1.0
         version: 10.1.0
@@ -3209,6 +3206,11 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
 
+  baseline-browser-mapping@2.10.38:
+    resolution: {integrity: sha512-31/02mVB4yuQU6adKk5SlY6m+mxDwUq5KZkyYgnLrrKl7TEm1+3PyDtDBz2kOv/wxZz41GHsvV1A/u6RmiyBvw==}
+    engines: {node: '>=6.0.0'}
+    hasBin: true
+
   bcp47@1.1.2:
     resolution: {integrity: sha512-JnkkL4GUpOvvanH9AZPX38CxhiLsXMBicBY2IAtqiVN8YulGDQybUydWA4W6yAMtw6iShtw+8HEF6cfrTHU+UQ==}
     engines: {node: '>=0.10'}
@@ -3816,11 +3818,6 @@ packages:
     peerDependenciesMeta:
       '@typescript-eslint/parser':
         optional: true
-
-  eslint-plugin-prefer-arrow@1.2.3:
-    resolution: {integrity: sha512-J9I5PKCOJretVuiZRGvPQxCbllxGAV/viI20JO3LYblAodofBxyMnZAJ+WGeClHgANnSJberTNoFWWjrWKBuXQ==}
-    peerDependencies:
-      eslint: '>=2.0.0'
 
   eslint-plugin-react-hooks@7.1.1:
     resolution: {integrity: sha512-f2I7Gw6JbvCexzIInuSbZpfdQ44D7iqdWX01FKLvrPgqxoE7oMj8clOfto8U6vYiz4yd5oKu39rRSVOe1zRu0g==}
@@ -9218,6 +9215,8 @@ snapshots:
 
   baseline-browser-mapping@2.10.37: {}
 
+  baseline-browser-mapping@2.10.38: {}
+
   bcp47@1.1.2: {}
 
   bezier-easing@3.0.0: {}
@@ -9935,10 +9934,6 @@ snapshots:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
-
-  eslint-plugin-prefer-arrow@1.2.3(eslint@10.3.0(jiti@2.6.1)):
-    dependencies:
-      eslint: 10.3.0(jiti@2.6.1)
 
   eslint-plugin-react-hooks@7.1.1(eslint@10.3.0(jiti@2.6.1)):
     dependencies:

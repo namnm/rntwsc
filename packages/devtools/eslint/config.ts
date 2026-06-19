@@ -4,7 +4,6 @@ import tsPlugin from '@typescript-eslint/eslint-plugin'
 import * as tsParser from '@typescript-eslint/parser'
 import type { ESLint } from 'eslint'
 import * as importPlugin from 'eslint-plugin-import'
-import preferArrowPlugin from 'eslint-plugin-prefer-arrow'
 import reactPlugin from 'eslint-plugin-react'
 import reactHooksPlugin from 'eslint-plugin-react-hooks'
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort'
@@ -135,7 +134,6 @@ export const config = ({
       'react-hooks': reactHooksPlugin as ESLint.Plugin,
       import: importPlugin,
       'simple-import-sort': simpleImportSortPlugin,
-      'prefer-arrow': preferArrowPlugin,
       custom: customPlugin,
       ...extraPlugins,
     },
@@ -204,8 +202,7 @@ export const config = ({
       ],
 
       'custom/concat-classname-strings': warn,
-      'custom/no-interface': warn,
-      'custom/no-single-item-array-prop': [warn, ['style', 'className']],
+      'custom/enforce-arrow-function': warn,
       'custom/enforce-use-client': [
         warn,
         {
@@ -213,6 +210,9 @@ export const config = ({
           global: enforceUseClientGlobal,
         },
       ],
+      'custom/no-interface': warn,
+      'custom/no-single-item-array-prop': [warn, ['style', 'className']],
+      'custom/no-unicode-chars': warn,
     }),
   }
 
@@ -248,28 +248,6 @@ export const config = ({
         },
       ],
 
-      'prefer-arrow/prefer-arrow-functions': [
-        warn,
-        {
-          disallowPrototype: true,
-          singleReturnOnly: false,
-          classPropertiesAllowed: true,
-        },
-      ],
-      'prefer-arrow-callback': [
-        warn,
-        {
-          allowNamedFunctions: true,
-        },
-      ],
-      'func-style': [
-        warn,
-        'expression',
-        {
-          allowArrowFunctions: true,
-        },
-      ],
-
       'react/destructuring-assignment': [
         warn,
         'always',
@@ -280,6 +258,13 @@ export const config = ({
 
       'react-hooks/exhaustive-deps': warn,
 
+      'prefer-arrow-callback': [
+        warn,
+        {
+          allowNamedFunctions: true,
+        },
+      ],
+
       'custom/err-name': warn,
       'custom/kebab-case-import-paths': warn,
       'custom/no-missing-export': warn,
@@ -289,6 +274,7 @@ export const config = ({
       'custom/no-import-outside': off,
       'custom/no-json-stringify': warn,
       'custom/no-nullish-coalescing': warn,
+      'custom/no-unicode-chars-non-fixable': warn,
       'custom/no-use-state': off,
       'custom/no-void-union': off,
     }),

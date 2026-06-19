@@ -15,9 +15,9 @@ import {
   SLOTTABLE_TYPE,
 } from '@/core/components/slot/utils'
 
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 // Slottable
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 
 type SlottableProps = PropsWithChildren
 
@@ -26,9 +26,9 @@ const Slottable = Object.assign(SlottableUntyped, {
   $$typeof: SLOTTABLE_TYPE,
 })
 
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 // Slot
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 
 type SlotProps = {
   children?: ReactNode
@@ -37,7 +37,7 @@ type SlotProps = {
 
 const Slot = forwardRef<unknown, SlotProps>(
   ({ children, ...slotProps }, ref) => {
-    // ── Case 1: children contains a <Slottable> ──────────────────────────
+    // -- Case 1: children contains a <Slottable> --------------------------
     const childrenArray = Children.toArray(children)
     const slottableIndex = childrenArray.findIndex(isSlottable)
 
@@ -66,7 +66,7 @@ const Slot = forwardRef<unknown, SlotProps>(
       )
     }
 
-    // ── Case 2: plain single child ───────────────────────────────────────
+    // -- Case 2: plain single child ---------------------------------------
     return (
       <SlotClone {...slotProps} ref={ref}>
         {children}
@@ -77,9 +77,9 @@ const Slot = forwardRef<unknown, SlotProps>(
 
 Slot.displayName = 'Slot'
 
-// ─────────────────────────────────────────────
-// SlotClone — does the actual cloneElement
-// ─────────────────────────────────────────────
+// ---------------------------------------------
+// SlotClone - does the actual cloneElement
+// ---------------------------------------------
 
 type SlotCloneProps = {
   children: ReactNode
@@ -115,9 +115,9 @@ const SlotClone = forwardRef<unknown, SlotCloneProps>(
 
 SlotClone.displayName = 'SlotClone'
 
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 // Exports
-// ─────────────────────────────────────────────
+// ---------------------------------------------
 
 export { Slot, Slottable }
 export type { SlotProps, SlottableProps }

@@ -14,8 +14,6 @@ const resolved: {
 } = {}
 
 const oldRequireFn = Module.prototype.require
-// must use function with this
-// eslint-disable-next-line func-style
 function newRequireFn(this: Module, fileName: string) {
   // check if is not a relative import
   if (!fileName.startsWith('.')) {

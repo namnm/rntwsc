@@ -113,7 +113,10 @@ export const TextInputPage = () => {
             <View className='gap-2'>
               <TextInput placeholder='amount' prefix={<Span>$</Span>} />
               <TextInput placeholder='username' prefix={<Span>@</Span>} />
-              <TextInput placeholder='search' prefix={<Span>🔍</Span>} />
+              <TextInput
+                placeholder='search'
+                prefix={<Span>{'\u1F50D'}</Span>}
+              />
             </View>
           </View>
 
