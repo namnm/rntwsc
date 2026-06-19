@@ -262,7 +262,7 @@
     // Skip type checking .d.ts files that are included with TypeScript.
     // "skipDefaultLibCheck": false,
     // Skip type checking all .d.ts files.
-    "skipLibCheck": true
+    "skipLibCheck": true,
 
     /* ===== Editor Support ===== */
     // Remove the 20mb cap on total source code size for JavaScript files in the TypeScript language server.
@@ -272,7 +272,7 @@
 
     /* ===== Other ===== */
     //
-    // "ignoreDeprecations": "",
+    "ignoreDeprecations": "6.0"
   },
   "exclude": [
     // AUTOMATICALLY INHERIT FROM GITIGNORE - BEGIN

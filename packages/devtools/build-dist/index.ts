@@ -91,10 +91,9 @@ type SubPkgJson = Partial<Deps>
 // flat set. Cross-module deps are added as peerDependencies so consumers
 // install them explicitly rather than getting duplicate copies.
 const mergeDeps = async (mod: string) => {
-  const merged: Deps = {
+  const deps: Omit<Deps, 'devDependencies'> = {
     dependencies: {},
     peerDependencies: {},
-    devDependencies: {},
   }
 
   const paths = await glob('**/package.json', {
@@ -106,16 +105,17 @@ const mergeDeps = async (mod: string) => {
     depKeys
       .filter(k => pkg[k])
       .forEach(k => {
-        Object.assign(merged[k], pkg[k])
+        const mk = k === 'devDependencies' ? 'dependencies' : k
+        Object.assign(deps[mk], pkg[k])
       })
   })
   await Promise.all(promises)
 
   for (const dep of getCross(mod)) {
-    merged.dependencies[`${scope}/${dep}`] = `${git}#${version}&path:${dep}`
+    deps.dependencies[`${scope}/${dep}`] = `${git}#${version}&path:${dep}`
   }
 
-  return merged
+  return deps
 }
 
 // Platform-specific file suffixes mapped to their exports condition names.
@@ -225,8 +225,16 @@ const writePackageJson = async (mod: string) => {
     exports,
   }
   depKeys
-    .filter(k => Object.keys(deps[k]).length)
+    .filter(k => {
+      if (k === 'devDependencies') {
+        return
+      }
+      return Object.keys(deps[k]).length
+    })
     .forEach(k => {
+      if (k === 'devDependencies') {
+        return
+      }
       pkg[k] = deps[k]
     })
 
