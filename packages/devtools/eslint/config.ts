@@ -273,7 +273,7 @@ export const config = ({
       'custom/no-import-invalid-variant': warn,
       'custom/no-import-outside': off,
       'custom/no-json-stringify': warn,
-      'custom/no-nullish-coalescing': warn,
+      'custom/no-nullish-coalescing': off,
       'custom/no-unicode-chars-non-fixable': warn,
       'custom/no-use-state': off,
       'custom/no-void-union': off,
