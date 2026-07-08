@@ -14,7 +14,7 @@ type Props = {
 }
 export const GraphQLClient = async ({ label, refetch }: Props) => {
   const r = await useApollo<HelloData>({
-    url: playgroundGraphQLUrl,
+    url: playgroundGraphQLUrl + '?client=true',
     query: HELLO_QUERY,
   })
   return (

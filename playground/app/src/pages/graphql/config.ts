@@ -1,7 +1,9 @@
 import type { TypedDocumentNode } from '@apollo/client'
 import { gql } from '@apollo/client'
 
-export const playgroundGraphQLUrl = 'http://192.168.5.199:3001/api/graphql'
+import { serverOrigin } from '#/pages/fetch/config'
+
+export const playgroundGraphQLUrl = `${serverOrigin}/api/graphql`
 
 export type HelloData = {
   hello: {

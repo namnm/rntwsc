@@ -66,6 +66,14 @@ clean_deep_rm:
 		$$TMPDIR/haste-map*;
 
 ###############################################################################
+# dist
+
+dist_linux_amd64:
+	@rm -rf ./dist-linux-amd64 \
+	&& docker compose build --no-cache dist_linux_amd64 \
+	&& docker compose run --rm dist_linux_amd64;
+
+###############################################################################
 # fmt
 
 fmt:
