@@ -1,7 +1,7 @@
 ###############################################################################
 # builder
 
-FROM node:24.11 AS builder
+FROM node:24.11-alpine AS builder
 
 RUN npm i --loglevel=error -g pnpm
 RUN pnpm config set store-dir /pnpm-store
@@ -10,7 +10,7 @@ ENV NODE_ENV=production
 
 WORKDIR /repo
 COPY --parents **/package.json .
-COPY --parents patches .
+COPY --parents **/patches .
 COPY pnpm-*.yaml .
 
 RUN pnpm i
@@ -22,7 +22,7 @@ RUN pnpm build
 ###############################################################################
 # runner
 
-FROM oven/bun:alpine AS runner
+FROM node:24.11-alpine AS runner
 RUN apk add --no-cache nginx
 
 COPY --from=builder /repo/playground/web/.next/standalone /next-standalone
@@ -79,7 +79,7 @@ WORKDIR /next-standalone/playground/web
 COPY <<'EOF' /docker-entrypoint.sh
 #!/bin/sh
 set -e
-HOSTNAME=127.0.0.1 PORT=3000 bun run server.js &
+HOSTNAME=127.0.0.1 PORT=3000 node server.js &
 exec nginx -g 'daemon off;'
 EOF
 

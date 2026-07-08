@@ -1,0 +1,13 @@
+services:
+  dist_linux_amd64:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    platform: linux/amd64
+    volumes:
+      - ./dist-linux-amd64:/dist-linux-amd64
+    entrypoint:
+      - sh
+      - -c
+      - cp -r /repo/playground/web/.next/. /dist-linux-amd64/
