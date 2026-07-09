@@ -13,7 +13,8 @@
     "prettier": "node ./devtools prettier",
     "ts": "node ./devtools ts",
     "tsc": "node ./devtools tsc",
-    "type-coverage": "node ./devtools type-coverage"
+    "type-coverage": "node ./devtools type-coverage",
+    "dev": "cd apps/playground/web && pnpm start"
   },
   "engines": {
     "node": ">=24.11",

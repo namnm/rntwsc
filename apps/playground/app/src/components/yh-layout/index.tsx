@@ -9,7 +9,7 @@ import { ScrollView } from '@/rn/core/components/scroll-view'
 import { View } from '@/rn/core/components/view'
 import { LinkUntyped } from '@/rn/core/components/link-untyped'
 import { NavLayout } from '#/components/nav-layout'
-import { rYhHome, rYhCamera, rYhVaccine } from '#/pages/route-paths'
+import { rYhHome, rYhCamera, rYhVaccine, rYhMedicine } from '#/pages/route-paths'
 
 const PRIMARY = '#132C95'
 
@@ -19,7 +19,7 @@ const tabs: Tab[] = [
   { key: 'home', label: 'Trang chủ', href: rYhHome },
   { key: 'vaccine', label: 'Tiêm chủng', href: rYhVaccine },
   { key: 'camera', label: 'Camera', href: rYhCamera },
-  { key: 'medicine', label: 'Thuốc' },
+  { key: 'medicine', label: 'Thuốc', href: rYhMedicine },
   { key: 'account', label: 'Tài khoản' },
 ]
 

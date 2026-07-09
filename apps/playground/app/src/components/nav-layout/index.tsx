@@ -31,6 +31,8 @@ import {
   rYhHome,
   rYhCamera,
   rYhChat,
+  rYhVaccine,
+  rYhMedicine,
 } from '#/pages/route-paths'
 
 export type NavItem = {
@@ -96,8 +98,10 @@ export const NavLayout = ({ children }: NavLayoutProps) => (
           YOURHEALTH DEMO
         </Span>
         <NavSidebarLink href={rYhHome} label='YH — Trang chủ' />
+        <NavSidebarLink href={rYhVaccine} label='YH — Tiem chung' />
         <NavSidebarLink href={rYhCamera} label='YH — Camera / OCR' />
         <NavSidebarLink href={rYhChat} label='YH — AI Chatbox' />
+        <NavSidebarLink href={rYhMedicine} label='YH — Thuoc' />
         <Separator />
         <ThemeSwitcher />
         <Separator />
