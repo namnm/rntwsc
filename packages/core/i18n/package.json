@@ -8,14 +8,14 @@
     "pnpm": ">=11"
   },
   "dependencies": {
-    "i18next": "26.2.0",
-    "react-i18next": "17.0.8"
+    "i18next": "26.3.6",
+    "react-i18next": "17.0.9"
   },
   "peerDependencies": {
     "next": "*",
     "react": "*"
   },
   "devDependencies": {
-    "@types/react": "19.2.14"
+    "@types/react": "19.2.17"
   }
 }

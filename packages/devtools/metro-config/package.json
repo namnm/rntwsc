@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@rnx-kit/metro-config": "2.2.4",
-    "@rnx-kit/metro-resolver-symlinks": "0.3.0"
+    "@rnx-kit/metro-resolver-symlinks": "0.3.1"
   },
   "peerDependencies": {
     "@react-native/metro-babel-transformer": "*",

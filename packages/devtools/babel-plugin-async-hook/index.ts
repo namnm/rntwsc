@@ -1,43 +1,38 @@
-import type { ConfigAPI, NodePath, PluginObj } from '@babel/core'
+import type { NodePath, PluginObj } from '@babel/core'
 import { types as t } from '@babel/core'
 
-import {
-  getCallerIsServer,
-  getIsServer,
-} from '@/devtools/babel-config/is-server'
+import { get } from '@/core/lodash'
 import { shouldTranspile } from '@/devtools/babel-config/should-transpile'
+import { getExpressionName } from '@/devtools/babel-plugin-tw/lib/get-expression-name'
 
 const hookRegex = /^use[A-Z]/
 
-export const asyncHookPlugin = (api: ConfigAPI): PluginObj => {
-  const callerIsServer = getCallerIsServer(api)
-
-  return {
-    visitor: {
-      // use program path to get plugin pass and perform some checks before traverse
-      // also prioritize this plugin over others such as react compiler
-      Program: (programPath, pluginPass) => {
-        if (!shouldTranspile(pluginPass.filename)) {
-          return
-        }
-        const isServer = getIsServer(pluginPass, callerIsServer)
-        if (isServer) {
-          return
-        }
-        programPath.traverse({
-          CallExpression: traverseCallExpression,
-        })
-      },
+export const asyncHookPlugin: PluginObj = {
+  visitor: {
+    // use program path to get plugin pass and perform some checks before traverse
+    // also prioritize this plugin over others such as react compiler
+    Program: (programPath, pluginPass) => {
+      if (!shouldTranspile(pluginPass.filename)) {
+        return
+      }
+      const isServer = get(pluginPass.opts, 'isServer')
+      if (isServer) {
+        return
+      }
+      programPath.traverse({
+        CallExpression: traverseCallExpression,
+      })
     },
-  }
+  },
 }
 
 const traverseCallExpression = (p: NodePath<t.CallExpression>) => {
   const callee = p.node.callee
-  if (!t.isIdentifier(callee)) {
+  if (!t.isExpression(callee)) {
     return
   }
-  if (!hookRegex.test(callee.name)) {
+  const calleeName = getExpressionName(callee)
+  if (!calleeName || !hookRegex.test(calleeName)) {
     return
   }
 
@@ -82,13 +77,12 @@ const stripAwaitOrYield = (
   if (!arg) {
     return invalid()
   }
-  if (t.isCallExpression(arg) && t.isIdentifier(arg.callee)) {
-    const name = arg.callee.name
-    if (!hookRegex.test(name)) {
-      return invalid()
+  if (t.isCallExpression(arg) && t.isExpression(arg.callee)) {
+    const name = getExpressionName(arg.callee)
+    if (name && hookRegex.test(name)) {
+      p.replaceWith(arg)
+      return
     }
-    p.replaceWith(arg)
-    return
   }
   if (t.isCallExpression(arg) && t.isMemberExpression(arg.callee)) {
     const { object, property, computed } = arg.callee

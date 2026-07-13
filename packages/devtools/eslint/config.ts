@@ -9,6 +9,7 @@ import reactHooksPlugin from 'eslint-plugin-react-hooks'
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort'
 import globals from 'globals'
 
+import type { StrMap } from '@/core/ts-utils'
 import {
   enforceUseClientGlobal,
   enforceUseClientImports,
@@ -16,16 +17,14 @@ import {
 import { ignoreExtraneous } from '@/devtools/eslint/config-ignore-extraneous'
 import { restrictedImports } from '@/devtools/eslint/config-restricted-imports'
 import { customPlugin } from '@/devtools/eslint-plugin-custom'
+import { fs, readJson5Sync } from '@/devtools/fs'
+import { getGitignorePath } from '@/devtools/gitignore'
+import { globSync } from '@/devtools/glob'
 import { pnpmWorkspaceSync } from '@/devtools/normalize/pnpm-workspace'
-import { fs } from '@/nodejs/fs'
-import { gitignorePath } from '@/nodejs/gitignore'
-import { globSync } from '@/nodejs/glob'
-import { path } from '@/nodejs/path'
-import type { StrMap } from '@/shared/ts-utils'
+import { path } from '@/devtools/path'
 
 const off = 0
 const warn = 1
-const gitignore = includeIgnoreFile(gitignorePath)
 
 const tsExts = '{ts,tsx}'
 const jsExts = '{js,jsx,cjs,mjs}'
@@ -48,6 +47,7 @@ type Alias = {
 }
 type Options = {
   dir: string
+  repoRoot: string
   extraPlugins?: StrMap<string>
   overriddenRules?: StrMap
   alias?: boolean
@@ -59,12 +59,15 @@ let tsconfig: string[] | undefined
 
 export const config = ({
   dir,
+  repoRoot,
   alias = false,
   ignoreShadowed = false,
   tsProjectService = false,
   extraPlugins,
   overriddenRules,
 }: Options) => {
+  const gitignore = includeIgnoreFile(getGitignorePath(repoRoot))
+
   const jsShadowed: string[] = []
   if (ignoreShadowed) {
     jsShadowed.push(
@@ -122,7 +125,7 @@ export const config = ({
     },
     settings: {
       react: {
-        version: pnpmWorkspaceSync().overrides?.['react'] || '19',
+        version: pnpmWorkspaceSync(repoRoot).overrides?.['react'] || '19',
       },
     },
     linterOptions: {
@@ -270,7 +273,12 @@ export const config = ({
       'custom/no-missing-export': warn,
       'custom/no-access-property': off,
       'custom/no-import-default': [warn, ['react']],
-      'custom/no-import-invalid-variant': warn,
+      'custom/no-import-invalid-variant': [
+        warn,
+        {
+          repoRoot,
+        },
+      ],
       'custom/no-import-outside': off,
       'custom/no-json-stringify': warn,
       'custom/no-nullish-coalescing': off,
@@ -282,9 +290,13 @@ export const config = ({
 
   const aliases: Alias[] = []
   if (alias) {
-    tsconfig = tsconfig || globSync('**/tsconfig.json')
+    tsconfig =
+      tsconfig ||
+      globSync('**/tsconfig.json', {
+        cwd: repoRoot,
+      })
     tsconfig.forEach(t => {
-      const ts = require(t)
+      const ts = readJson5Sync(t)
       if (!ts.compilerOptions?.paths) {
         return
       }
@@ -335,7 +347,11 @@ export const config = ({
   let tsNonFixable: ConfigWithExtends[] = []
 
   if (tsProjectService) {
-    tsconfig = tsconfig || globSync('**/tsconfig.json')
+    tsconfig =
+      tsconfig ||
+      globSync('**/tsconfig.json', {
+        cwd: repoRoot,
+      })
     tsBase = tsconfig.map(p => ({
       ...base,
       languageOptions: {

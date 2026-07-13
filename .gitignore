@@ -43,6 +43,7 @@
 **/npm-debug.log*
 **/yarn-debug.log*
 **/yarn-error.log*
+**/*tsbuildinfo*
 
 # fastlane
 #
@@ -112,3 +113,6 @@
 **/package-lock.json
 **/yarn.lock
 # **/pnpm-lock.yaml
+
+# mirror copy from playground/turbopack/src
+**/playground/webpack/src/

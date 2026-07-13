@@ -1,10 +1,9 @@
-import { repoRoot } from '@/nodejs/entrypoint/root'
-import { binRequireResolve, cmd, exec } from '@/nodejs/exec'
-import { resolvePath } from '@/nodejs/path'
+import { binRequireResolve, cmd, exec } from '@/devtools/exec'
+import { resolvePath } from '@/devtools/path'
 
-export const prettier = async (target: string) =>
+export const prettier = async (target: string, repoRoot: string) =>
   cmd({
-    bin: await binRequireResolve('@/devtools/prettier'),
+    bin: await binRequireResolve('@/devtools/prettier', undefined, repoRoot),
     args: [
       ['--log-level', 'error'],
       ['--config', await resolvePath(repoRoot, 'prettier.config.js')],
@@ -14,4 +13,5 @@ export const prettier = async (target: string) =>
     target,
   })
 
-export const run = (target = repoRoot) => prettier(target).then(exec)
+export const run = (repoRoot: string, target = repoRoot) =>
+  prettier(target, repoRoot).then(exec)

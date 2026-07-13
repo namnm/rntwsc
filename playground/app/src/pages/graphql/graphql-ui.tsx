@@ -1,8 +1,9 @@
-import { Span } from '@/core/components/text'
-import type { GraphQLResponse } from '@/core/graphql/config'
-import type { UseHydrationData } from '@/core/hydration/config'
-import { View } from '@/core/tw/components/view'
-import { jsonSafe } from '@/shared/json-safe'
+import { Span } from '@rntwsc/core/components/text'
+import type { GraphQLResponse } from '@rntwsc/core/graphql/config'
+import type { UseHydrationData } from '@rntwsc/core/hydration/config'
+import { jsonSafe } from '@rntwsc/core/json-safe'
+import { View } from '@rntwsc/core/tw/components/view'
+
 import type { HelloData } from '#/pages/graphql/config'
 
 type Props = UseHydrationData<GraphQLResponse<HelloData>>

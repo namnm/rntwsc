@@ -1,10 +1,11 @@
-import { Button } from '@/core/components/button'
-import { H1, H2, H3, Span } from '@/core/components/text'
-import { useTranslationUntyped } from '@/core/i18n'
-import { isWeb } from '@/core/platform'
-import { useSafeAreaPadding } from '@/core/responsive/use-safe-area'
-import { ScrollView } from '@/core/tw/components/scroll-view'
-import { View } from '@/core/tw/components/view'
+import { Button } from '@rntwsc/core/components/button'
+import { H1, H2, H3, Span } from '@rntwsc/core/components/text'
+import { useTranslationUntyped } from '@rntwsc/core/i18n'
+import { isWeb } from '@rntwsc/core/platform'
+import { useSafeAreaPadding } from '@rntwsc/core/responsive/use-safe-area'
+import { ScrollView } from '@rntwsc/core/tw/components/scroll-view'
+import { View } from '@rntwsc/core/tw/components/view'
+
 import { NavLayout } from '#/components/nav-layout'
 
 export const HomePage = async () => {
@@ -62,10 +63,10 @@ export const HomePage = async () => {
           <H1 className='text-foreground text-center text-4xl font-bold transition md:text-5xl lg:text-6xl'>
             rntwsc
           </H1>
-          <Span className='text-primary mt-3 text-center text-sm font-semibold tracking-widest uppercase transition'>
+          <Span className='text-primary mt-3 text-center text-sm font-semibold uppercase transition'>
             {t('tagline')}
           </Span>
-          <Span className='text-foreground mt-5 text-center text-base leading-relaxed transition md:text-lg'>
+          <Span className='text-foreground mt-5 text-center text-base transition md:text-lg'>
             {t('hero_description')}
           </Span>
           <View className='mt-8 flex-row flex-wrap items-center justify-center gap-3'>
@@ -92,7 +93,7 @@ export const HomePage = async () => {
                 <H3 className='text-primary mb-2 text-lg transition'>
                   {title}
                 </H3>
-                <Span className='text-foreground text-sm leading-relaxed transition'>
+                <Span className='text-foreground text-sm transition'>
                   {desc}
                 </Span>
               </View>
@@ -129,10 +130,10 @@ export const HomePage = async () => {
                 <H3 className='text-primary mb-3 text-lg transition'>
                   {title}
                 </H3>
-                <Span className='mb-3 text-sm leading-relaxed text-gray-500 transition dark:text-gray-400'>
+                <Span className='mb-3 text-sm text-gray-500 transition dark:text-gray-400'>
                   {problem}
                 </Span>
-                <Span className='text-foreground text-sm leading-relaxed font-medium transition'>
+                <Span className='text-foreground text-sm font-medium transition'>
                   {solution}
                 </Span>
               </View>

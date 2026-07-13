@@ -1,6 +1,6 @@
-import { Span } from '@/core/components/text'
-import type { UseHydrationData } from '@/core/hydration/config'
-import { View } from '@/core/tw/components/view'
+import { Span } from '@rntwsc/core/components/text'
+import type { UseHydrationData } from '@rntwsc/core/hydration/config'
+import { View } from '@rntwsc/core/tw/components/view'
 
 export type HelloData = { message: string; timestamp: number }
 

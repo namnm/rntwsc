@@ -1,12 +1,13 @@
 'use client'
 
-import { Alert } from '@/core/components/alert'
-import { H1, Span } from '@/core/components/text'
-import { Plus } from '@/core/icons/plus'
-import { useSafeAreaPadding } from '@/core/responsive/use-safe-area'
-import { Pressable } from '@/core/tw/components/pressable'
-import { ScrollView } from '@/core/tw/components/scroll-view'
-import { View } from '@/core/tw/components/view'
+import { Alert } from '@rntwsc/core/components/alert'
+import { H1, Span } from '@rntwsc/core/components/text'
+import { Plus } from '@rntwsc/core/icons/plus'
+import { useSafeAreaPadding } from '@rntwsc/core/responsive/use-safe-area'
+import { Pressable } from '@rntwsc/core/tw/components/pressable'
+import { ScrollView } from '@rntwsc/core/tw/components/scroll-view'
+import { View } from '@rntwsc/core/tw/components/view'
+
 import { NavLayout } from '#/components/nav-layout'
 
 const types = [

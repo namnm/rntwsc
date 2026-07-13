@@ -2,8 +2,8 @@ import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next/initReactI18next'
 
 import { serverCacheKey } from '@/core/cache/key'
+import type { Falsish, StrMap } from '@/core/ts-utils'
 import { initSingleton } from '@/core/utils/init-singleton'
-import type { Falsish, StrMap } from '@/shared/ts-utils'
 
 export const sck = serverCacheKey('@rntwsc/i18n', [
   'currentLocale',

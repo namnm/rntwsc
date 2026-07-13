@@ -1,6 +1,6 @@
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils'
 
-import type { StrMap } from '@/shared/ts-utils'
+import type { StrMap } from '@/core/ts-utils'
 
 export const noAccessProperty: TSESLint.RuleModule<
   'noAccessProperty',

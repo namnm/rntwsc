@@ -1,8 +1,8 @@
 import type { ColorSchemeName } from 'react-native'
 
 import { serverCacheKey } from '@/core/cache/key'
+import type { Falsish } from '@/core/ts-utils'
 import type { ClassNameDarkModeState } from '@/core/tw/class-name'
-import type { Falsish } from '@/shared/ts-utils'
 
 export const sck = serverCacheKey('@rntwsc/dark-mode', ['cookie'] as const)
 

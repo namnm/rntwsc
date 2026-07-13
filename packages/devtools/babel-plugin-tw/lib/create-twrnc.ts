@@ -2,15 +2,13 @@ import type { Platform } from 'react-native'
 import type { TwConfig } from 'twrnc'
 import { create } from 'twrnc/create'
 
-import { pnpmWorkspaceSync } from '@/devtools/normalize/pnpm-workspace'
-
 // can not import twrnc directly as it imports react-native which is not available in nodejs babel env
 export const createTwrnc = (
-  platform: Platform['OS'],
   twrncConfig: TwConfig,
+  platform: Platform['OS'],
+  reactNativeVersion: string,
 ) => {
-  const rnVersionStr = pnpmWorkspaceSync().overrides?.['react-native'] || ''
-  const matches = /(\d+)\.(\d+)\.(\d+)/.exec(rnVersionStr)
+  const matches = /(\d+)\.(\d+)\.(\d+)/.exec(reactNativeVersion)
   if (!matches) {
     throw new Error(
       'Can not read react native version from pnpm-workspace.yaml',

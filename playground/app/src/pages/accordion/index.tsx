@@ -1,12 +1,13 @@
 'use client'
 
-import { Accordion } from '@/core/components/accordion'
-import { H1, Span } from '@/core/components/text'
-import { Minus } from '@/core/icons/minus'
-import { Plus } from '@/core/icons/plus'
-import { useSafeAreaPadding } from '@/core/responsive/use-safe-area'
-import { ScrollView } from '@/core/tw/components/scroll-view'
-import { View } from '@/core/tw/components/view'
+import { Accordion } from '@rntwsc/core/components/accordion'
+import { H1, Span } from '@rntwsc/core/components/text'
+import { Minus } from '@rntwsc/core/icons/minus'
+import { Plus } from '@rntwsc/core/icons/plus'
+import { useSafeAreaPadding } from '@rntwsc/core/responsive/use-safe-area'
+import { ScrollView } from '@rntwsc/core/tw/components/scroll-view'
+import { View } from '@rntwsc/core/tw/components/view'
+
 import { NavLayout } from '#/components/nav-layout'
 
 const gaps = ['sm', 'md', 'lg'] as const

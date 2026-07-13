@@ -9,7 +9,7 @@ import {
 } from '@/core/hydration/config'
 import { rehydrated } from '@/core/hydration/dehydrate'
 import { isBrowser } from '@/core/platform'
-import type { StrMap } from '@/shared/ts-utils'
+import type { StrMap } from '@/core/ts-utils'
 
 const store: StrMap<HydrationData> = {}
 const listeners = new Set<() => void>()

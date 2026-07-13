@@ -1,9 +1,10 @@
-import { Span } from '@/core/components/text'
-import { useTranslationUntyped } from '@/core/i18n'
-import { getLangUntyped } from '@/core/i18n/config'
-import { useI18nSwitcherProps } from '@/core/i18n/use-i18n-switcher-props'
-import { Pressable } from '@/core/tw/components/pressable'
-import { View } from '@/core/tw/components/view'
+import { Span } from '@rntwsc/core/components/text'
+import { useTranslationUntyped } from '@rntwsc/core/i18n'
+import { getLangUntyped } from '@rntwsc/core/i18n/config'
+import { useI18nSwitcherProps } from '@rntwsc/core/i18n/use-i18n-switcher-props'
+import { Pressable } from '@rntwsc/core/tw/components/pressable'
+import { View } from '@rntwsc/core/tw/components/view'
+
 import { languages } from '#/i18n/config'
 
 export const I18nSwitcher = async ({ onPress }: { onPress?: () => void }) => {

@@ -5,8 +5,10 @@ FROM node:24.11-alpine AS builder
 
 RUN npm i --loglevel=error -g pnpm
 RUN pnpm config set store-dir /pnpm-store
+RUN pnpm config set minimum-release-age 0
 
 ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
 WORKDIR /repo
 COPY --parents **/package.json .
@@ -16,7 +18,7 @@ COPY pnpm-*.yaml .
 RUN pnpm i
 
 COPY . .
-WORKDIR /repo/playground/web
+WORKDIR /repo/playground/turbopack
 RUN pnpm build
 
 ###############################################################################
@@ -25,9 +27,9 @@ RUN pnpm build
 FROM node:24.11-alpine AS runner
 RUN apk add --no-cache nginx
 
-COPY --from=builder /repo/playground/web/.next/standalone /next-standalone
-COPY --from=builder /repo/playground/web/.next/static /next-static
-COPY --from=builder /repo/playground/web/public /next-public
+COPY --from=builder /repo/playground/turbopack/.next/standalone /next-standalone
+COPY --from=builder /repo/playground/turbopack/.next/static /next-static
+COPY --from=builder /repo/playground/turbopack/public /next-public
 
 EXPOSE 3334
 
@@ -74,7 +76,7 @@ http {
 EOF
 
 ENV NODE_ENV=production
-WORKDIR /next-standalone/playground/web
+WORKDIR /next-standalone/playground/turbopack
 
 COPY <<'EOF' /docker-entrypoint.sh
 #!/bin/sh

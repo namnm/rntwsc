@@ -13,9 +13,9 @@ import type {
 import { Controller } from 'react-hook-form'
 
 import { Span } from '@/core/components/text'
+import type { StrMap } from '@/core/ts-utils'
 import type { ViewProps } from '@/core/tw/components/view'
 import { View } from '@/core/tw/components/view'
-import type { StrMap } from '@/shared/ts-utils'
 
 type Rules<T extends FieldValues> = Omit<
   RegisterOptions<T, Path<T>>,
@@ -61,7 +61,7 @@ export const FormField = <T extends FieldValues, K extends Path<T>>({
         <Span className='text-sm font-medium text-gray-700 transition dark:text-gray-300'>
           {typeof label === 'function' ? label() : label}
         </Span>
-        {requiredMask && <Span className='text-sm text-error'>*</Span>}
+        {requiredMask && <Span className='text-error text-sm'>*</Span>}
       </View>
     ) : null
 
@@ -98,7 +98,7 @@ export const FormField = <T extends FieldValues, K extends Path<T>>({
 
   const renderErr = ({ error }: ControllerFieldState) =>
     error?.message ? (
-      <Span className='text-xs text-error'>{error.message}</Span>
+      <Span className='text-error text-xs'>{error.message}</Span>
     ) : null
 
   return (

@@ -1,9 +1,10 @@
-import { TextInput } from '@/core/components/input'
-import { PasswordInput } from '@/core/components/input/password-input'
-import { H1, Span } from '@/core/components/text'
-import { useSafeAreaPadding } from '@/core/responsive/use-safe-area'
-import { ScrollView } from '@/core/tw/components/scroll-view'
-import { View } from '@/core/tw/components/view'
+import { TextInput } from '@rntwsc/core/components/input'
+import { PasswordInput } from '@rntwsc/core/components/input/password-input'
+import { H1, Span } from '@rntwsc/core/components/text'
+import { useSafeAreaPadding } from '@rntwsc/core/responsive/use-safe-area'
+import { ScrollView } from '@rntwsc/core/tw/components/scroll-view'
+import { View } from '@rntwsc/core/tw/components/view'
+
 import { NavLayout } from '#/components/nav-layout'
 
 const appearances = ['outlined', 'filled', 'ghost', 'underlined'] as const

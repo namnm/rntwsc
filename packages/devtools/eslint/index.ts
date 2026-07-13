@@ -1,10 +1,9 @@
-import { repoRoot } from '@/nodejs/entrypoint/root'
-import { binRequireResolve, cmd, exec } from '@/nodejs/exec'
-import { resolvePath } from '@/nodejs/path'
+import { binRequireResolve, cmd, exec } from '@/devtools/exec'
+import { resolvePath } from '@/devtools/path'
 
-export const eslint = async (target: string) =>
+export const eslint = async (target: string, repoRoot: string) =>
   cmd({
-    bin: await binRequireResolve('@/devtools/eslint'),
+    bin: await binRequireResolve('@/devtools/eslint', undefined, repoRoot),
     args: [
       ['--config', await resolvePath(repoRoot, 'eslint.config.js')],
       ['--fix'],
@@ -14,4 +13,5 @@ export const eslint = async (target: string) =>
     target,
   })
 
-export const run = (target = repoRoot) => eslint(target).then(exec)
+export const run = (repoRoot: string, target = repoRoot) =>
+  eslint(target, repoRoot).then(exec)

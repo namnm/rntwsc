@@ -1,14 +1,8 @@
 // react native metro doesnt support typescript in this file
-// we need to use commonjs here
-require('tsconfig-paths/register')
-require('@/nodejs/entrypoint')({
-  target: __dirname,
-  babel: false,
-  alias: false,
-})
-
-module.exports = require('@/devtools/babel-config').config({
+// we need to use js here
+require('tsx/cjs')
+module.exports = require('@rntwsc/devtools/babel-config').config({
   dir: __dirname,
   target: 'rn',
-  twrncConfig: require('#/twrnc-config').twrncConfig,
+  ...require('./babel-plugin-tw-config'),
 })

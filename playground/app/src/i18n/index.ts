@@ -2,7 +2,7 @@ import {
   useCurrentLangUntyped,
   useCurrentLocaleUntyped,
   useTranslationUntyped,
-} from '@/core/i18n'
+} from '@rntwsc/core/i18n'
 import {
   getDefaultLangUntyped,
   getDefaultLocaleUntyped,
@@ -12,7 +12,8 @@ import {
   getLocaleUntyped,
   isValidLangUntyped,
   isValidLocaleUntyped,
-} from '@/core/i18n/config'
+} from '@rntwsc/core/i18n/config'
+
 import type { Lang, Locale, Namespace, Resources } from '#/i18n/config'
 
 export const isValidLocale = isValidLocaleUntyped as (v: unknown) => v is Locale

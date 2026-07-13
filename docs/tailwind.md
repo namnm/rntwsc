@@ -53,64 +53,94 @@ const style = runtimeStyle('flex flex-col')
 
 ## Extras: transitions (Reanimated)
 
-`transition` `transition-all` `transition-colors` `transition-opacity` `transition-shadow` `transition-transform` `transition-none` `transition-[<value>]`
-`duration-<n>` `duration-initial`
-`ease-linear` `ease-in` `ease-out` `ease-in-out` `ease-initial`
-`delay-<n>`
+```
+transition
+transition-all
+transition-colors
+transition-opacity
+transition-shadow
+transition-transform
+transition-none
+transition-[<value>]
+duration-<n>
+duration-initial
+ease-linear
+ease-in
+ease-out
+ease-in-out
+ease-initial
+delay-<n>
+```
 
-Custom easing: add to `tailwind.theme.extend` in `tailwind.config.js` and to `transitionTimingFunctionMap` in `normalize-style-config.ts`.
+Custom easing: add to tailwind.theme.extend in tailwind.config.js and to transitionTimingFunctionMap in normalize-style-config.ts.
 
 ## Extras: animations (Reanimated)
 
-`animate-spin` `animate-ping` `animate-pulse` `animate-bounce`
+```
+animate-spin
+animate-ping
+animate-pulse
+animate-bounce
+```
 
-Custom animation: add to `tailwind.theme.extend` and to `animationMap` in `normalize-style-config.ts`.
+Custom animation: add to tailwind.theme.extend and to animationMap in normalize-style-config.ts.
 
 ## Extras: grid (computed layout, View only)
 
-`grid` `grid-cols-none` `grid-cols-<n>` `grid-cols-[..px_..fr]` `gap` `gap-x` `gap-y`
+```
+grid
+grid-cols-none
+grid-cols-<n>
+grid-cols-[..px_..fr]
+gap
+gap-x
+gap-y
+```
 
 ## Extras: other
 
-- Transforms: `translate-` `rotate-` `scale-`
-- Viewport: `<prop>-[<n>vw]` `<prop>-[<n>vh]` `<prop>-screen`
-- Calc: `<prop>-[calc(<expr>)]` - operators: `+ - * /`, units: `px vw vh`
+- Transforms: translate-, rotate-, scale-
+- Viewport: prop-[<n>vw], prop-[<n>vh], prop-screen
+- Calc: prop-[calc(<expr>)] - operators plus, minus, times, divide; units px, vw, vh
 
 ## Special props
 
 These class names compile to RN props instead of style:
 
-| Class                                       | Prop                   |
-| ------------------------------------------- | ---------------------- |
-| `line-clamp-<n>` / `line-clamp-none`        | `numberOfLines`        |
-| `select-text` / `select-none`               | `selectable`           |
-| `placeholder-<color>`                       | `placeholderTextColor` |
-| `caret-transparent`                         | `caretHidden`          |
-| `object-contain/cover/fill/none/scale-down` | `resizeMode`           |
+| Class                                            | Prop                 |
+| ------------------------------------------------ | -------------------- |
+| line-clamp-n or line-clamp-none                  | numberOfLines        |
+| select-text or select-none                       | selectable           |
+| placeholder-color                                | placeholderTextColor |
+| caret-transparent                                | caretHidden          |
+| object-contain, cover, fill, none, or scale-down | resizeMode           |
 
 ## Selectors
 
-**Platform**: `web:` `ios:` `android:` `native:` - stripped at build time if platform does not match. Web-incompatible classes auto-stripped: `theme-` `web:` `web-` `hover:` `group-*-hover:` `peer-*-hover:` `cursor-`
+Platform: web:, ios:, android:, native: - stripped at build time if the platform does not match. Web incompatible classes are auto stripped: theme-, web:, web-, hover:, group-hover:, peer-hover:, cursor-
 
-**Color scheme**: `dark:` `light:`
+Color scheme: dark:, light:
 
-**Screen size**: `sm:` `md:` `lg:` `xl:` `2xl:`
+Screen size: sm:, md:, lg:, xl:, 2xl:
 
-**Events**: `active:` (Pressable: onPressIn/Out) `focus:` (TextInput: onFocus/Blur)
+Events: active: (Pressable onPressIn/Out), focus: (TextInput onFocus/Blur)
 
-**Props**: `disabled:` `checked:` - pass fields to hook options `props`/`childrenProps`
+Props: disabled:, checked: - pass fields to hook options props or childrenProps
 
-**Group/peer**: `group-<selector>:` `group-<key>-<selector>:` `peer-<selector>:` `peer-<key>-<selector>:`. Use `TwClassNamePeerProvider` to isolate peer contexts.
+Group and peer: group-selector:, group-key-selector:, peer-selector:, peer-key-selector:. Use TwClassNamePeerProvider to isolate peer contexts.
 
-**Nested**: `<sel1>:<sel2>:<class>` - deeper nesting wins.
+Nested: sel1:sel2:class - deeper nesting wins.
 
 ## Minify
 
-On web, class names can be minified with [postcss-rename](https://github.com/google/postcss-rename) since the Babel plugin captures all references. See `playground/web/postcss.config.js` - emits the minified class name map to `playground/app/src/codegen/class-names.min.json`.
+On web, class names can be minified with postcss-rename since the Babel plugin captures all references. See playground/turbopack/postcss.config.ts - it emits the minified class name map to playground/app/src/codegen/class-names.min.json.
 
 ## cva convention
 
-- `attribute` - a component characteristic (color, size, shape). Different from React props like event handlers.
-- `attribute value` - one value of an attribute (e.g. red, sm).
-- `variant` - a full combination of all attributes. N attributes with M values each = N\*M variants.
-- No default variant - set defaults in component default props.
+An attribute is a component characteristic (color, size, shape) - different from a React prop like an event handler.
+
+An attribute value is one value of an attribute, for example red or sm.
+
+A variant is a full combination of all attributes. N attributes with M values each gives N times M variants.
+
+There is no default variant - set defaults in the component's own default props.

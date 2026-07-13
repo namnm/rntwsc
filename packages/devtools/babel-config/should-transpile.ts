@@ -1,4 +1,4 @@
-import type { Falsish } from '@/shared/ts-utils'
+import type { Falsish } from '@/core/ts-utils'
 
 export const shouldTranspileExtension = /\.tsx?/
 
@@ -6,8 +6,10 @@ export const shouldTranspile = (filename: string | Falsish) => {
   if (!filename) {
     return false
   }
-  if (filename.includes('node_modules') && !filename.includes('@rntwsc')) {
+  const node = filename.includes('node_modules')
+  const rntwsc = filename.includes('@rntwsc')
+  if (node && !rntwsc) {
     return false
   }
-  return shouldTranspileExtension.test(filename)
+  return rntwsc || shouldTranspileExtension.test(filename)
 }

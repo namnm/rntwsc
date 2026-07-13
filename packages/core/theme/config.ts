@@ -1,9 +1,9 @@
 import { serverCacheKey } from '@/core/cache/key'
+import type { Falsish } from '@/core/ts-utils'
 import type { ClassName } from '@/core/tw/class-name'
 import type { ThemeVariables } from '@/core/tw/twrnc-config'
 import { validateThemeVariables } from '@/core/tw/twrnc-config'
 import { initSingleton } from '@/core/utils/init-singleton'
-import type { Falsish } from '@/shared/ts-utils'
 
 export const sck = serverCacheKey('@rntwsc/theme', ['cookie'] as const)
 

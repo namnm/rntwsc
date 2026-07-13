@@ -10,7 +10,7 @@ import {
   darkModeEnabled,
   darkModeToBolean,
 } from '@/core/dark-mode/config'
-import { darkClassName, lightClassName } from '@/core/tw/tailwind'
+import { darkClassName, lightClassName } from '@/core/tw/styles'
 
 let initialized = false
 let currentDarkMode: boolean | undefined = undefined

@@ -10,4 +10,4 @@ services:
     entrypoint:
       - sh
       - -c
-      - cp -r /repo/playground/web/.next/. /dist-linux-amd64/
+      - cp -r /repo/playground/turbopack/.next/. /dist-linux-amd64/

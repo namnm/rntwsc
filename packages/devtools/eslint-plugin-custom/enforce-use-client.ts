@@ -3,10 +3,7 @@ import type { TSESLint, TSESTree } from '@typescript-eslint/utils'
 import { shouldTranspileExtension } from '@/devtools/babel-config/should-transpile'
 
 type MessageId =
-  | 'enforceUseClient'
-  | 'wrongPosition'
-  | 'missingNewlines'
-  | 'disallowUseClient'
+  'enforceUseClient' | 'wrongPosition' | 'missingNewlines' | 'disallowUseClient'
 
 type Options = {
   imports?: string[]

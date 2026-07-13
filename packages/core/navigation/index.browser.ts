@@ -6,8 +6,8 @@ import { usePathname, useSearchParams } from 'next-unchecked/navigation'
 
 import { useCurrentLocaleUntyped } from '@/core/i18n/index.browser'
 import { normalizePathname } from '@/core/navigation/normalize-pathname'
-import type { ParsedQs } from '@/shared/qs'
-import { qsParse } from '@/shared/qs'
+import type { ParsedQs } from '@/core/qs'
+import { qsParse } from '@/core/qs'
 
 export const useRoute = () => {
   const currentPath = usePathname()

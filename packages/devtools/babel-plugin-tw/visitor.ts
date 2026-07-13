@@ -12,13 +12,14 @@ import { traverseJSXOpeningElement } from '@/devtools/babel-plugin-tw/lib/traver
 import { traverseTaggedTemplateExpression } from '@/devtools/babel-plugin-tw/lib/traverse-tagged-template-expression'
 
 const pluginPassOptsSchema = z.object({
-  extractOutputPath: z.string(),
+  reactNativeVersion: z.string(),
   twrncConfig: z.record(z.string(), z.any()),
+  extractClassNameOutputPath: z.string(),
 })
 export type TwPluginOptions = z.infer<typeof pluginPassOptsSchema>
 
 export type CreateVisitorOptions = Partial<Pick<Ctx, 'extract' | 'err'>>
-export type TraverseOptions = Omit<ContextOptions, 'rootPath' | 'calleeName'>
+export type TraverseOptions = Omit<ContextOptions, 'rootPath' | 'calleeNode'>
 
 export const createVisitor = ({
   extract,
@@ -31,12 +32,12 @@ export const createVisitor = ({
       return
     }
 
-    const { extractOutputPath, twrncConfig } = pluginPassOptsSchema.parse(
-      pluginPass.opts,
-    )
+    const { reactNativeVersion, twrncConfig, extractClassNameOutputPath } =
+      pluginPassOptsSchema.parse(pluginPass.opts)
     const o: TraverseOptions = {
-      extractOutputPath,
+      reactNativeVersion,
       twrncConfig,
+      extractClassNameOutputPath,
       programPath,
       platform: getPlatform(pluginPass),
       extract,

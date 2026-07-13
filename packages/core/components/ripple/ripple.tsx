@@ -2,12 +2,10 @@
 
 import { useRef, useState } from 'react'
 
-import '@/core/components/ripple/ripple.css'
-
 import type { ClassName } from '@/core/tw/class-name'
 import { clsx } from '@/core/tw/clsx'
+import { ulid } from '@/core/ulidx'
 import { isClickDOM, useParentDOM } from '@/core/utils/dom'
-import { ulid } from '@/shared/ulidx'
 
 export type RippleProps = {
   className?: ClassName

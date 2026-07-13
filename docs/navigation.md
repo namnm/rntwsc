@@ -16,20 +16,22 @@ export const routesNative = {
   [rProfile]: ProfilePage,
 }
 
-// 3. playground/app/src/pages/routes.ts - declare params if any (omit if no params)
+// 3. playground/app/src/pages/routes.ts - declare params, only needed when
+// the route has typed query params, omit the entry entirely otherwise
 export type RoutesData = {
   [rProfile]: { userId: string }
 }
 
-// 4. playground/web/src/app/[locale]/profile/page.tsx - web page
+// 4. playground/turbopack/src/app/locale/profile/page.tsx - web page
 export { ProfilePage as default } from '#/pages/profile'
 
 // 5. playground/app/src/components/nav-layout/index.tsx - sidebar link
 <NavSidebarLink href={rProfile} label='Profile' />
 ```
 
-**RN-only route**: skip steps 4 and 5.
-**Web-only route**: skip steps 2 and 3, add step 4 only.
+RN only route: skip steps 4 and 5.
+
+Web only route: skip steps 2 and 3, add step 4 only.
 
 ## Link
 
@@ -54,16 +56,16 @@ const focused = useIsRouteFocused() // always true on web, useIsFocused() on nat
 
 ## Internals
 
-Platform entry points in `packages/core/navigation/`:
+Platform entry points in packages/core/navigation/:
 
-| File               | Used by            | How                                                                    |
-| ------------------ | ------------------ | ---------------------------------------------------------------------- |
-| `index.ts`         | Server components  | Reads `x-request-url` header, strips locale prefix, parses query       |
-| `index.browser.ts` | Browser components | `usePathname()` + `useSearchParams()` from `next-unchecked/navigation` |
-| `index.native.ts`  | React Native       | Wraps `useRoute` + `useIsFocused` from `@react-navigation/native`      |
+| File             | Used by            | How                                                                    |
+| ---------------- | ------------------ | ---------------------------------------------------------------------- |
+| index.ts         | Server components  | Reads the x-request-url header, strips the locale prefix, parses query |
+| index.browser.ts | Browser components | usePathname and useSearchParams from next-unchecked navigation         |
+| index.native.ts  | React Native       | Wraps useRoute and useIsFocused from react-navigation native           |
 
-On native, `routesNative` is passed to `createNativeStackNavigator` and wrapped with `createStaticNavigation` in `playground/app/src/app.native.tsx`. On web, Next.js file-system routing handles everything under `playground/web/src/app/[locale]/`.
+On native, routesNative is passed to createNativeStackNavigator and wrapped with createStaticNavigation in playground/app/src/app.native.tsx. On web, Next.js file system routing handles everything under playground/turbopack/src/app/locale/.
 
-`route-paths.ts` is kept separate from `routes.native.ts` to avoid circular imports between the route map and page components.
+route-paths.ts is kept separate from routes.native.ts to avoid circular imports between the route map and page components.
 
-The typed `Link` at `playground/app/src/components/link.tsx` wraps the framework's `LinkUntyped` with the app's `Routes` and `RoutesData` types. On web it prepends the current locale to the pathname.
+The typed Link at playground/app/src/components/link.tsx wraps the framework's LinkUntyped with the app's Routes and RoutesData types. On web it prepends the current locale to the pathname.

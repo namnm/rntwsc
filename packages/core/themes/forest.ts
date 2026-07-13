@@ -1,9 +1,8 @@
-import common from '@/core/themes/common.extract-variables.scss'
-import commonDark from '@/core/themes/common-dark.extract-variables.scss'
-import override from '@/core/themes/forest.extract-variables.scss'
-import overrideDark from '@/core/themes/forest-dark.extract-variables.scss'
-
 import type { ThemeConfig } from '@/core/theme/config'
+import common from '@/core/themes/common.local.json'
+import commonDark from '@/core/themes/common-dark.local.json'
+import override from '@/core/themes/forest.local.json'
+import overrideDark from '@/core/themes/forest-dark.local.json'
 import { tw } from '@/core/tw/tw'
 
 export const forestTheme: ThemeConfig = {

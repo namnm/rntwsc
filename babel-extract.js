@@ -1,4 +1,3 @@
-require('./devtools-register')
 const { extract } = require('@/devtools/babel-extract')
 
 console.log('TODO:')

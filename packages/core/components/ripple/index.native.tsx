@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { RippleData, RippleProps } from '@/core/components/ripple/ripple'
 import { Ripple } from '@/core/components/ripple/ripple.native'
 import type { PressableRn } from '@/core/tw/components/pressable'
-import { ulid } from '@/shared/ulidx'
+import { ulid } from '@/core/ulidx'
 
 export const useRipple = (props: RippleProps) => {
   const ref = useRef<PressableRn>(null)

@@ -3,6 +3,9 @@
 
 import type { Platform } from 'react-native'
 
+import { jsonSafe } from '@/core/json-safe'
+import { camelCase } from '@/core/lodash'
+import type { Falsish, StrMap } from '@/core/ts-utils'
 import type {
   ClassNameDarkModeSelector,
   ClassNameHandlerSelector,
@@ -25,9 +28,6 @@ import {
   transitionTimingFunctionDefault,
   transitionTimingFunctionMap,
 } from '@/core/tw/lib/normalize-style-config'
-import { jsonSafe } from '@/shared/json-safe'
-import { camelCase } from '@/shared/lodash'
-import type { Falsish, StrMap } from '@/shared/ts-utils'
 
 type Options = {
   platform: Platform['OS']
@@ -440,12 +440,7 @@ extraTwrnc.push(options => {
   }
   // should keep these typings updated with the post-transpile runtime code
   type TransitionPropertyTw =
-    | 'all'
-    | 'colors'
-    | 'opacity'
-    | 'shadow'
-    | 'transform'
-    | 'none'
+    'all' | 'colors' | 'opacity' | 'shadow' | 'transform' | 'none'
   type TransitionProperty = '' | TransitionPropertyTw | string[]
   const r = {
     transitionProperty: '' as TransitionProperty,

@@ -4,9 +4,9 @@ import type { PropsWithChildren } from 'react'
 import type { NativeMethods, PressableProps, ViewComponent } from 'react-native'
 import { Pressable } from 'react-native'
 
+import type { StrMap } from '@/core/ts-utils'
 import type { CommonProps } from '@/core/tw/components/lib/common-props'
 import { normalizePropsRnw } from '@/core/tw/components/lib/normalize-props-rnw'
-import type { StrMap } from '@/shared/ts-utils'
 
 export type PressablePropsWocn = CommonProps<
   PropsWithChildren<Omit<PressableProps, 'children'>>,

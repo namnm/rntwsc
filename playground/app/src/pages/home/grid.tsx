@@ -1,5 +1,5 @@
-import { Span } from '@/core/components/text'
-import { View } from '@/core/tw/components/view'
+import { Span } from '@rntwsc/core/components/text'
+import { View } from '@rntwsc/core/tw/components/view'
 
 export const DemoGrid = () => (
   <>

@@ -1,10 +1,9 @@
 // nodejs code here
 
+import { mergeWithArray } from '@rntwsc/core/lodash'
+import { config as coreConfig } from '@rntwsc/core/tw/tailwind-config'
+import { path } from '@rntwsc/devtools/path'
 import type { Config } from 'tailwindcss'
-
-import { config as coreConfig } from '@/core/tw/tailwind-config'
-import { path } from '@/nodejs/path'
-import { mergeWithArray } from '@/shared/lodash'
 
 const override: Config = {
   content: [path.join(__dirname, './**/*.{ts,tsx}')],

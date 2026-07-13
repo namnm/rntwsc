@@ -4,18 +4,22 @@ import '#/polyfill/native'
 
 import { createStaticNavigation } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { Portal } from '@rntwsc/core/components/portal'
+import { initDarkModeNative } from '@rntwsc/core/dark-mode/index.native'
+import {
+  I18nProviderNative,
+  initI18nNative,
+} from '@rntwsc/core/i18n/index.native'
+import { initThemeNative } from '@rntwsc/core/theme/index.native'
+import { TwClassNamePeerProvider } from '@rntwsc/core/tw/marker'
+import { tw } from '@rntwsc/core/tw/tw'
+import { composeProviders } from '@rntwsc/core/utils/compose-providers'
 import type { PropsWithChildren } from 'react'
 import { StrictMode, useEffect, useState } from 'react'
+import type { ViewStyle } from 'react-native'
 import { AppRegistry } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
-import { Portal } from '@/core/components/portal'
-import { initDarkModeNative } from '@/core/dark-mode/index.native'
-import { I18nProviderNative, initI18nNative } from '@/core/i18n/index.native'
-import { initThemeNative } from '@/core/theme/index.native'
-import { TwClassNamePeerProvider } from '@/core/tw/marker'
-import { tw } from '@/core/tw/tw'
-import { composeProviders } from '@/core/utils/compose-providers'
 import { rHome } from '#/pages/route-paths'
 import { routesNative } from '#/pages/routes.native'
 
@@ -26,7 +30,7 @@ const RootStack = createNativeStackNavigator({
   initialRouteName: rHome,
   screenOptions: {
     headerShown: false,
-    contentStyle: tw`bg-white`,
+    contentStyle: tw`bg-white` as ViewStyle,
   },
   layout: ({ children }: PropsWithChildren) => (
     <>

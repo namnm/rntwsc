@@ -1,5 +1,8 @@
 import type { Config } from 'prettier'
 
+const twPlugin = require.resolve('prettier-plugin-tailwindcss')
+const xmlPlugin = require.resolve('@prettier/plugin-xml')
+
 export const config: Config = {
   printWidth: 80,
   tabWidth: 2,
@@ -16,10 +19,7 @@ export const config: Config = {
   insertPragma: false,
   endOfLine: 'lf',
   htmlWhitespaceSensitivity: 'ignore',
-  plugins: [
-    require.resolve('prettier-plugin-tailwindcss'),
-    require.resolve('@prettier/plugin-xml'),
-  ],
+  plugins: [twPlugin, xmlPlugin],
   tailwindFunctions: ['tw', 'cva', 'clsx'],
   xmlQuoteAttributes: 'double',
   xmlSelfClosingSpace: true,

@@ -6,7 +6,7 @@ import { hk } from '@/core/fetch/config'
 import type { HydrationData } from '@/core/hydration/config'
 import { drainHydration, subscribeHydration } from '@/core/hydration/store'
 import { isBrowser } from '@/core/platform'
-import type { StrMap } from '@/shared/ts-utils'
+import type { StrMap } from '@/core/ts-utils'
 
 const store: StrMap<HydrationData> = {}
 const listeners = new Set<() => void>()

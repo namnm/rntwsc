@@ -1,71 +1,74 @@
-import type { ConfigAPI } from '@babel/core'
-
 import { getAlias } from '@/devtools/babel-config/get-alias'
-import { getCallerBrowserOnly } from '@/devtools/babel-config/is-server'
 import { asyncHookPlugin } from '@/devtools/babel-plugin-async-hook'
-import { browserExtensionPlugin } from '@/devtools/babel-plugin-browser-extension'
 import { browserValidationPlugin } from '@/devtools/babel-plugin-browser-validation'
 import { twPlugin } from '@/devtools/babel-plugin-tw'
-import { path } from '@/nodejs/path'
+
+const reactnativeWorkletsPlugin =
+  require.resolve('react-native-worklets/plugin')
+const reactCompilerPlugin = require.resolve('babel-plugin-react-compiler')
+const typescriptPreset = require.resolve('@babel/preset-typescript')
+const reactPreset = require.resolve('@babel/preset-react')
+
+const moduleResolverPlugin = require.resolve('babel-plugin-module-resolver')
+const reactNativePreset = require.resolve('@react-native/babel-preset')
 
 type Options = {
   dir: string
   target: 'rn' | 'nextjs'
-  twrncConfig?: object
-  twExtractOutputPath?: string
+  reactNativeVersion: string
+  twrncConfig: object
+  extractClassNameOutputPath: string
+  isServer?: boolean
 }
 
 export const config = ({
   dir,
   target,
-  twrncConfig = require(path.join(dir, './src/twrnc')),
-  twExtractOutputPath = dir,
+  reactNativeVersion,
+  twrncConfig,
+  extractClassNameOutputPath,
+  isServer,
 }: Options) => {
   const twOptions = {
+    reactNativeVersion,
     twrncConfig,
-    extractOutputPath: twExtractOutputPath,
+    extractClassNameOutputPath,
   }
 
   if (target === 'nextjs') {
-    return (api: ConfigAPI) => {
-      const plugins: any[] = [
-        //
-        browserValidationPlugin,
-        browserExtensionPlugin,
-        asyncHookPlugin,
-      ]
-      const presets: any[] = [
-        //
-        require.resolve('@babel/preset-typescript'),
-      ]
+    const isServerOptions = {
+      isServer,
+    }
+    Object.assign(twOptions, isServerOptions)
 
-      if (getCallerBrowserOnly(api)) {
-        plugins.push(
-          //
-          require.resolve('babel-plugin-react-compiler'),
-        )
-      } else {
-        plugins.push(
-          //
-          [twPlugin, twOptions],
-          require.resolve('react-native-worklets/plugin'),
-        )
-        presets.push(
-          //
-          [
-            require.resolve('@babel/preset-react'),
-            {
-              runtime: 'automatic',
-            },
-          ],
-        )
-      }
+    const plugins: any[] = [
+      //
+      [browserValidationPlugin, isServerOptions],
+      [asyncHookPlugin, isServerOptions],
+      [twPlugin, twOptions],
+      reactnativeWorkletsPlugin,
+    ]
 
-      return {
-        plugins,
-        presets,
-        compact: false,
-      }
+    if (!isServer) {
+      plugins.push(
+        //
+        reactCompilerPlugin,
+      )
+    }
+
+    return {
+      plugins,
+      presets: [
+        //
+        typescriptPreset,
+        [
+          reactPreset,
+          {
+            runtime: 'automatic',
+          },
+        ],
+      ],
+      compact: false,
     }
   }
 
@@ -75,25 +78,24 @@ export const config = ({
     }),
   }
 
-  const extraOptions = {
+  const isServerOptions = {
     isServer: false,
   }
-  const asyncHookOptions = extraOptions
-  Object.assign(twOptions, extraOptions)
+  Object.assign(twOptions, isServerOptions)
 
   return {
     plugins: [
       //
-      browserValidationPlugin,
-      [asyncHookPlugin, asyncHookOptions],
+      [browserValidationPlugin, isServerOptions],
+      [asyncHookPlugin, isServerOptions],
       [twPlugin, twOptions],
-      require.resolve('babel-plugin-react-compiler'),
-      [require.resolve('babel-plugin-module-resolver'), moduleResolverOptions],
-      require.resolve('react-native-worklets/plugin'),
+      reactCompilerPlugin,
+      [moduleResolverPlugin, moduleResolverOptions],
+      reactnativeWorkletsPlugin,
     ],
     presets: [
       //
-      require.resolve('@react-native/babel-preset'),
+      reactNativePreset,
     ],
     compact: false,
   }

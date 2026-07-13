@@ -8,13 +8,13 @@
     "pnpm": ">=11"
   },
   "dependencies": {
-    "@apollo/client": "4.2.3",
-    "graphql": "16.14.2"
+    "@apollo/client": "4.2.6",
+    "graphql": "17.0.2"
   },
   "peerDependencies": {
     "react": "*"
   },
   "devDependencies": {
-    "@types/react": "19.2.14"
+    "@types/react": "19.2.17"
   }
 }

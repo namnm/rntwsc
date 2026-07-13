@@ -27,9 +27,9 @@ const buttonCva = cva({
     // fix active: selector and press in to work with
     // touch pad or any mouse up happens too quickly
     buttonActive: '',
-    text: 'select-none font-medium text-white',
+    text: 'font-medium text-white select-none',
     elevationBackdrop:
-      'pointer-events-none absolute bottom-[1px] left-[1px] right-[1px] top-1 bg-gray-400 dark:bg-gray-700',
+      'pointer-events-none absolute top-1 right-[1px] bottom-[1px] left-[1px] bg-gray-400 dark:bg-gray-700',
     border:
       'pointer-events-none absolute inset-0 border border-transparent transition',
     inset: 'rounded',

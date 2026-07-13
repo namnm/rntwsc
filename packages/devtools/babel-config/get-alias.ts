@@ -1,12 +1,13 @@
-import { path } from '@/nodejs/path'
-import type { StrMap } from '@/shared/ts-utils'
+import type { StrMap } from '@/core/ts-utils'
+import { readJson5Sync } from '@/devtools/fs'
+import { path } from '@/devtools/path'
 
 type Options = {
   relative?: true
 }
 
 export const getAlias = (dir: string, { relative }: Options = {}) => {
-  const tsconfig = require(path.join(dir, './tsconfig.json'))
+  const tsconfig = readJson5Sync(dir, './tsconfig.json')
   const paths: StrMap<string[]> = tsconfig.compilerOptions.paths
 
   return Object.entries(paths).reduce<StrMap<string>>((m, a) => {
@@ -18,18 +19,7 @@ export const getAlias = (dir: string, { relative }: Options = {}) => {
   }, {})
 }
 
-export const getInAlias = (importPath: string, alias: StrMap<string>) => {
-  for (const [k, v] of Object.entries(alias)) {
-    if (importPath.startsWith(`${k}/`)) {
-      return [k, v]
-    }
-  }
-  return []
-}
-
 export const toAlias = (alias: StrMap<string>, abs: string) => {
-  // longest dir first so a more-specific alias wins over a shorter one
-  // e.g. '@/shared' beats '@' when both could match
   const sorted = Object.entries(alias).sort((a, b) => b[1].length - a[1].length)
   for (const [key, dir] of sorted) {
     if (!abs.startsWith(`${dir}/`)) {

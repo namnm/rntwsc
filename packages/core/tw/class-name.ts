@@ -1,10 +1,6 @@
 import type { ImageStyle, TextStyle, ViewStyle } from 'react-native'
-import type {
-  CSSAnimationProperties,
-  CSSTransitionProperties,
-} from 'react-native-reanimated'
 
-import type { Falsish, StrMap } from '@/shared/ts-utils'
+import type { Falsish, StrMap } from '@/core/ts-utils'
 
 export type ClassNameWebSingle = string | Falsish
 export type ClassNameWeb = ClassNameWebSingle | ClassNameWeb[]
@@ -13,11 +9,36 @@ export type StyleSingle = Partial<
   TextStyle &
     ViewStyle &
     ImageStyle &
-    CSSTransitionProperties<any> &
-    CSSAnimationProperties<any> &
+    CSSTransitionProperties &
+    CSSAnimationProperties &
     GridStyle
 >
 export type Style = StyleSingle | Style[]
+
+export type CSSAnimationProperties = {
+  animationName?: string
+  animationDuration?: number
+  animationTimingFunction?: string
+  animationDelay?: number
+  animationIterationCount?: 'infinite' | number
+  animationDirection?: 'normal' | 'reverse' | 'alternate' | 'alternate-reverse'
+  animationFillMode?: 'none' | 'forwards' | 'backwards' | 'both'
+  animationPlayState?: 'running' | 'paused'
+}
+export type CSSTransitionProperties = {
+  transitionProperty?: string | string[]
+  transitionDuration?: number
+  transitionTimingFunction?: string | string[]
+  transitionDelay?: number
+}
+export type CSSTimingFunction =
+  | 'linear'
+  | 'ease'
+  | 'ease-in'
+  | 'ease-out'
+  | 'ease-in-out'
+  | 'step-start'
+  | 'step-end'
 
 export type GridStyle = {
   grid?: true
@@ -55,12 +76,7 @@ export type ClassName = ClassNameSingle | ClassName[]
 
 export type ClassNamePlatformSelector = 'web' | 'native' | 'android' | 'ios'
 export type ClassNameResponsiveSelector =
-  | 'xs'
-  | 'sm'
-  | 'md'
-  | 'lg'
-  | 'xl'
-  | '2xl'
+  'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 export type ClassNameDarkModeSelector = 'dark' | 'light'
 export type ClassNameHandlerSelector = 'active' | 'focus'
 export type ClassNamePropsSelector = 'disabled' | 'checked'

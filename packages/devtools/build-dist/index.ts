@@ -1,9 +1,9 @@
-import { repoRoot } from '@/nodejs/entrypoint/root'
-import { fs } from '@/nodejs/fs'
-import { glob, globby } from '@/nodejs/glob'
-import { log } from '@/nodejs/log'
-import { path } from '@/nodejs/path'
-import type { StrMap } from '@/shared/ts-utils'
+import type { StrMap } from '@/core/ts-utils'
+import { run as buildCssExtractVariablesJsons } from '@/devtools/css-extract-variables'
+import { fs } from '@/devtools/fs'
+import { glob, globby } from '@/devtools/glob'
+import { log } from '@/devtools/log'
+import { path } from '@/devtools/path'
 
 type Config = {
   git?: string
@@ -12,61 +12,161 @@ type Config = {
   packages?: string
   dist?: string
   modules?: string[]
-  cross?: StrMap<string[] | undefined>
-  extraCopy?: StrMap<string[] | undefined>
+  cross?: StrMap<string[]>
+  extraCopy?: StrMap<string[]>
 }
-
-const packageJsonRoot = require(path.join(repoRoot, './package.json'))
-const config: Config = packageJsonRoot.dist
-if (!config) {
-  log.fatal('Missing "dist" in root package.json')
+type ParsedConfig = Omit<Required<Config>, 'packages' | 'dist'> & {
+  repoRoot: string
+  packagesRoot: string
+  distRoot: string
 }
-
-const git = config.git || 'github:namnm/rntwsc'
-const scope = config.scope || '@rntwsc'
-const version = config.version
-if (!version) {
-  log.fatal('Missing "dist.version" in root package.json')
-}
-
-const packages = config.packages || 'packages'
-const packagesRoot = path.join(repoRoot, packages)
-const dist = config.dist || 'dist'
-const distRoot = path.join(repoRoot, dist)
-
-const modules = config.modules || ['shared', 'nodejs', 'core', 'devtools']
-
-const cross = config.cross || {
-  shared: [],
-  nodejs: ['shared'],
-  core: ['shared'],
-  devtools: ['shared', 'nodejs', 'core'],
-}
-const extraCopy = config.extraCopy || {
-  shared: [],
-  nodejs: [],
-  core: [],
-  devtools: ['tsconfig.base.json'],
-}
-
-// private packages modules must have import paths start with @/..
-const aliasRegex = /(['"`])(@\/[^'"`]+)\1/g
 
 // ---------------------------------------------------------------------------
 // Main
+// ---------------------------------------------------------------------------
 
-export const run = async () => {
-  await fs.remove(distRoot)
-  await Promise.all(modules.map(build))
+export const run = async (repoRoot: string) => {
+  const packageJsonRoot = await fs.readJson(path.join(repoRoot, 'package.json'))
+  const config: Config = packageJsonRoot.dist
+  if (!config) {
+    log.fatal('Missing "dist" in repo root package.json')
+  }
+
+  const git = config.git || 'github:namnm/rntwsc'
+  const scope = config.scope || '@rntwsc'
+  const version = config.version
+  if (!version) {
+    log.fatal('Missing "dist.version" in root package.json')
+  }
+
+  const packagesRoot = path.join(repoRoot, config.packages || 'packages')
+  const distRoot = path.join(repoRoot, config.dist || 'dist')
+  const modules = config.modules || ['core', 'devtools']
+  const cross = config.cross || {
+    core: [],
+    devtools: ['core'],
+  }
+  const extraCopy = config.extraCopy || {
+    core: [],
+    devtools: ['tsconfig.base.json'],
+  }
+
+  const c: ParsedConfig = {
+    repoRoot,
+    git,
+    scope,
+    version,
+    packagesRoot,
+    distRoot,
+    modules,
+    cross,
+    extraCopy,
+  }
+
+  await fs.remove(c.distRoot)
+  // copy every module's assets and raw ts/tsx directly
+  await Promise.all(modules.map(m => copy(c, m)))
+  // generate css extract variables jsons
+  await buildCssExtractVariablesJsons(c.distRoot, false)
+  // generate css browser variants json
+  await buildBrowserVariantsJson(c)
+  // build exports map and rewrite alias
+  // must run after the generation steps above have populated it
+  await Promise.all(modules.map(m => writePackageJson(c, m)))
+  await Promise.all(modules.map(m => rewriteAlias(c, m)))
 }
 
-const build = async (mod: string): Promise<void> => {
-  await Promise.all([copy(mod), writePackageJson(mod)])
-  await rewriteAlias(mod)
+// ---------------------------------------------------------------------------
+// Copy code & assets
+// ---------------------------------------------------------------------------
+
+const copy = async (c: ParsedConfig, mod: string) => {
+  const src = path.join(c.packagesRoot, mod)
+  const dst = path.join(c.distRoot, mod)
+
+  const srcFiles = await glob('**/*.{ts,tsx,js,svg,css,scss,patch}', {
+    cwd: src,
+    ignore: ['**/*.test.*'],
+  })
+
+  const promises = srcFiles.map(async srcFull => {
+    const rel = path.relative(src, srcFull)
+    const dstFull = path.join(dst, rel)
+    await fs.copy(srcFull, dstFull)
+  })
+
+  const extraCopyPromisees = c.extraCopy[mod]?.map(f =>
+    fs.copy(path.join(c.repoRoot, f), path.join(dst, f)),
+  )
+
+  await Promise.all([...promises, ...(extraCopyPromisees || [])])
+}
+
+// ---------------------------------------------------------------------------
+// Browser resolve alias map
+// ---------------------------------------------------------------------------
+
+const indexBrowserRegex = /(^|\/)index\.browser\.[jt]sx?$/
+const browserRegex = /\.browser\.[jt]sx?$/
+
+const buildBrowserVariantsJson = async (c: ParsedConfig) => {
+  const map: StrMap<string> = {}
+
+  await Promise.all(
+    c.modules.map(async m => {
+      const files = await glob('**/*.browser.{ts,tsx}', {
+        cwd: path.join(c.distRoot, m),
+        relative: true,
+        gitignore: false,
+      })
+      for (const f of files) {
+        const isIndex = indexBrowserRegex.test(f)
+        const base = f.replace(isIndex ? indexBrowserRegex : browserRegex, '')
+        const key = `${c.scope}/${m}${base ? `/${base}` : ''}`
+        map[key] = isIndex ? `${key}/index.browser` : `${key}.browser`
+      }
+    }),
+  )
+
+  await fs.outputJson(
+    path.join(c.distRoot, 'devtools/next-config/browser-variants.json'),
+    map,
+  )
 }
 
 // ---------------------------------------------------------------------------
 // Merge package.json
+// ---------------------------------------------------------------------------
+
+// Write the dist package.json with merged deps and exports map.
+const writePackageJson = async (c: ParsedConfig, mod: string) => {
+  const [deps, exports] = await Promise.all([
+    mergeDeps(c, mod),
+    buildExports(c, mod),
+  ])
+
+  const pkg: PkgJson = {
+    name: `${c.scope}/${mod}`,
+    version: c.version,
+    type: 'commonjs',
+    exports,
+  }
+  depKeys
+    .filter(k => {
+      if (k === 'devDependencies') {
+        return
+      }
+      return Object.keys(deps[k]).length
+    })
+    .forEach(k => {
+      if (k === 'devDependencies') {
+        return
+      }
+      pkg[k] = deps[k]
+    })
+
+  await fs.outputJson(path.join(c.distRoot, mod, 'package.json'), pkg)
+}
 
 type Deps = {
   dependencies: StrMap<string>
@@ -90,14 +190,14 @@ type SubPkgJson = Partial<Deps>
 // Merge dependencies from all sub-package.json files within a module into one
 // flat set. Cross-module deps are added as peerDependencies so consumers
 // install them explicitly rather than getting duplicate copies.
-const mergeDeps = async (mod: string) => {
+const mergeDeps = async (c: ParsedConfig, mod: string) => {
   const deps: Omit<Deps, 'devDependencies'> = {
     dependencies: {},
     peerDependencies: {},
   }
 
   const paths = await glob('**/package.json', {
-    cwd: path.join(packagesRoot, mod),
+    cwd: path.join(c.packagesRoot, mod),
   })
 
   const promises = paths.map(async p => {
@@ -110,59 +210,56 @@ const mergeDeps = async (mod: string) => {
       })
   })
   await Promise.all(promises)
-
-  for (const dep of getCross(mod)) {
-    deps.dependencies[`${scope}/${dep}`] = `${git}#${version}&path:${dep}`
+  const cross = c.cross[mod] || []
+  for (const dep of cross) {
+    deps.dependencies[`${c.scope}/${dep}`] = `${c.git}#${c.version}&path:${dep}`
   }
 
   return deps
 }
 
-// Platform-specific file suffixes mapped to their exports condition names.
-// 'default' is not listed here - it is used for files with no platform suffix.
 const platformSuffixes: StrMap<string> = {
   '.native': 'react-native',
 }
 
-// Build an explicit exports map from source files so Node can resolve both
-// bare directory imports (e.g. @rntwsc/nodejs/entrypoint -> index.ts) and
-// exact file imports without relying on wildcard fallback arrays, which many
-// runtimes (tsx, older Metro) do not implement correctly.
-const buildExports = async (mod: string): Promise<StrMap<ExportsValue>> => {
-  const srcMod = path.join(packagesRoot, mod)
+const buildExports = async (
+  c: ParsedConfig,
+  mod: string,
+): Promise<StrMap<ExportsValue>> => {
+  const srcMod = path.join(c.distRoot, mod)
   const [codeFiles, assetFiles] = await Promise.all([
-    glob('**/*.{ts,tsx,js,jsx}', {
+    glob('**/*.{ts,tsx}', {
       cwd: srcMod,
-      ignore: ['**/*.test.*'],
+      ignore: ['**/*.test.*', '**/*.d.ts'],
       relative: true,
+      gitignore: false,
     }),
-    glob('**/*.{svg,css,scss}', {
+    glob('**/*.{svg,css,scss,js,json}', {
       cwd: srcMod,
       relative: true,
+      gitignore: false,
     }),
   ])
 
-  const codeExtRegex = /\.(tsx?|jsx?)$/
-  const extraCopyFiles = getExtraCopy(mod)
-  codeFiles.push(...extraCopyFiles.filter(f => codeExtRegex.test(f)))
-  assetFiles.push(...extraCopyFiles.filter(f => !codeExtRegex.test(f)))
+  const codeExt = /\.(tsx?|jsx?)$/
+  const extraCopy = c.extraCopy[mod] || []
+  codeFiles.push(...extraCopy.filter(f => codeExt.test(f)))
+  assetFiles.push(...extraCopy.filter(f => !codeExt.test(f)))
 
-  const map: StrMap<ExportsValue> = {}
+  const exports: StrMap<ExportsValue> = {}
 
-  // Accumulate conditional exports: key -> { condition -> file }
-  const conditions = new Map<string, StrMap<string>>()
+  const conditions = new Map<string, StrMap<ExportsValue>>()
   const addCondition = (key: string, file: string, condition: string) => {
     let m = conditions.get(key)
     if (!m) {
       m = {}
       conditions.set(key, m)
     }
-    m[condition] = file
+    m[condition] = `./${file}`
   }
 
   for (const f of codeFiles) {
-    const noExt = f.replace(codeExtRegex, '')
-    // Detect platform suffix (e.g. foo.native -> base=foo, condition=react-native)
+    const noExt = f.replace(codeExt, '')
     let base = noExt
     let platform: string | undefined
     for (const [suffix, condition] of Object.entries(platformSuffixes)) {
@@ -175,121 +272,67 @@ const buildExports = async (mod: string): Promise<StrMap<ExportsValue>> => {
     if (!platform) {
       platform = 'default'
     }
-    // Exact file entry - always a direct string, never conditional
-    map[`./${f}`] = `./${f}`
+    // Exact file entry - never platform-conditional
+    exports[`./${f}`] = `./${f}`
     // Explicit platform path without extension (e.g. ./foo.native)
-    map[`./${noExt}`] = `./${f}`
+    exports[`./${noExt}`] = `./${f}`
     // Base path entry with condition (./foo -> react-native or default)
-    addCondition(`./${base}`, `./${f}`, platform)
+    addCondition(`./${base}`, f, platform)
     // Directory entry when the base filename is 'index'
     if (path.basename(base) === 'index') {
       const dir = path.dirname(base)
-      addCondition(dir === '.' ? '.' : `./${dir}`, `./${f}`, platform)
+      addCondition(dir === '.' ? '.' : `./${dir}`, f, platform)
     }
   }
 
   // Emit conditional entries. Entries with only a 'default' stay as plain strings.
   // 'default' must be last in the conditions object per the exports spec.
-  for (const [k, c] of conditions) {
-    const { default: d, ...platforms } = c
+  for (const [k, { default: d, ...platforms }] of conditions) {
     if (Object.keys(platforms).length) {
       if (d) {
         // default must be last
-        map[k] = {
+        exports[k] = {
           ...platforms,
+          // @ts-ignore
           default: d,
         }
       } else {
-        map[k] = platforms
+        // @ts-ignore
+        exports[k] = platforms
       }
     } else if (d) {
-      map[k] = d
+      exports[k] = d
     }
   }
 
   for (const f of assetFiles) {
-    map[`./${f}`] = `./${f}`
+    exports[`./${f}`] = `./${f}`
   }
 
-  return map
-}
-
-// Write the dist package.json with merged deps and exports map.
-const writePackageJson = async (mod: string) => {
-  const [deps, exports] = await Promise.all([mergeDeps(mod), buildExports(mod)])
-
-  const pkg: PkgJson = {
-    name: `${scope}/${mod}`,
-    version,
-    type: 'commonjs',
-    exports,
-  }
-  depKeys
-    .filter(k => {
-      if (k === 'devDependencies') {
-        return
-      }
-      return Object.keys(deps[k]).length
-    })
-    .forEach(k => {
-      if (k === 'devDependencies') {
-        return
-      }
-      pkg[k] = deps[k]
-    })
-
-  await fs.outputJson(path.join(distRoot, mod, 'package.json'), pkg)
-}
-
-// ---------------------------------------------------------------------------
-// Copy assets
-
-// Copy source files as-is to dist. No transpilation - the consuming bundler
-// (Metro, Vite) handles that. Extra root-level files (e.g. tsconfig.base.json)
-// can be added per-module via extraCopy.
-const copy = async (mod: string) => {
-  const src = path.join(packagesRoot, mod)
-  const dst = path.join(distRoot, mod)
-
-  await fs.ensureDir(dst)
-
-  const srcFiles = await glob('**/*.{ts,tsx,js,jsx,svg,css,scss,patch}', {
-    cwd: src,
-    ignore: ['**/*.test.*'],
-  })
-
-  const promises = srcFiles.map(async srcFull => {
-    const rel = path.relative(src, srcFull)
-    const dstFull = path.join(dst, rel)
-    await fs.ensureDir(path.dirname(dstFull))
-    await fs.copyFile(srcFull, dstFull)
-  })
-  await Promise.all([
-    ...promises,
-    ...getExtraCopy(mod).map(f =>
-      fs.copyFile(path.join(repoRoot, f), path.join(dst, f)),
-    ),
-  ])
+  return exports
 }
 
 // ---------------------------------------------------------------------------
 // Rewrite imports
+// ---------------------------------------------------------------------------
+
+const aliasRegex = /(['"`])(@\/[^'"`]+)\1/g
 
 // Rewrite all @/ alias imports in dist files to @rntwsc/ scoped package
 // imports so they resolve correctly after installation in node_modules.
-const rewriteAlias = async (mod: string): Promise<void> => {
-  const distMod = path.join(distRoot, mod)
+const rewriteAlias = async (c: ParsedConfig, mod: string): Promise<void> => {
+  const distMod = path.join(c.distRoot, mod)
 
-  const files: string[] = await globby('**/*.{ts,tsx,js,jsx}', {
+  const files: string[] = await globby('**/*.{ts,tsx,js,css,scss}', {
     cwd: distMod,
     gitignore: false,
     absolute: true,
     onlyFiles: true,
   })
 
-  const results = await Promise.all(files.map(f => rewriteAliasInFile(f, mod)))
-
-  const errs = results.flat()
+  const errs = (
+    await Promise.all(files.map(f => rewriteAliasInFile(c, f, mod)))
+  ).flat()
   if (!errs.length) {
     return
   }
@@ -304,12 +347,13 @@ const rewriteAlias = async (mod: string): Promise<void> => {
 // become @rntwsc/ paths - same-module self-references resolve via the exports
 // map generated by buildExports.
 const rewriteAliasInFile = async (
+  c: ParsedConfig,
   f: string,
   mod: string,
 ): Promise<string[]> => {
-  const original = await fs.readFile(f, 'utf8')
   const errs: string[] = []
-  const crossDeps = getCross(mod)
+  const cross = c.cross[mod] || []
+  const original = await fs.readFile(f, 'utf8')
 
   const rewritten = original.replace(
     aliasRegex,
@@ -320,16 +364,16 @@ const rewriteAliasInFile = async (
         slashIdx === -1 ? withoutAt : withoutAt.slice(0, slashIdx)
       const subPath = slashIdx === -1 ? '' : withoutAt.slice(slashIdx + 1)
 
-      if (importMod !== mod && !crossDeps.includes(importMod)) {
+      if (importMod !== mod && !cross.includes(importMod)) {
         errs.push(
-          `${path.relative(packagesRoot, f)}: unresolvable import "${importPath}" - "${importMod}" is not in cross deps for "${mod}"`,
+          `${path.relative(c.packagesRoot, f)}: unresolvable import "${importPath}" - "${importMod}" is not in cross deps for "${mod}"`,
         )
         return m
       }
 
       const pkg = subPath
-        ? `${scope}/${importMod}/${subPath}`
-        : `${scope}/${importMod}`
+        ? `${c.scope}/${importMod}/${subPath}`
+        : `${c.scope}/${importMod}`
       return `${q}${pkg}${q}`
     },
   )
@@ -340,6 +384,3 @@ const rewriteAliasInFile = async (
 
   return errs
 }
-
-const getCross = (mod: string) => cross[mod] || []
-const getExtraCopy = (mod: string) => extraCopy[mod] || []

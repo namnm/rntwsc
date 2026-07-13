@@ -1,16 +1,16 @@
 'use client'
 
+import { Portal } from '@rntwsc/core/components/portal'
+import { Separator } from '@rntwsc/core/components/separator'
+import { Span } from '@rntwsc/core/components/text'
+import { useTranslationUntyped } from '@rntwsc/core/i18n'
+import { isWeb } from '@rntwsc/core/platform'
+import { Pressable } from '@rntwsc/core/tw/components/pressable'
+import { ScrollView } from '@rntwsc/core/tw/components/scroll-view'
+import { View } from '@rntwsc/core/tw/components/view'
 import type { PropsWithChildren } from 'react'
 import { useState } from 'react'
 
-import { Portal } from '@/core/components/portal'
-import { Separator } from '@/core/components/separator'
-import { Span } from '@/core/components/text'
-import { useTranslationUntyped } from '@/core/i18n'
-import { isWeb } from '@/core/platform'
-import { Pressable } from '@/core/tw/components/pressable'
-import { ScrollView } from '@/core/tw/components/scroll-view'
-import { View } from '@/core/tw/components/view'
 import { DarkModeSwitcher } from '#/components/dark-mode-switcher'
 import { I18nSwitcher } from '#/components/i18n-switcher'
 import { NavSidebarLink } from '#/components/nav-layout/nav-sidebar-link'
@@ -40,11 +40,16 @@ import {
   rViewport,
 } from '#/pages/route-paths'
 
+type Props = PropsWithChildren<{
+  sidebarOpen: boolean
+  setSidebarOpen: (open: boolean) => void
+}>
+
 const NavLayoutWithoutEffects = async ({
   children,
   setSidebarOpen,
   sidebarOpen,
-}: any) => {
+}: Props) => {
   const t = await useTranslationUntyped('sidebar')
   const onPress = () => setSidebarOpen(false)
 

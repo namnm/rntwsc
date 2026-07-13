@@ -1,0 +1,17 @@
+{
+  "name": "@rntwsc/devtools-css-extract-variables",
+  "version": "0.0.0-locked",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=24.11",
+    "pnpm": ">=11"
+  },
+  "dependencies": {
+    "css-tree": "3.2.1",
+    "sass": "1.101.0"
+  },
+  "devDependencies": {
+    "@types/css-tree": "2.3.11"
+  }
+}

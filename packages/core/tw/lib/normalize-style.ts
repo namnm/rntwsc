@@ -1,10 +1,10 @@
+import { camelCase } from '@/core/lodash'
 import { isWeb } from '@/core/platform'
+import type { Falsish, FnAny, StrMap } from '@/core/ts-utils'
 import {
   animationMap,
   transitionTimingFunctionMap,
 } from '@/core/tw/lib/normalize-style-config'
-import { camelCase } from '@/shared/lodash'
-import type { Falsish, FnAny, StrMap } from '@/shared/ts-utils'
 
 type Style = StrMap &
   Partial<{

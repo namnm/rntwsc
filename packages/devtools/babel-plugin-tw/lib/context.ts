@@ -1,6 +1,7 @@
 import type { Node, NodePath, types as t } from '@babel/core'
 import type { Platform } from 'react-native'
 
+import type { StrMap } from '@/core/ts-utils'
 import type { ClassName } from '@/core/tw/class-name'
 import { readTwExtractOutput } from '@/devtools/babel-plugin-tw/lib/config'
 import type { Twrnc } from '@/devtools/babel-plugin-tw/lib/create-twrnc'
@@ -8,15 +9,13 @@ import { createTwrnc } from '@/devtools/babel-plugin-tw/lib/create-twrnc'
 import type { WithPath } from '@/devtools/babel-plugin-tw/lib/path-to-js'
 import { transpileClassName } from '@/devtools/babel-plugin-tw/lib/transpile-class-name'
 import type { TwPluginOptions } from '@/devtools/babel-plugin-tw/visitor'
-import type { StrMap } from '@/shared/ts-utils'
 
 export type Ctx = {
   programPath: NodePath<t.Program>
   rootPath: NodePath
   isInFunction: boolean
   platform: Platform['OS']
-  // omit in jsx class name or tagged template literal
-  calleeName?: string
+  calleeNode?: t.Expression
   twrnc: Twrnc
   min?: StrMap<string>
   extract?: (classNames: string[]) => void
@@ -27,34 +26,35 @@ export type Ctx = {
 
 export type ContextOptions = Pick<
   TwPluginOptions,
-  'extractOutputPath' | 'twrncConfig'
+  'reactNativeVersion' | 'twrncConfig' | 'extractClassNameOutputPath'
 > &
-  Pick<Ctx, 'programPath' | 'rootPath' | 'platform' | 'calleeName'> &
+  Pick<Ctx, 'programPath' | 'rootPath' | 'platform' | 'calleeNode'> &
   Partial<Pick<Ctx, 'extract' | 'err'>>
 
 const codeFrameErr = (path: NodePath, msg: string) =>
   path.buildCodeFrameError(msg)
 
 export const context = ({
-  extractOutputPath,
+  reactNativeVersion,
   twrncConfig,
+  extractClassNameOutputPath,
   programPath,
   rootPath,
   platform,
-  calleeName,
+  calleeNode,
   extract,
   err = codeFrameErr,
 }: ContextOptions) => {
-  const twrnc = createTwrnc(platform, twrncConfig)
+  const twrnc = createTwrnc(twrncConfig, platform, reactNativeVersion)
 
   const ctx: Ctx = {
     programPath,
     rootPath,
     isInFunction: !!rootPath.getFunctionParent(),
     platform,
-    calleeName,
+    calleeNode,
     twrnc,
-    min: readTwExtractOutput(extractOutputPath),
+    min: readTwExtractOutput(extractClassNameOutputPath),
     extract,
     err,
     transpileClassName: v => {

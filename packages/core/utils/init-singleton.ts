@@ -1,4 +1,4 @@
-import type { StrMap } from '@/shared/ts-utils'
+import type { StrMap } from '@/core/ts-utils'
 
 /**
  * To ensure singleton is initialized before use, this helper wraps

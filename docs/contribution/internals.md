@@ -2,30 +2,25 @@
 
 ## Turbopack
 
-Currently webpack-only. Turbopack uses ESM and a unified RSC graph for all environments, which conflicts with React Native's CommonJS requirement. Supporting it would require:
+Available as a selectable option alongside webpack, for both next dev and next build (see contribution/turbopack.md for full technical detail). Packages are consumed directly from ts source via tsconfig path aliases in the dev and build path used by playground/turbopack - no prebuilt CommonJS step is required. Browser variant resolution and CSS theme variable extraction are both wired through Turbopack's resolveAlias and rules config.
 
-- Prebuilt CommonJS for all packages
-- CSS theme variables generated in a build step
-- `resolveAlias` glob for all `.browser` extension files in next config
-- Rebuild CSS or restart Next.js when adding/removing `.browser` files
-
-Turbopack also has known issues with bundle chunk sizes. Not recommended for now.
+Restarting Next.js is still required when adding or removing a browser file - the glob that finds them is computed once at config load time, same limitation webpack already had.
 
 ## Patching react-native-web
 
-Default `react-native-web` limitations:
+Default react-native-web limitations:
 
-- Styles are runtime-generated and injected into `<head>`, overriding Tailwind CSS
+- Styles are runtime-generated and injected into head, overriding Tailwind CSS
 - SSR style extraction is incompatible with Next.js App Router streaming
-- `className` is stripped from props
+- className is stripped from props
 
-**Patch approach**: Patch the following components to accept `className` and use a computed class name strategy instead of RN StyleSheet: `Text`, `View`, `ScrollView`, `Pressable`, `TextInput`, `FlatList`. These are also exported with Reanimated support.
+Patch approach: patch the following components to accept className and use a computed class name strategy instead of the RN StyleSheet: Text, View, ScrollView, Pressable, TextInput, FlatList. These are also exported with Reanimated support.
 
 Changes made:
 
-- Add `rnwTag`, `rnwClassNameData`, `className` to `forwardedProps`
-- Update `createElement` to use `rnwTag`
-- Add `rnwClassNameData` to each patched component
-- Update `createDOMProps` to call a global `rnwClassName` function (injected in `packages/core/tw/polyfill/react-native-web.ts` - functions cannot be passed as props in RSC streaming)
+- Add rnwTag, rnwClassNameData, and className to forwardedProps
+- Update createElement to use rnwTag
+- Add rnwClassNameData to each patched component
+- Update createDOMProps to call a global rnwClassName function, injected in packages/core/tw/polyfill/react-native-web.ts (functions cannot be passed as props in RSC streaming)
 
-Props prefixed `data-` are merged into `dataSet` (react-native-web only supports `dataSet`).
+Props prefixed with data- are merged into dataSet (react-native-web only supports dataSet).

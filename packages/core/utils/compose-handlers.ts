@@ -1,4 +1,4 @@
-import type { Falsish, StrMap } from '@/shared/ts-utils'
+import type { Falsish, StrMap } from '@/core/ts-utils'
 
 export const composeHandlers = (...propsArr: (StrMap | Falsish)[]): StrMap => {
   const composed: StrMap = {}

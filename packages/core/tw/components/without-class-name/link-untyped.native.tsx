@@ -2,8 +2,8 @@
 
 import { Link } from '@react-navigation/native'
 
+import { omit } from '@/core/lodash'
 import type { LinkPropsWocn } from '@/core/tw/components/without-class-name/link-untyped'
-import { omit } from '@/shared/lodash'
 
 const webProps: (keyof LinkPropsWocn)[] = ['scroll']
 

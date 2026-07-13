@@ -5,10 +5,10 @@ import { Children, cloneElement, createContext } from 'react'
 
 import type { ButtonProps } from '@/core/components/button'
 import { Button } from '@/core/components/button'
+import type { SingleOrMultipleProps } from '@/core/ts-utils'
 import { View } from '@/core/tw/components/view'
 import { useControllableState } from '@/core/utils/use-controllable-state'
 import { useSafeContext } from '@/core/utils/use-safe-context'
-import type { SingleOrMultipleProps } from '@/shared/ts-utils'
 
 // context
 

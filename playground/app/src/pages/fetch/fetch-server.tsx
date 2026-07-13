@@ -1,6 +1,7 @@
-import { Span } from '@/core/components/text'
-import { useFetch } from '@/core/fetch'
-import { View } from '@/core/tw/components/view'
+import { Span } from '@rntwsc/core/components/text'
+import { useFetch } from '@rntwsc/core/fetch'
+import { View } from '@rntwsc/core/tw/components/view'
+
 import { playgroundFetchUrl } from '#/pages/fetch/config'
 import type { HelloData } from '#/pages/fetch/fetch-ui'
 import { FetchUi } from '#/pages/fetch/fetch-ui'

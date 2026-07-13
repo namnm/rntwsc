@@ -1,4 +1,4 @@
-import type { Falsish, StrMap } from '@/shared/ts-utils'
+import type { Falsish, StrMap } from '@/core/ts-utils'
 
 export const mergeDefault = <T extends StrMap<unknown>>(
   value: T,

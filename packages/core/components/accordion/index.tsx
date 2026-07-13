@@ -12,6 +12,7 @@ import type { LayoutChangeEvent } from 'react-native'
 
 import { TextStyleProvider } from '@/core/components/text/text-style-context'
 import { ChevronBottom } from '@/core/icons/chevron-bottom'
+import type { MultipleProps, SingleProps } from '@/core/ts-utils'
 import type { PressableProps } from '@/core/tw/components/pressable'
 import { Pressable } from '@/core/tw/components/pressable'
 import type { ViewProps } from '@/core/tw/components/view'
@@ -20,7 +21,6 @@ import type { Variant } from '@/core/tw/cva'
 import { cva } from '@/core/tw/cva'
 import { useControllableState } from '@/core/utils/use-controllable-state'
 import { useSafeContext } from '@/core/utils/use-safe-context'
-import type { MultipleProps, SingleProps } from '@/shared/ts-utils'
 
 // context
 
@@ -57,7 +57,7 @@ const accordionCva = cva({
     trigger: 'flex cursor-pointer flex-row items-center justify-between',
     triggerBorder: 'border-t border-gray-200 dark:border-gray-700',
     triggerDisabled: 'opacity-70',
-    triggerText: 'text-md font-medium text-foreground',
+    triggerText: 'text-md text-foreground font-medium',
     triggerIcon: 'transition-[transform,rotate]',
     triggerIconOpen: 'rotate-[180deg]',
     triggerIconChevron: 'text-gray-500',
@@ -66,7 +66,7 @@ const accordionCva = cva({
     contentInner: '',
     contentText: 'text-md text-gray-600 dark:text-gray-400',
     contentMeasure:
-      'pointer-events-none absolute left-0 right-0 top-0 -z-10 opacity-0',
+      'pointer-events-none absolute top-0 right-0 left-0 -z-10 opacity-0',
   },
   attributes: {
     gap: {

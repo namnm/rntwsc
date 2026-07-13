@@ -1,5 +1,6 @@
 'use client'
 
+import type { MiddlewareState } from '@floating-ui/react'
 import {
   autoUpdate,
   flip,
@@ -40,7 +41,7 @@ const Item = ({ open, onClose, reference, children }: DropdownProps) => {
         padding: 8,
       }),
       size({
-        apply: ({ rects, elements }) => {
+        apply: ({ rects, elements }: MiddlewareState) => {
           elements.floating.style.minWidth = `${rects.reference.width}px`
         },
         padding: 8,

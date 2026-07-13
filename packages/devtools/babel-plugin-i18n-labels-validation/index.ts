@@ -3,7 +3,7 @@ import { parse, traverse, types as t } from '@babel/core'
 import { z } from 'zod'
 
 import { shouldTranspile } from '@/devtools/babel-config/should-transpile'
-import { fs } from '@/nodejs/fs'
+import { fs } from '@/devtools/fs'
 
 // ============================================================
 // Types

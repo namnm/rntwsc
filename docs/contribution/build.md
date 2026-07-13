@@ -1,19 +1,15 @@
-# dist
+# Build and release packages
 
-Build script for distributing the 4 framework modules as standalone packages
-without publishing to npm. Consumers install via pnpm git URL with a path selector.
+Build script for distributing the framework modules as standalone packages without publishing to npm. Consumers install via a pnpm git URL with a path selector.
 
 ## Modules
 
-| Module              | Package            | Deps                 |
-| ------------------- | ------------------ | -------------------- |
-| `packages/shared`   | `@rntwsc/shared`   | -                    |
-| `packages/nodejs`   | `@rntwsc/nodejs`   | shared               |
-| `packages/core`     | `@rntwsc/core`     | shared, nodejs       |
-| `packages/devtools` | `@rntwsc/devtools` | shared, nodejs, core |
+| Module            | Package          | Depends on |
+| ----------------- | ---------------- | ---------- |
+| packages/core     | @rntwsc/core     | (none)     |
+| packages/devtools | @rntwsc/devtools | core       |
 
-Each module is a collection of sub-packages (e.g. `nodejs/exec`, `nodejs/log`).
-The build merges them into one installable package.
+Each module is a collection of sub packages (for example core/tw, devtools/eslint). The build merges them into one installable package per module.
 
 ## Running
 
@@ -21,69 +17,42 @@ The build merges them into one installable package.
 pnpm dist
 ```
 
-## What it does per module
+## What it does (packages/devtools/build-dist/index.ts)
 
-1. **Compile** - generates a temp `tsconfig.<mod>.dist.local.json` then runs tsc:
-   - Output: ESM syntax (`module: esnext`, `moduleResolution: bundler`) - preserves
-     estree for tree shaking in Metro/webpack. `type: commonjs` in the emitted
-     package.json keeps imports extension-free and skips the `exports` map.
-     Node.js users need a transpiler (ts-node/tsx); bundler users get it for free.
-   - Declarations: `.d.ts` alongside each `.js`
+1. Copy - copies every ts, tsx, js, svg, css, scss, and patch file from packages/<module> into dist/<module>, as is. No compilation happens at any point - consumers get the same source this repo builds from. Test files are excluded. Extra root files a module needs (for example tsconfig.base.json for devtools) are copied in too.
 
-2. **Copy assets** - copies non-TS files tsc ignores: `.svg`, `.css`, `.scss`
+2. Generate CSS extract variables json - runs the css-extract-variables generator against the freshly copied dist output, producing a local.json sibling next to every extract-variables.css or extract-variables.scss file. Theme files import that json instead of the stylesheet directly.
 
-3. **Rewrite imports** in all `.js` and `.d.ts` output files:
-   - `@/<same-mod>/sub` -> relative path (e.g. `../exec`)
-   - `@/<other-mod>/sub` -> `@rntwsc/<other-mod>/sub`
+3. Generate browser variants json - scans the dist output of every module for files ending in browser.ts, browser.tsx, or an index.browser file, and writes a flat specifier map (for example @rntwsc/core/dark-mode mapped to @rntwsc/core/dark-mode/index.browser) to dist/devtools/next-config/browser-variants.json. A consuming app's next-config reads this file directly, so it can resolve the browser variant of a package installed from node_modules without globbing into node_modules itself.
 
-4. **Write package.json** - merges `dependencies` and `peerDependencies` from
-   all sub-package `package.json` files, adds cross-module sibling deps
+4. Write package.json - merges dependencies and peerDependencies from every sub package's own package.json into one, adds the other module as a peerDependency pointing at the same git tarball and version (devtools depends on core this way), sets the package type to commonjs, and writes an explicit exports map. The exports map has one entry per source file plus a directory entry for every folder with an index file. A file suffixed native gets a react-native condition; everything else falls under default.
 
-## dist/ output structure
+5. Rewrite imports - rewrites every @/ alias import inside the dist ts, tsx, js, css, and scss files into a @rntwsc/ scoped import (for example @/core/tw becomes @rntwsc/core/tw). An import into the other module is only allowed if that module is declared as a cross dependency for the current one; anything else fails the build with a list of unresolved imports.
+
+## Consuming the published package
+
+Consumers get plain ts, tsx, and js source, not compiled output - the app's own bundler is expected to transpile it the same way it transpiles first party source. transpilePackages in next-config, and the @rntwsc special case in babel-config's should-transpile, exist for exactly this: they tell webpack, Turbopack, and babel to run their normal pipeline against @rntwsc/* even though it lives inside node_modules.
+
+## dist output structure
 
 ```
 dist/
-  shared/       <- @rntwsc/shared
-    package.json
-    lodash/index.js + index.d.ts
-    ts-utils/index.js + index.d.ts
-    ...
-  nodejs/       <- @rntwsc/nodejs
-    package.json  (depends on @rntwsc/shared)
-    exec/index.js + index.d.ts
-    log/index.js + index.d.ts
-    ...
-  core/           <- @rntwsc/core
-    package.json  (depends on @rntwsc/shared, @rntwsc/nodejs)
-    core/...
+  core/
+    package.json        depends on nothing
+    tw/tw.ts
     components/...
-    svg-icons/*.svg (copied)
-    themes/*.scss (copied)
+    svg-icons/*.svg      copied
+    themes/*.scss        copied
+    themes/*.local.json  generated by step 2
     ...
-  devtools/     <- @rntwsc/devtools
-    package.json  (depends on @rntwsc/shared, @rntwsc/nodejs, @rntwsc/core)
-    eslint/index.js + index.d.ts
+  devtools/
+    package.json         depends on @rntwsc/core
+    next-config/browser-variants.json   generated by step 3
+    eslint/index.ts
     babel-plugin-tw/...
     ...
 ```
 
-## tsconfig approach
+## Build order
 
-Each module gets a temporary `tsconfig.<mod>.dist.local.json` (deleted after build).
-
-Key design decisions:
-
-- **No broad `@/*` fallback** - prevents TypeScript from following unknown aliases into source files and emitting stray `.d.ts` next to source.
-
-- **Cross-module paths point to `dist/<dep>/`** - TypeScript reads already-compiled
-  `.d.ts` files for type info, not source. This is why build order matters
-  (shared -> nodejs -> core -> devtools).
-
-## Build order dependency
-
-```
-shared (no deps)
-  -> nodejs (needs dist/shared/)
-  -> core     (needs dist/shared/, dist/nodejs/)
-     -> devtools (needs dist/shared/, dist/nodejs/, dist/core/)
-```
+devtools depends on core; core depends on nothing. The copy, css-vars, and package.json steps still run in parallel across both modules (Promise.all), since each only reads and writes its own dist/<module> output - the dependency only matters for what ends up in each module's own package.json, not for the order the build steps run in.

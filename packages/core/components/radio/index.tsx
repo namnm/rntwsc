@@ -3,6 +3,7 @@
 import type { PropsWithChildren } from 'react'
 import { createContext } from 'react'
 
+import type { ValueProps } from '@/core/ts-utils'
 import type { PressableProps } from '@/core/tw/components/pressable'
 import { Pressable } from '@/core/tw/components/pressable'
 import { View } from '@/core/tw/components/view'
@@ -10,7 +11,6 @@ import type { Variant } from '@/core/tw/cva'
 import { cva } from '@/core/tw/cva'
 import { useControllableState } from '@/core/utils/use-controllable-state'
 import { useSafeContext } from '@/core/utils/use-safe-context'
-import type { ValueProps } from '@/shared/ts-utils'
 
 const radioCva = cva({
   classNames: {

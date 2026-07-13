@@ -1,8 +1,8 @@
 /* eslint-disable no-restricted-imports */
 
 import { TextInput } from 'react-native'
-import type { CSSTransitionProperties } from 'react-native-reanimated'
 
+import type { CSSTransitionProperties } from '@/core/tw/class-name'
 import { createAnimatedComponent } from '@/core/tw/components/lib/create-animated-component'
 import { isReanimated } from '@/core/tw/components/lib/is-reanimated'
 import { normalizePropsNative } from '@/core/tw/components/lib/normalize-props-native'

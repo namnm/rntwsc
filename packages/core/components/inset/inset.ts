@@ -1,5 +1,3 @@
-import '@/core/components/inset/inset.css'
-
 import { tw } from '@/core/tw/tw'
 
 // it is difficult to write tailwind class name for complex css

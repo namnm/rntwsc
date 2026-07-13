@@ -3,8 +3,8 @@
 import BezierEasing from 'bezier-easing'
 import parseColor from 'color-rgba'
 import { useEffect, useRef, useState } from 'react'
-import type { CSSTransitionProperties } from 'react-native-reanimated'
 
+import type { CSSTransitionProperties } from '@/core/tw/class-name'
 import {
   transitionDurationDefault,
   transitionTimingFunctionDefault,

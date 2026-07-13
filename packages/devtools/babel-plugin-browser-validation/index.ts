@@ -1,13 +1,8 @@
-import type { ConfigAPI, PluginObj } from '@babel/core'
+import type { PluginObj } from '@babel/core'
 
-import {
-  getCallerIsServer,
-  getIsServer,
-} from '@/devtools/babel-config/is-server'
+import { get } from '@/core/lodash'
 import { shouldTranspile } from '@/devtools/babel-config/should-transpile'
 
-// Modules that are only allowed in React Server Components (RSC) / server context.
-// Imports matching any entry will throw a build-time error in browser bundles.
 const SERVER_ONLY_MODULES: string[] = ['next*/headers', 'server-*']
 
 const wildcardToRegex = (pattern: string) => {
@@ -18,38 +13,34 @@ const serverOnlyRegexes = SERVER_ONLY_MODULES.map(wildcardToRegex)
 const isServerOnly = (importPath: string) =>
   serverOnlyRegexes.some(r => r.test(importPath))
 
-export const browserValidationPlugin = (api: ConfigAPI): PluginObj => {
-  const callerIsServer = getCallerIsServer(api)
+export const browserValidationPlugin: PluginObj = {
+  visitor: {
+    // use program path to get plugin pass and perform some checks before traverse
+    // also prioritize this plugin over others such as react compiler
+    Program: (programPath, pluginPass) => {
+      if (!shouldTranspile(pluginPass.filename)) {
+        return
+      }
+      const isServer = get(pluginPass.opts, 'isServer')
+      if (isServer) {
+        return
+      }
 
-  return {
-    visitor: {
-      // use program path to get plugin pass and perform some checks before traverse
-      // also prioritize this plugin over others such as react compiler
-      Program: (programPath, pluginPass) => {
-        if (!shouldTranspile(pluginPass.filename)) {
-          return
-        }
-        const isServer = getIsServer(pluginPass, callerIsServer)
-        if (isServer) {
-          return
-        }
-
-        programPath.traverse({
-          ImportDeclaration: p => {
-            const n = p.node
-            if (n.importKind === 'type') {
-              return
-            }
-            const importPath = n.source.value
-            if (!isServerOnly(importPath)) {
-              return
-            }
-            throw p.buildCodeFrameError(
-              `"${importPath}" cannot be imported in a browser bundle, this module is only allowed in server code.`,
-            )
-          },
-        })
-      },
+      programPath.traverse({
+        ImportDeclaration: p => {
+          const n = p.node
+          if (n.importKind === 'type') {
+            return
+          }
+          const importPath = n.source.value
+          if (!isServerOnly(importPath)) {
+            return
+          }
+          throw p.buildCodeFrameError(
+            `"${importPath}" cannot be imported in a browser bundle, this module is only allowed in server code.`,
+          )
+        },
+      })
     },
-  }
+  },
 }

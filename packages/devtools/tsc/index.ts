@@ -1,15 +1,14 @@
-import { repoRoot } from '@/nodejs/entrypoint/root'
-import { bin, cmd, exec } from '@/nodejs/exec'
-import { fs } from '@/nodejs/fs'
-import { glob } from '@/nodejs/glob'
-import { path } from '@/nodejs/path'
+import { bin, cmd, exec } from '@/devtools/exec'
+import { fs } from '@/devtools/fs'
+import { glob } from '@/devtools/glob'
+import { path } from '@/devtools/path'
 
-export const ts = async () => {
-  const tsconfig = await getTsconfig()
+export const ts = async (repoRoot: string) => {
+  const tsconfig = await getTsconfig(repoRoot)
 
   const tsc = tsconfig.map(async p =>
     cmd({
-      bin: await bin(repoRoot, 'tsc'),
+      bin: await bin(repoRoot, 'tsc', repoRoot),
       args: [
         ['--noEmit'],
         ['--project', p],
@@ -23,16 +22,18 @@ export const ts = async () => {
 }
 
 let tsconfig: Promise<string[]> | undefined = undefined
-export const getTsconfig = async () => {
+export const getTsconfig = async (repoRoot: string) => {
   if (!tsconfig) {
-    tsconfig = getTsconfigUncached()
+    tsconfig = getTsconfigUncached(repoRoot)
   }
   return tsconfig
 }
 
-const getTsconfigUncached = async () => {
+const getTsconfigUncached = async (repoRoot: string) => {
   const arr: string[] = []
-  const paths = await glob('**/tsconfig.json')
+  const paths = await glob('**/tsconfig.json', {
+    cwd: repoRoot,
+  })
 
   const promises = paths.map(async t => {
     const p = path.join(path.dirname(t), 'package.json')
@@ -49,4 +50,5 @@ const getTsconfigUncached = async () => {
   return arr
 }
 
-export const run = () => ts().then(cmds => Promise.all(cmds.map(c => exec(c))))
+export const run = (repoRoot: string) =>
+  ts(repoRoot).then(cmds => Promise.all(cmds.map(c => exec(c))))

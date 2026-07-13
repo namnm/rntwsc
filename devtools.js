@@ -1,5 +1,5 @@
 // shortcut to run devtools scripts
-require('./devtools-register')
+require('tsx/cjs')
 require('@/devtools').run({
-  dir: __dirname,
+  repoRoot: __dirname,
 })

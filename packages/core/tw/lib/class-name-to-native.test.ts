@@ -3,12 +3,25 @@ import { describe, expect, it } from 'vitest'
 import { classNameToNative } from '@/core/tw/lib/class-name-to-native'
 import { twrncConfig } from '@/core/tw/twrnc-config'
 import { createTwrnc } from '@/devtools/babel-plugin-tw/lib/create-twrnc'
+import { pnpmWorkspaceSync } from '@/devtools/normalize/pnpm-workspace'
+
+// vitest always runs from the repo root (see root package.json "test" script)
+let reactNativeVersion = ''
+try {
+  reactNativeVersion =
+    pnpmWorkspaceSync(process.cwd()).overrides?.['react-native'] || ''
+} catch {}
+if (!reactNativeVersion) {
+  console.error('Can not get react native version from process cwd')
+  process.exit(1)
+}
+const platform = 'android'
 
 const e = (className: string, expectedValue: any) => {
   const v = classNameToNative({
-    platform: 'android',
+    platform,
     className,
-    twrnc: createTwrnc('android', twrncConfig),
+    twrnc: createTwrnc(twrncConfig, platform, reactNativeVersion),
   })
   return expect(v).toEqual(expectedValue)
 }

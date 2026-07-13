@@ -1,7 +1,8 @@
-import { H1 } from '@/core/components/text'
-import { useSafeAreaPadding } from '@/core/responsive/use-safe-area'
-import { ScrollView } from '@/core/tw/components/scroll-view'
-import { View } from '@/core/tw/components/view'
+import { H1 } from '@rntwsc/core/components/text'
+import { useSafeAreaPadding } from '@rntwsc/core/responsive/use-safe-area'
+import { ScrollView } from '@rntwsc/core/tw/components/scroll-view'
+import { View } from '@rntwsc/core/tw/components/view'
+
 import { NavLayout } from '#/components/nav-layout'
 import { useDemoRefs } from '#/pages/home/refs'
 

@@ -4,18 +4,19 @@ import type { NodePath, Visitor } from '@babel/traverse'
 import traverse from '@babel/traverse'
 
 import { twExtract } from '@/devtools/babel-plugin-tw/extract'
-import { fs } from '@/nodejs/fs'
-import { globSync } from '@/nodejs/glob'
+import { fs } from '@/devtools/fs'
+import { globSync } from '@/devtools/glob'
 
 type Options = {
-  twExtractOutputPath: string
+  extractClassNameOutputPath: string
+  repoRoot: string
 }
 type Extractor = {
   visitor: Visitor<any>
   done: () => void
 }
 
-export const extract = ({ twExtractOutputPath }: Options) => {
+export const extract = ({ extractClassNameOutputPath, repoRoot }: Options) => {
   let currentCode = ''
   const err = (npath: NodePath, msg: string) => {
     const loc = npath.node?.loc
@@ -40,12 +41,14 @@ export const extract = ({ twExtractOutputPath }: Options) => {
     extractors.push(
       twExtract({
         err,
-        twExtractOutputPath,
+        extractClassNameOutputPath,
       }),
     )
   }
 
-  const paths = globSync('**/*.{ts,tsx}')
+  const paths = globSync('**/*.{ts,tsx}', {
+    cwd: repoRoot,
+  })
 
   const parserOption = {
     sourceType: 'module' as const,

@@ -1,15 +1,14 @@
 import { compare } from 'semver'
 
+import { jsonSafe } from '@/core/json-safe'
+import { jsonStable } from '@/core/json-stable'
+import { groupBy, kebabCase, omit } from '@/core/lodash'
+import type { StrMap } from '@/core/ts-utils'
+import { fs, readJson5 } from '@/devtools/fs'
+import { glob } from '@/devtools/glob'
+import { log } from '@/devtools/log'
 import { pnpmWorkspace } from '@/devtools/normalize/pnpm-workspace'
-import { repoRoot } from '@/nodejs/entrypoint/root'
-import { fs } from '@/nodejs/fs'
-import { glob } from '@/nodejs/glob'
-import { log } from '@/nodejs/log'
-import { isRepoRoot, path } from '@/nodejs/path'
-import { jsonSafe } from '@/shared/json-safe'
-import { jsonStable } from '@/shared/json-stable'
-import { groupBy, kebabCase, omit } from '@/shared/lodash'
-import type { StrMap } from '@/shared/ts-utils'
+import { path } from '@/devtools/path'
 
 const keys = [
   'dependencies',
@@ -65,11 +64,13 @@ const validSemverRegex = /^\d/
  *
  * - Check if a package appears multiple times in different paths
  */
-export const normalizePackageJson = async () => {
+export const normalizePackageJson = async (repoRoot: string) => {
   const [paths, rootPackageJson, overrides] = await Promise.all([
-    glob('**/package.json'),
+    glob('**/package.json', {
+      cwd: repoRoot,
+    }),
     fs.readJson(path.join(repoRoot, './package.json')),
-    pnpmWorkspace().then(w => w.overrides),
+    pnpmWorkspace(repoRoot).then(w => w.overrides),
   ])
 
   const allDependencies: StrMap<PackageData[]> = {}
@@ -79,7 +80,7 @@ export const normalizePackageJson = async () => {
     const packageJsonRelativePath = path.relative(repoRoot, p)
 
     let name = rootPackageJson.name
-    if (!isRepoRoot(dir)) {
+    if (path.relative(dir, repoRoot)) {
       const kebabPath = path
         .relative(repoRoot, dir)
         .replace(/^[.\\\/]+/, '')
@@ -93,7 +94,7 @@ export const normalizePackageJson = async () => {
       name = `@${rootPackageJson.name}/${kebabPath}`
     }
 
-    const packageJson = require(p)
+    const packageJson = await readJson5(p)
 
     const newPackageJson: StrMap = {
       name,

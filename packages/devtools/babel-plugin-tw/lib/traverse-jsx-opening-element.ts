@@ -14,12 +14,10 @@ export const traverseJSXOpeningElement = (
     if (!t.isJSXAttribute(a.node)) {
       return false
     }
-    if (
-      !(
-        t.isStringLiteral(a.node.value) ||
-        t.isJSXExpressionContainer(a.node.value)
-      )
-    ) {
+    if (!(
+      t.isStringLiteral(a.node.value) ||
+      t.isJSXExpressionContainer(a.node.value)
+    )) {
       return false
     }
     if (!t.isJSXIdentifier(a.node.name)) {

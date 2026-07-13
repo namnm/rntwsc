@@ -2,11 +2,14 @@ import { getDefaultConfig } from '@react-native/metro-config'
 import { makeMetroConfig } from '@rnx-kit/metro-config'
 import MetroSymlinksResolver from '@rnx-kit/metro-resolver-symlinks'
 
-import { repoRoot } from '@/nodejs/entrypoint/root'
-import { path } from '@/nodejs/path'
+import { path } from '@/devtools/path'
+
+const babelTransformerPath =
+  require.resolve('@/devtools/metro-config/transformer.js')
 
 type Options = {
   dir: string
+  repoRoot: string
 }
 
 const extraExts = [
@@ -17,7 +20,7 @@ const extraExts = [
   'scss',
 ]
 
-export const config = ({ dir }: Options) => {
+export const config = ({ dir, repoRoot }: Options) => {
   const defaultConfig = getDefaultConfig(dir)
   const { assetExts, sourceExts } = defaultConfig.resolver
 
@@ -38,7 +41,7 @@ export const config = ({ dir }: Options) => {
       unstable_conditionNames: ['react-native', 'import', 'require', 'default'],
     },
     transformer: {
-      babelTransformerPath: require.resolve('./transformer'),
+      babelTransformerPath,
       getTransformOptions: () => ({
         transform: {
           experimentalImportSupport: false,

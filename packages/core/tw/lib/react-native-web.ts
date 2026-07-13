@@ -1,7 +1,7 @@
+import type { StrMap } from '@/core/ts-utils'
 import type { ClassName } from '@/core/tw/class-name'
 import { clsx } from '@/core/tw/clsx'
 import { tw } from '@/core/tw/tw'
-import type { StrMap } from '@/shared/ts-utils'
 
 type Common = {
   className?: ClassName

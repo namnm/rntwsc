@@ -2,7 +2,7 @@
 
 import { useIsFocused, useNavigationState } from '@react-navigation/native'
 
-import type { StrMap } from '@/shared/ts-utils'
+import type { StrMap } from '@/core/ts-utils'
 
 type State = {
   routes: {

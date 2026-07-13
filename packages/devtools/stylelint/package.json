@@ -8,9 +8,9 @@
     "pnpm": ">=11"
   },
   "dependencies": {
-    "postcss": "8.5.14",
+    "postcss": "8.5.18",
     "postcss-scss": "4.0.9",
-    "stylelint": "17.11.1",
+    "stylelint": "17.14.0",
     "stylelint-config-hudochenkov": "13.0.2",
     "stylelint-order": "8.1.1"
   }

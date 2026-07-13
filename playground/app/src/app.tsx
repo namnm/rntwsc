@@ -2,17 +2,18 @@
 
 import '#/polyfill/server'
 
+import { useDarkModeUser } from '@rntwsc/core/dark-mode'
+import { useCurrentLangUntyped } from '@rntwsc/core/i18n'
+import { useTheme } from '@rntwsc/core/theme'
+import { getThemeClassName } from '@rntwsc/core/theme/config'
+import { clsx } from '@rntwsc/core/tw/clsx'
+import {
+  darkClassName,
+  lightClassName,
+  webClassName,
+} from '@rntwsc/core/tw/styles'
 import type { PropsWithChildren } from 'react'
 
-import '../tailwind.css'
-import '@/core/themes/all.scss'
-
-import { useDarkModeUser } from '@/core/dark-mode'
-import { useCurrentLangUntyped } from '@/core/i18n'
-import { useTheme } from '@/core/theme'
-import { getThemeClassName } from '@/core/theme/config'
-import { clsx } from '@/core/tw/clsx'
-import { darkClassName, lightClassName, webClassName } from '@/core/tw/tailwind'
 import { BrowserEnhancers } from '#/polyfill/browser'
 
 export const App = async ({ children }: PropsWithChildren) => {

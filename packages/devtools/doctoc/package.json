@@ -8,6 +8,6 @@
     "pnpm": ">=11"
   },
   "dependencies": {
-    "doctoc": "2.4.1"
+    "doctoc": "2.5.0"
   }
 }

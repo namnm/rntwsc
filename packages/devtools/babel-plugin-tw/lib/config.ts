@@ -1,15 +1,15 @@
 import type { PluginPass } from '@babel/core'
 import type { Platform } from 'react-native'
 
-import { fs } from '@/nodejs/fs'
-import { path } from '@/nodejs/path'
-import { get } from '@/shared/lodash'
-import type { StrMap } from '@/shared/ts-utils'
+import { get } from '@/core/lodash'
+import type { StrMap } from '@/core/ts-utils'
+import { fs } from '@/devtools/fs'
+import { path } from '@/devtools/path'
 
 export const twFn = {
-  tw: 'tw',
-  cva: 'cva',
-  clsx: 'clsx',
+  tw: (v: string) => v.endsWith('tw'),
+  cva: (v: string) => v.endsWith('cva'),
+  clsx: (v: string) => v.endsWith('clsx'),
 }
 
 export const getPlatform = (pluginPass: PluginPass): Platform['OS'] =>

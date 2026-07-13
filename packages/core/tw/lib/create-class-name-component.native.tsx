@@ -2,9 +2,11 @@ import type { FC } from 'react'
 import { useEffect, useRef, useState } from 'react'
 
 import { useDarkModeState } from '@/core/dark-mode/use-dark-mode-state'
+import { get, isEqual } from '@/core/lodash'
 import { useResponsiveState } from '@/core/responsive/use-responsive-state'
 import { useWindowDimensions } from '@/core/responsive/use-window-dimensions'
 import { useThemeVariables } from '@/core/theme/use-theme-variables'
+import type { Falsish, StrMap } from '@/core/ts-utils'
 import type {
   ClassName,
   ClassNameDarkModeState,
@@ -40,8 +42,6 @@ import {
 } from '@/core/tw/lib/marker.native'
 import { runtimeStyle } from '@/core/tw/runtime-style'
 import { useOnUnmounted } from '@/core/utils/use-mounted'
-import { get, isEqual } from '@/shared/lodash'
-import type { Falsish, StrMap } from '@/shared/ts-utils'
 
 type Props = Pick<CommonProps, 'twStableProvider'> & StrMap
 

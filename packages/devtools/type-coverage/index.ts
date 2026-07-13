@@ -1,12 +1,12 @@
+import { binRequireResolve, cmd, exec } from '@/devtools/exec'
 import { getTsconfig } from '@/devtools/tsc'
-import { binRequireResolve, cmd, exec } from '@/nodejs/exec'
 
-export const ts = async () => {
-  const tsconfig = await getTsconfig()
+export const ts = async (repoRoot: string) => {
+  const tsconfig = await getTsconfig(repoRoot)
 
   const coverage = tsconfig.map(async p =>
     cmd({
-      bin: await binRequireResolve(__dirname, 'type-coverage'),
+      bin: await binRequireResolve(__dirname, 'type-coverage', repoRoot),
       args: [
         ['--suppressError'],
         ['--at-least', '0'],
@@ -20,4 +20,5 @@ export const ts = async () => {
   return Promise.all([...coverage])
 }
 
-export const run = () => ts().then(cmds => Promise.all(cmds.map(c => exec(c))))
+export const run = (repoRoot: string) =>
+  ts(repoRoot).then(cmds => Promise.all(cmds.map(c => exec(c))))

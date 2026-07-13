@@ -16,23 +16,22 @@
     "type-coverage": "node ./devtools type-coverage",
     "test": "vitest run",
     "test:watch": "vitest",
+    "css-extract-variables": "node ./devtools css-extract-variables",
     "dist": "node ./devtools build-dist"
   },
   "engines": {
     "node": ">=24.11",
     "pnpm": ">=11"
   },
-  "dependencies": {
-    "json5": "2.2.3",
-    "tsconfig-paths": "4.2.0"
-  },
   "devDependencies": {
-    "@types/node": "25.8.0",
+    "@rntwsc/devtools": "github:namnm/rntwsc#7c52aa7d8296993cb538c86d5737608ccc6f570c&path:devtools",
+    "@types/node": "26.1.1",
+    "tailwindcss": "4.3.2",
+    "tsx": "4.23.0",
     "typescript": "6.0.3",
-    "vitest": "4.1.6"
+    "vitest": "4.1.10"
   },
   "dist": {
-    "version": "0.0.1"
-  },
-  "ignoreTsc": true
+    "version": "0.0.2"
+  }
 }

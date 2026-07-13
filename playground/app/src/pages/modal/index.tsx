@@ -1,14 +1,14 @@
 'use client'
 
+import { Button } from '@rntwsc/core/components/button'
+import type { ModalProps } from '@rntwsc/core/components/modal'
+import { Modal } from '@rntwsc/core/components/modal'
+import { Span } from '@rntwsc/core/components/text'
+import { useSafeAreaPadding } from '@rntwsc/core/responsive/use-safe-area'
+import { ScrollView } from '@rntwsc/core/tw/components/scroll-view'
+import { View } from '@rntwsc/core/tw/components/view'
 import { useState } from 'react'
 
-import { Button } from '@/core/components/button'
-import type { ModalProps } from '@/core/components/modal'
-import { Modal } from '@/core/components/modal'
-import { Span } from '@/core/components/text'
-import { useSafeAreaPadding } from '@/core/responsive/use-safe-area'
-import { ScrollView } from '@/core/tw/components/scroll-view'
-import { View } from '@/core/tw/components/view'
 import { NavLayout } from '#/components/nav-layout'
 
 const sizes = ['sm', 'md', 'lg', 'full'] as const

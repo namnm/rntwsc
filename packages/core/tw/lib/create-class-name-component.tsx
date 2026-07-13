@@ -1,6 +1,6 @@
+import type { StrMap } from '@/core/ts-utils'
 import { clsx } from '@/core/tw/clsx'
 import { createClassNameComponentOptions } from '@/core/tw/lib/create-class-name-component-options'
-import type { StrMap } from '@/shared/ts-utils'
 
 export type CreateClassNameComponentOptions = {
   extraClassNameKeys?: string[]

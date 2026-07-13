@@ -1,8 +1,8 @@
 import type { Node, NodePath } from '@babel/core'
 import { types as t } from '@babel/core'
 
+import type { StrMap } from '@/core/ts-utils'
 import type { Ctx } from '@/devtools/babel-plugin-tw/lib/context'
-import type { StrMap } from '@/shared/ts-utils'
 
 export type Literal = undefined | null | boolean | number | string
 export type WithPath<T = any> = {

@@ -2,61 +2,67 @@
 
 ## Key locations
 
-| What                               | Where                                                |
-| ---------------------------------- | ---------------------------------------------------- |
-| Framework components               | `packages/core/components/<name>/index.tsx`          |
-| Playground pages (shared RN + web) | `playground/app/src/pages/<name>/index.tsx`          |
-| Web routes                         | `playground/web/src/app/[locale]/<name>/page.tsx`    |
-| Route constants                    | `playground/app/src/pages/route-paths.ts`            |
-| RN route map                       | `playground/app/src/pages/routes.native.ts`          |
-| Sidebar nav                        | `playground/app/src/components/nav-layout/index.tsx` |
+| What                                 | Where                                              |
+| ------------------------------------ | -------------------------------------------------- |
+| Framework components                 | packages/core/components/name/index.tsx            |
+| Playground pages (shared RN and web) | playground/app/src/pages/name/index.tsx            |
+| Web routes                           | playground/turbopack/src/app/locale/name/page.tsx  |
+| Route constants                      | playground/app/src/pages/route-paths.ts            |
+| RN route map                         | playground/app/src/pages/routes.native.ts          |
+| Sidebar nav                          | playground/app/src/components/nav-layout/index.tsx |
 
 ## Reference components
 
 Read the closest existing component before building a new one:
 
-| Pattern                                    | File                    |
-| ------------------------------------------ | ----------------------- |
-| Full complexity (cva, ripple, elevation)   | `button/index.tsx`      |
-| Boolean toggle + controlled state          | `switch/index.tsx`      |
-| Group context pattern                      | `radio/index.tsx`       |
-| cva with appearance x type                 | `badge/index.tsx`       |
-| Trigger -> Drawer (single/multiple select) | `select/index.tsx`      |
-| Trigger -> Drawer + custom UI inside       | `date-picker/index.tsx` |
-| Single/Multiple props union                | `accordion/index.tsx`   |
+| Pattern                                            | File                  |
+| -------------------------------------------------- | --------------------- |
+| Full complexity (cva, ripple, elevation)           | button/index.tsx      |
+| Boolean toggle plus controlled state               | switch/index.tsx      |
+| Group context pattern                              | radio/index.tsx       |
+| cva with appearance times type                     | badge/index.tsx       |
+| Trigger opens a drawer, single or multiple select  | select/index.tsx      |
+| Trigger opens a drawer, with custom content inside | date-picker/index.tsx |
+| Single or multiple props union                     | accordion/index.tsx   |
 
-All components live under `packages/core/components/`.
+All components live under packages/core/components/.
 
 ## Adding a component
 
-1. `packages/core/components/<name>/index.tsx` - component
-2. `playground/app/src/pages/<name>/index.tsx` - demo page, show all variants
-3. `playground/app/src/pages/route-paths.ts` - `export const rFoo = '/foo'`
-4. `playground/app/src/pages/routes.native.ts` - import page + add to `routesNative`
-5. `playground/web/src/app/[locale]/<name>/page.tsx` - `export { FooPage as default } from '#/pages/<name>'`
-6. `playground/app/src/components/nav-layout/index.tsx` - `<NavSidebarLink href={rFoo} label='Foo' />`
+1. packages/core/components/name/index.tsx - the component
+2. playground/app/src/pages/name/index.tsx - demo page, showing all variants
+3. playground/app/src/pages/route-paths.ts - export a path constant, for example rFoo equal to '/foo'
+4. playground/app/src/pages/routes.native.ts - import the page and add it to routesNative
+5. playground/turbopack/src/app/locale/name/page.tsx - re-export the page as the route's default export
+6. playground/app/src/components/nav-layout/index.tsx - add a NavSidebarLink pointing at the new route
 
 When editing a component, update the playground demo if the API changed.
 
 ## cva conventions
 
-- Never hardcode Tailwind strings inline in JSX. Every class name goes in `classNames` (base) or `attributes`/`compoundVariants`.
-- Standard attribute set for form-like components: `appearance`, `size`, `shape`, `disabled`, `active`, `invalid`.
-  - `active` = open/focused state (drawer open, input focused). Mirror TextInput `focus:` border styles via compound variants.
-  - `invalid` = error state. Use compound variants per appearance (`border-error` / `border-b-error` for underlined).
-  - Put `invalid` compound variants after `active` so `border-error` always wins when both are true.
-- `underlined` appearance always needs `rounded-none` - add compound variants for `underlined` x `rounded` and `underlined` x `pill`.
-- `size` only scales the trigger, not drawer/popover content - put drawer item padding/font in base `classNames` at a fixed size.
+Never hardcode Tailwind strings inline in JSX. Every class name goes in classNames (base) or in an attribute's or compoundVariant's own classNames.
+
+Standard attribute set for form-like components: appearance, size, shape, disabled, active, invalid.
+
+The active attribute marks the open or focused state (drawer open, input focused). Mirror TextInput's focus border styles via compound variants.
+
+The invalid attribute marks the error state. Use compound variants per appearance, for example border-error for a bordered appearance or border-b-error for an underlined one.
+
+Put invalid compound variants after active ones, so the error border always wins when both are true.
+
+The underlined appearance always needs rounded-none - add compound variants for underlined times rounded and underlined times pill.
+
+The size attribute only scales the trigger, not the drawer or popover content - put drawer item padding and font size in the base classNames at a fixed size instead.
 
 Compound variant order:
 
 ```
-1. shape overrides  (underlined -> rounded-none)
-2. active state     (open border color)
-3. invalid state    (error border color, wins over active)
+1. shape overrides   (underlined forces rounded-none)
+2. active state      (open border color)
+3. invalid state     (error border color, wins over active)
 ```
 
-## Trigger -> Drawer pattern
+## Trigger to drawer pattern
 
 For components that open a bottom sheet on press (Select, DatePicker):
 
@@ -73,10 +79,11 @@ const cn = fooCva({ ..., active: open })
 </Drawer>
 ```
 
-- Drawer content size is fixed - not scaled by the trigger's `size` prop.
-- In multiple-select mode only, render a Done button inside the drawer. Do not close on each item tap.
+Drawer content size is fixed - it is not scaled by the trigger's size prop.
 
-## Single/Multiple props pattern
+In multiple select mode only, render a Done button inside the drawer. Do not close the drawer on each item tap.
+
+## Single or multiple props pattern
 
 ```tsx
 export type FooProps = (SingleProps | MultipleProps) & BaseProps
@@ -88,8 +95,8 @@ const [state, setState] = useControllableState<string | string[]>({
 })
 ```
 
-The `as any` casts are correct here - same pattern used in `accordion/index.tsx`.
+The as any casts are correct here - the same pattern is used in accordion/index.tsx.
 
 ## SVG icons
 
-Icons live in `packages/core/svg-icons/`. `className` controls color (`text-*` -> fill) and size (`text-*` -> width/height). Use dedicated directional icons (`chevron-left`, `chevron-bottom`, etc.) - do not rotate `chevron-right`.
+Icons live in packages/core/svg-icons/. className controls both color (the current text color becomes the fill) and size (the current text size becomes width and height). Use dedicated directional icons (chevron-left, chevron-bottom, and so on) instead of rotating chevron-right.

@@ -3,8 +3,8 @@
 import '#/polyfill/shared'
 import '#/polyfill/init-minified-class-names'
 
-import { Portal } from '@/core/components/portal'
-import { ReactNativeWebEnhancer } from '@/core/tw/polyfill/react-native-web-enhancer'
+import { Portal } from '@rntwsc/core/components/portal'
+import { ReactNativeWebEnhancer } from '@rntwsc/core/tw/polyfill/react-native-web-enhancer'
 
 export const BrowserEnhancers = () => (
   <>

@@ -1,13 +1,12 @@
-import { repoRoot } from '@/nodejs/entrypoint/root'
-import { binRequireResolve, cmd, exec } from '@/nodejs/exec'
-import { gitignorePath } from '@/nodejs/gitignore'
-import { path, resolvePath } from '@/nodejs/path'
+import { binRequireResolve, cmd, exec } from '@/devtools/exec'
+import { getGitignorePath } from '@/devtools/gitignore'
+import { path, resolvePath } from '@/devtools/path'
 
-export const stylelint = async (target: string) =>
+export const stylelint = async (target: string, repoRoot: string) =>
   cmd({
-    bin: await binRequireResolve('@/devtools/stylelint'),
+    bin: await binRequireResolve('@/devtools/stylelint', undefined, repoRoot),
     args: [
-      ['--ignore-path', gitignorePath],
+      ['--ignore-path', getGitignorePath(repoRoot)],
       ['--config-basedir', __dirname],
       ['--config', await resolvePath(repoRoot, 'stylelint.config.js')],
       ['--fix'],
@@ -16,4 +15,5 @@ export const stylelint = async (target: string) =>
     target: path.join(target, './**/*.{css,scss,less}'),
   })
 
-export const run = (target = repoRoot) => stylelint(target).then(exec)
+export const run = (repoRoot: string, target = repoRoot) =>
+  stylelint(target, repoRoot).then(exec)

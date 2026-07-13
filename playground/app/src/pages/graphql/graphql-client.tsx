@@ -1,9 +1,10 @@
 'use client'
 
-import { Button } from '@/core/components/button'
-import { Span } from '@/core/components/text'
-import { useApollo } from '@/core/graphql'
-import { View } from '@/core/tw/components/view'
+import { Button } from '@rntwsc/core/components/button'
+import { Span } from '@rntwsc/core/components/text'
+import { useApollo } from '@rntwsc/core/graphql'
+import { View } from '@rntwsc/core/tw/components/view'
+
 import type { HelloData } from '#/pages/graphql/config'
 import { HELLO_QUERY, playgroundGraphQLUrl } from '#/pages/graphql/config'
 import { GraphQLUi } from '#/pages/graphql/graphql-ui'

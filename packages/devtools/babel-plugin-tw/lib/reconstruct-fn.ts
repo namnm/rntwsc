@@ -13,7 +13,7 @@ export const reconstructFn = (
   call = 'call',
 ): t.Expression =>
   tpl({
-    fn: ctx.calleeName,
+    fn: ctx.calleeNode,
     arg: jsToNode(ctx, arg),
     call,
   })

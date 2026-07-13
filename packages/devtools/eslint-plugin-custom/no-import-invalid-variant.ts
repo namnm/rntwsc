@@ -1,13 +1,17 @@
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils'
 
-import { fs } from '@/nodejs/fs'
-import { stripRepoRoot } from '@/nodejs/path'
+import { fs } from '@/devtools/fs'
+import { stripInDir } from '@/devtools/path'
 
 const variants = ['native', 'ios', 'android', 'browser'] as const
 
+type Options = {
+  repoRoot: string
+}
+
 export const noImportInvalidVariant: TSESLint.RuleModule<
   'noImportInvalidVariant' | 'missingBaseFile' | 'missingNativeFile',
-  []
+  [Options]
 > = {
   meta: {
     type: 'problem',
@@ -23,11 +27,24 @@ export const noImportInvalidVariant: TSESLint.RuleModule<
       missingNativeFile:
         "File '{{file}}' requires a native variant '{{native}}' to exist",
     },
-    schema: [],
+    schema: [
+      {
+        type: 'object',
+        properties: {
+          repoRoot: {
+            type: 'string',
+            required: true,
+          },
+        },
+        additionalProperties: false,
+        required: true,
+      },
+    ],
   },
 
   create: c => {
     const fileVariant = getVariant(c.filename)
+    const { repoRoot } = c.options[0]
 
     const check = (src: TSESTree.StringLiteral | null) => {
       if (!src) {
@@ -57,8 +74,8 @@ export const noImportInvalidVariant: TSESLint.RuleModule<
               node: n,
               messageId: 'missingBaseFile',
               data: {
-                file: stripRepoRoot(c.filename),
-                base: stripRepoRoot(base),
+                file: stripInDir(repoRoot, c.filename),
+                base: stripInDir(repoRoot, base),
               },
             })
           }
@@ -70,8 +87,8 @@ export const noImportInvalidVariant: TSESLint.RuleModule<
               node: n,
               messageId: 'missingNativeFile',
               data: {
-                file: stripRepoRoot(c.filename),
-                native: stripRepoRoot(native),
+                file: stripInDir(repoRoot, c.filename),
+                native: stripInDir(repoRoot, native),
               },
             })
           }

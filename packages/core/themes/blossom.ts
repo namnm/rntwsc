@@ -1,9 +1,8 @@
-import override from '@/core/themes/blossom.extract-variables.scss'
-import overrideDark from '@/core/themes/blossom-dark.extract-variables.scss'
-import common from '@/core/themes/common.extract-variables.scss'
-import commonDark from '@/core/themes/common-dark.extract-variables.scss'
-
 import type { ThemeConfig } from '@/core/theme/config'
+import override from '@/core/themes/blossom.local.json'
+import overrideDark from '@/core/themes/blossom-dark.local.json'
+import common from '@/core/themes/common.local.json'
+import commonDark from '@/core/themes/common-dark.local.json'
 import { tw } from '@/core/tw/tw'
 
 export const blossomTheme: ThemeConfig = {

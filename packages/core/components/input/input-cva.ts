@@ -44,7 +44,7 @@ export const inputCva = cva({
         chevron: 'text-sm',
       },
       lg: {
-        container: 'h-11 px-3 text-md',
+        container: 'text-md h-11 px-3',
         label: 'text-md',
         placeholder: 'text-md',
         chevron: 'text-md',

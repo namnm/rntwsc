@@ -1,7 +1,7 @@
 // rnx doesnt support typescript in this file
 // we need to use js here
 
-const config = {
+module.exports = {
   dependencies: {
     // 'disable-some-packages': {
     //   platforms: {
@@ -11,5 +11,3 @@ const config = {
     // },
   },
 }
-
-module.exports = config

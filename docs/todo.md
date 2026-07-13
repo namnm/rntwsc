@@ -1,42 +1,47 @@
 # TODO
 
+## Tooling
+
+### create-rntwsc-app
+
+A package similar to create-next-app or the React Native CLI's init command, that scaffolds a new
+project from this framework instead of copying playground/app and playground/turbopack by hand.
+Should set up the workspace layout, tsconfig path aliases, babel and next config wiring, and a
+starter page for both web and native, so a new project gets a working dev setup in one command.
+
 ## Hydration / Core
 
-### Native: tach `index.native.ts` thanh implementation rieng
+### Native: split index.native.ts into its own implementation
 
-Hien tai `index.native.ts` o ca `core/fetch` va `core/graphql` chi la stub re-export browser code.
-Native co the can:
+Right now index.native.ts in both core/fetch and core/graphql is just a stub re-export of the browser code.
+Native may eventually need:
 
 - Offline cache (MMKV / AsyncStorage)
 - Re-fetch on app focus / network reconnect
 - Background fetch
 - Push notification invalidation
 
-Khi native can bat ky behavior nao trong so nay, phai co file rieng thay vi re-export.
-
----
+Once native needs any of this behavior, it needs its own file instead of a re-export.
 
 ### Request cancellation / race condition
 
-`useFetch` va `useApollo` khong cancel pending request khi:
+useFetch and useApollo do not cancel a pending request when:
 
-- Component unmount giua chung fetch
-- URL / variables thay doi truoc khi request truoc done
+- The component unmounts while a fetch is in flight
+- The URL or variables change before the previous request finishes
 
-Result cua request cu van set vao store, co the ghi de data moi hon.
+The old request's result still gets set into the store, which can overwrite newer data.
 
-Fix huong: dung `AbortController` trong `useFetch`, dung `r.refetch` cancel semantic trong Apollo.
-Scope: `packages/core/fetch/index.browser.ts`, `packages/core/graphql/index.browser.ts`.
+Fix direction: use AbortController in useFetch, use Apollo's own refetch cancel semantics.
+Scope: packages/core/fetch/index.browser.ts, packages/core/graphql/index.browser.ts.
 
----
+### Apollo auto-refetch does not clear hydrationErr
 
-### Apollo auto-refetch khong clear `hydrationErr`
+clearHydrationErr is only called when the user manually clicks refetch. If Apollo refetches on its
+own (polling, cache invalidation, network recovery) and succeeds, hydrationErr stays set - the
+consumer sees fresh data but the err field is still shown.
 
-`clearHydrationErr` chi duoc goi khi user manual click refetch. Neu Apollo tu refetch
-(polling, cache invalidation, network recovery) va thanh cong, `hydrationErr` van con set.
-Consumer thay data moi nhung `err` field van hien.
-
-Fix huong: subscribe Apollo's `client.watchQuery` observable de detect khi Apollo co result
-moi ma khong phai tu `refetch()` cua chung ta. Hoac: clear `hydrationErr` khi `r.loading`
-chuyen tu `true` sang `false` va `r.data` thay doi.
-Scope: `packages/core/graphql/index.browser.ts`, `packages/core/graphql/store.ts`.
+Fix direction: subscribe to Apollo's client.watchQuery observable to detect when Apollo has a new
+result that did not come from our own refetch(). Or: clear hydrationErr when r.loading goes from
+true to false and r.data changes.
+Scope: packages/core/graphql/index.browser.ts, packages/core/graphql/store.ts.

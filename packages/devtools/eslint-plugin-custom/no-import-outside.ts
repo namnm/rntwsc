@@ -1,6 +1,6 @@
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils'
 
-import { path } from '@/nodejs/path'
+import { path } from '@/devtools/path'
 
 export const noImportOutside: TSESLint.RuleModule<
   'noImportOutside',

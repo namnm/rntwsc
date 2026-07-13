@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 import { serverCacheKey } from '@/core/cache/key'
-import { jsonStable } from '@/shared/json-stable'
+import { jsonStable } from '@/core/json-stable'
 
 export const sck = serverCacheKey('@rntwsc/hydration', ['dehydrated'] as const)
 

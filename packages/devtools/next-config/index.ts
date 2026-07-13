@@ -1,140 +1,136 @@
 import type { NextConfig } from 'next'
 
+import { mapKeys, mapValues } from '@/core/lodash'
+import type { StrMap } from '@/core/ts-utils'
 import { getAlias } from '@/devtools/babel-config/get-alias'
-import { shouldTranspileExtension } from '@/devtools/babel-config/should-transpile'
-import { cssExtractVariablesRegex } from '@/devtools/webpack-css-extract-variables/transform'
-import { ResolveBrowserExtension } from '@/devtools/webpack-resolve-browser-extension'
-import { repoRoot } from '@/nodejs/entrypoint/root'
-import { glob } from '@/nodejs/glob'
-import { jsonSafe } from '@/shared/json-safe'
+import type { BabelLoaderOptions } from '@/devtools/babel-loader'
+import { glob } from '@/devtools/glob'
+import { browserResolveAlias } from '@/devtools/next-config/browser-resolve-alias'
+// @ts-ignore: will be generated
+import publishedBrowserAlias from '@/devtools/next-config/browser-variants.json'
+
+// we name it ts-loader to let next not complain about its builtin
+const babelLoaderPath = require.resolve('@/devtools/next-config/ts-loader.js')
+const svgLoaderPath = require.resolve('@/devtools/next-config/svg-loader.js')
 
 const resolveAlias = {
-  'next-unchecked/headers': '@/core/next/unchecked/headers',
-  'next-unchecked/navigation': '@/core/next/unchecked/navigation',
+  'next-unchecked/headers': '@rntwsc/core/next/unchecked/headers',
+  'next-unchecked/navigation': '@rntwsc/core/next/unchecked/navigation',
   'react-native': 'react-native-web',
   'react-native-svg': 'react-native-svg-web',
 }
 
-type Options = {
-  dir: string
+const transpilePackages: string[] = ['@rntwsc/core']
+const serverExternalPackages: string[] = []
+
+type Options = Omit<BabelLoaderOptions, 'isServer'> & {
+  repoRoot: string
 }
 
-export const config = async (o: Options): Promise<NextConfig> => ({
-  ...(await webpack(o)),
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  devIndicators: false,
-  reactStrictMode: false,
-  output: 'standalone',
-  outputFileTracingRoot: repoRoot,
-})
-
-const webpack = async (o: Options): Promise<NextConfig> => {
+export const config = async (o: Options): Promise<NextConfig> => {
   const alias = getAlias(o.dir)
-  const browsers = await glob('**/*.browser.{ts,tsx}')
-  const cssExtractVariablesLoader =
-    require.resolve('@/devtools/webpack-css-extract-variables')
+  const browsers = await glob('**/*.browser.{ts,tsx}', {
+    cwd: o.repoRoot,
+  })
+  const browserAlias = {
+    ...browserResolveAlias(alias, browsers),
+    ...publishedBrowserAlias,
+  }
 
   return {
-    webpack: (c, { isServer }) => {
-      c.resolve.alias = {
-        ...c.resolve.alias,
-        ...resolveAlias,
-      }
-
-      traverseWebpackRule(c.module.rules)
-
-      // css extract variables
-      c.module.rules.unshift({
-        test: cssExtractVariablesRegex,
-        type: 'javascript/auto',
-        use: {
-          loader: cssExtractVariablesLoader,
-        },
-      })
-
-      // svg to react component
-      c.module.rules.push({
-        test: /\.svg$/,
-        use: {
-          loader: '@svgr/webpack',
-          options: {
-            dimensions: false,
-          },
-        },
-      })
-
-      if (!isServer) {
-        c.resolve.plugins = c.resolve.plugins || []
-        c.resolve.plugins.push(new ResolveBrowserExtension(o.dir, browsers))
-
-        // since the loader is cached
-        // we can not use one babel loader for both browser and server code
-        // nextjs uses a different builtin babel loader
-        // we will use this loader to handle browser-only code
-        c.module.rules.push({
-          test: shouldTranspileExtension,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              caller: {
-                isServer,
-                browserOnly: true,
-                alias: jsonSafe(alias),
-                browsers: jsonSafe(browsers),
-              },
-            },
-          },
-        })
-      }
-
-      return c
+    webpack: buildWebpack(o, browserAlias),
+    turbopack: buildTurbopack(o, browserAlias),
+    transpilePackages,
+    serverExternalPackages,
+    typescript: {
+      ignoreBuildErrors: true,
     },
+    devIndicators: false,
+    reactStrictMode: false,
+    output: 'standalone',
+    outputFileTracingRoot: o.repoRoot,
   }
 }
 
-const traverseWebpackRule = (rule: any): any => {
-  if (!rule || typeof rule !== 'object') {
-    return rule
-  }
-
-  if (Array.isArray(rule)) {
-    return rule.map(traverseWebpackRule).filter(v => v)
-  }
-
-  for (const [k, v] of Object.entries(rule)) {
-    // since the loader is cached
-    // we can not use one babel loader for both browser and server code
-    // thus can not remove nextjs built in babel loader
-    // // remove babel loader since we already have above
-    // if (typeof v === 'string' && /babel[/-]loader/.test(v)) {
-    //   return
-    // }
-
-    // exclude css extract variables
-    if (k === 'test' && typeof v === 'object' && v) {
-      const regexps = (Array.isArray(v) ? v : [v]).filter(
-        r => typeof r?.test === 'function',
-      )
-      const exts = ['css', 'scss'].map(e => `example.extract-variables.${e}`)
-      if (exts.some(e => regexps.some(r => r.test(e)))) {
-        rule.exclude = rule.exclude || []
-        if (Array.isArray(rule.exclude)) {
-          rule.exclude.push(cssExtractVariablesRegex)
-        } else {
-          rule.exclude = [rule.exclude, cssExtractVariablesRegex]
-        }
-      }
+const buildWebpack =
+  (o: Options, browserAlias: StrMap<string>): NextConfig['webpack'] =>
+  (c, { isServer }) => {
+    c.resolve.alias = {
+      ...c.resolve.alias,
+      ...resolveAlias,
+      // $ forces an exact match, fix:
+      // @rntwsc/core/dark-mode/config ->
+      // @rntwsc/core/dark-mode/index.browser/config
+      ...mapKeys(isServer ? {} : browserAlias, (v, k) => `${k}$`),
     }
 
-    // already filtered out, remove this rule
-    if (k === 'use' && !v) {
-      return
-    }
+    c.module.rules.unshift({
+      test: /\.tsx?$/,
+      use: babelLoader(o, isServer),
+    })
 
-    rule[k] = traverseWebpackRule(v)
+    // svg to react component
+    c.module.rules.push({
+      test: /\.svg$/,
+      use: svgLoader(o),
+    })
+
+    return c
   }
 
-  return rule
-}
+const buildTurbopack = (
+  o: Options,
+  browserAlias: StrMap<string>,
+): NextConfig['turbopack'] => ({
+  root: o.repoRoot,
+  resolveAlias: {
+    ...resolveAlias,
+    ...mapValues(browserAlias, v => ({
+      browser: v,
+    })),
+  },
+  rules: {
+    '*.{ts,tsx}': [
+      babelLoaderTurbopackRule(o, true),
+      babelLoaderTurbopackRule(o, false),
+    ],
+    '*.svg': {
+      loaders: [svgLoader(o)],
+      as: '*.js',
+    },
+  },
+})
+
+const babelLoaderOption = (o: Options, isServer: boolean) => ({
+  dir: o.dir,
+  esmDirs: o.esmDirs,
+  isServer,
+  reactNativeVersion: o.reactNativeVersion,
+  twrncConfig: o.twrncConfig,
+  extractClassNameOutputPath: o.extractClassNameOutputPath,
+})
+const babelLoader = (o: Options, isServer: boolean) => ({
+  loader: babelLoaderPath,
+  options: babelLoaderOption(o, isServer),
+})
+const babelLoaderTurbopackRule = (o: Options, isServer: boolean) =>
+  ({
+    condition: {
+      all: [
+        isServer
+          ? {
+              not: 'browser',
+            }
+          : 'browser',
+      ],
+    },
+    loaders: [babelLoader(o, isServer)],
+  }) as any
+
+const svgLoader = (o: Options) => ({
+  loader: svgLoaderPath,
+  options: {
+    dimensions: false,
+    esmDirs: o.esmDirs,
+  },
+})

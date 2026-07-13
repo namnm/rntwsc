@@ -1,3 +1,4 @@
+import type { MiddlewareState } from '@floating-ui/react-native'
 import {
   flip,
   offset,
@@ -37,7 +38,7 @@ const Item = ({ open, onClose, reference, children }: DropdownProps) => {
         padding: 8,
       }),
       size({
-        apply: ({ rects }) => {
+        apply: ({ rects }: MiddlewareState) => {
           setMinWidth(rects.reference.width)
         },
         padding: 8,

@@ -12,12 +12,12 @@ import { ChevronBottom } from '@/core/icons/chevron-bottom'
 import { ChevronLeft } from '@/core/icons/chevron-left'
 import { ChevronRight } from '@/core/icons/chevron-right'
 import { useWindowDimensions } from '@/core/responsive/use-window-dimensions'
+import type { ValueProps } from '@/core/ts-utils'
 import type { ClassName } from '@/core/tw/class-name'
 import { Pressable } from '@/core/tw/components/pressable'
 import { View } from '@/core/tw/components/view'
 import { cva } from '@/core/tw/cva'
 import { useControllableState } from '@/core/utils/use-controllable-state'
-import type { ValueProps } from '@/shared/ts-utils'
 
 const MONTH_NAMES = [
   'January',
@@ -111,7 +111,7 @@ const Calendar = ({ value, onSelect }: CalendarProps) => {
           <ChevronLeft className='text-gray-600 dark:text-gray-400' />
         </Pressable>
 
-        <Span className='font-semibold text-foreground transition'>
+        <Span className='text-foreground font-semibold transition'>
           {MONTH_NAMES[viewMonth]} {viewYear}
         </Span>
 
@@ -166,7 +166,7 @@ const Calendar = ({ value, onSelect }: CalendarProps) => {
                           selected
                             ? 'font-semibold text-white'
                             : isToday
-                              ? 'font-semibold text-primary'
+                              ? 'text-primary font-semibold'
                               : current
                                 ? 'text-gray-800 dark:text-gray-100'
                                 : 'text-gray-300 dark:text-gray-600',

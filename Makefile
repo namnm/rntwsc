@@ -13,9 +13,9 @@ publish:
 	&& git checkout -b $(V) \
 	&& git add -A \
 	&& git commit -m "Release $(V)" \
+	&& git log -1 --format="%H" \
 	&& git remote add origin git@github.com:namnm/rntwsc.git \
 	&& git push -uf origin HEAD \
-	&& git log -1 --format="%H" \
 	&& cd .. \
 	&& rm -rf ./dist;
 

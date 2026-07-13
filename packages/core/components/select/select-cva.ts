@@ -1,7 +1,7 @@
 import type { InputCva } from '@/core/components/input/input-cva'
+import type { MultipleProps, SingleProps } from '@/core/ts-utils'
 import type { ClassName } from '@/core/tw/class-name'
 import { cva } from '@/core/tw/cva'
-import type { MultipleProps, SingleProps } from '@/shared/ts-utils'
 
 export const selectCva = cva({
   classNames: {
@@ -16,13 +16,13 @@ export const selectCva = cva({
     item: 'flex-row items-center justify-between border-b border-gray-100 px-4 py-3 dark:border-gray-800',
     itemActive: 'dark:bg-primary/10 bg-primary-50',
     itemLabel: 'text-sm text-gray-800 dark:text-white',
-    itemLabelActive: 'font-medium text-primary',
+    itemLabelActive: 'text-primary font-medium',
     itemLabelHighlight: 'bg-yellow-200 dark:bg-yellow-800/40',
     itemCheck: 'text-primary',
     statusText:
       'px-4 py-6 text-center text-sm text-gray-400 dark:text-gray-600',
     doneBar: 'border-t border-gray-100 px-4 py-3 dark:border-gray-800',
-    doneBtn: 'items-center rounded-lg bg-primary py-2',
+    doneBtn: 'bg-primary items-center rounded-lg py-2',
     doneBtnLabel: 'text-sm font-semibold text-white',
   },
   attributes: {

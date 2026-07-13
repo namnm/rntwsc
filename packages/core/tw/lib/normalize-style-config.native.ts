@@ -1,17 +1,16 @@
 import { bounce, ping, pulse, spin } from 'react-native-css-animations'
+
+import type { StrMap } from '@/core/ts-utils'
 import type {
   CSSAnimationProperties,
-  CSSTransitionTimingFunction,
-} from 'react-native-reanimated'
-
-import type { StrMap } from '@/shared/ts-utils'
+  CSSTimingFunction,
+} from '@/core/tw/class-name'
 
 export * from '@/core/tw/lib/normalize-style-config-shared'
 
-export const transitionTimingFunctionMap: StrMap<CSSTransitionTimingFunction> =
-  {
-    // custom transtion timing function here
-  }
+export const transitionTimingFunctionMap: StrMap<CSSTimingFunction> = {
+  // custom transtion timing function here
+}
 
 export const animationMap: StrMap<CSSAnimationProperties> = {
   // built in tailwind animation

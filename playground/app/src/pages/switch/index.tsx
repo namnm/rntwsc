@@ -1,11 +1,12 @@
 'use client'
 
-import { Switch } from '@/core/components/switch'
-import { H1, Span } from '@/core/components/text'
-import { useSafeAreaPadding } from '@/core/responsive/use-safe-area'
-import { ScrollView } from '@/core/tw/components/scroll-view'
-import { View } from '@/core/tw/components/view'
-import { upperFirst } from '@/shared/lodash'
+import { Switch } from '@rntwsc/core/components/switch'
+import { H1, Span } from '@rntwsc/core/components/text'
+import { upperFirst } from '@rntwsc/core/lodash'
+import { useSafeAreaPadding } from '@rntwsc/core/responsive/use-safe-area'
+import { ScrollView } from '@rntwsc/core/tw/components/scroll-view'
+import { View } from '@rntwsc/core/tw/components/view'
+
 import { NavLayout } from '#/components/nav-layout'
 
 const types = [

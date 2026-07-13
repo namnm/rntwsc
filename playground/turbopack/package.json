@@ -1,0 +1,35 @@
+{
+  "name": "@rntwsc/playground-turbopack",
+  "version": "0.0.0-locked",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "start2": "cross-env NEXT_PUBLIC_MINIFY_CLASS_NAMES=1 next dev --turbopack",
+    "build2": "cross-env NEXT_PUBLIC_MINIFY_CLASS_NAMES=1 next build --turbopack"
+  },
+  "engines": {
+    "node": ">=24.11",
+    "pnpm": ">=11"
+  },
+  "dependencies": {
+    "@rntwsc/core": "github:namnm/rntwsc#7c52aa7d8296993cb538c86d5737608ccc6f570c&path:core",
+    "accept-language": "3.0.20",
+    "next": "16.2.10",
+    "react-dom": "19.2.3",
+    "react-native-svg-web": "1.0.9",
+    "react-native-web": "0.21.2"
+  },
+  "devDependencies": {
+    "@rntwsc/devtools": "github:namnm/rntwsc#7c52aa7d8296993cb538c86d5737608ccc6f570c&path:devtools",
+    "@tailwindcss/postcss": "4.3.2",
+    "@types/react-dom": "19.2.3",
+    "autoprefixer": "10.5.2",
+    "baseline-browser-mapping": "latest",
+    "cross-env": "10.1.0",
+    "postcss-rename": "0.8.1",
+    "tailwindcss": "4.3.2",
+    "tsx": "4.23.0"
+  }
+}

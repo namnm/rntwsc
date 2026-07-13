@@ -1,9 +1,10 @@
-import { Button } from '@/core/components/button'
-import { ButtonGroup } from '@/core/components/button-group'
-import { Span } from '@/core/components/text'
-import { useSafeAreaPadding } from '@/core/responsive/use-safe-area'
-import { ScrollView } from '@/core/tw/components/scroll-view'
-import { View } from '@/core/tw/components/view'
+import { Button } from '@rntwsc/core/components/button'
+import { ButtonGroup } from '@rntwsc/core/components/button-group'
+import { Span } from '@rntwsc/core/components/text'
+import { useSafeAreaPadding } from '@rntwsc/core/responsive/use-safe-area'
+import { ScrollView } from '@rntwsc/core/tw/components/scroll-view'
+import { View } from '@rntwsc/core/tw/components/view'
+
 import { NavLayout } from '#/components/nav-layout'
 
 const appearances = ['solid', 'soft', 'outline', 'ghost'] as const

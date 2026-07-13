@@ -1,14 +1,14 @@
+import type { StrMap } from '@/core/ts-utils'
 import { writeTwExtractOutput } from '@/devtools/babel-plugin-tw/lib/config'
 import type { Ctx } from '@/devtools/babel-plugin-tw/lib/context'
 import { generateMinifiedClassName } from '@/devtools/babel-plugin-tw/lib/generate-minified-class-name'
 import { createVisitor } from '@/devtools/babel-plugin-tw/visitor'
-import type { StrMap } from '@/shared/ts-utils'
 
 type Options = Pick<Ctx, 'err'> & {
-  twExtractOutputPath: string
+  extractClassNameOutputPath: string
 }
 
-export const twExtract = ({ err, twExtractOutputPath }: Options) => {
+export const twExtract = ({ err, extractClassNameOutputPath }: Options) => {
   const minified: StrMap<string> = {}
   let n = 0
 
@@ -24,6 +24,6 @@ export const twExtract = ({ err, twExtractOutputPath }: Options) => {
       extract,
       err,
     }),
-    done: () => writeTwExtractOutput(twExtractOutputPath, minified),
+    done: () => writeTwExtractOutput(extractClassNameOutputPath, minified),
   }
 }

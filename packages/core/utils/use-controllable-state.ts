@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState } from 'react'
 
-import type { ValueProps } from '@/shared/ts-utils'
+import type { ValueProps } from '@/core/ts-utils'
 
 export const useControllableState = <T>({
   value,
