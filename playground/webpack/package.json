@@ -20,7 +20,7 @@
     "react-dom": "19.2.3",
     "react-native-svg-web": "1.0.9",
     "react-native-web": "0.21.2",
-    "rntwsc": "github:namnm/rntwsc#e397a3b43e487994ea9eba268f18d2729e03ab4a"
+    "rntwsc": "github:namnm/rntwsc#2476fd6704c530e3ce8c82e690013bebf3db8d0d"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.2",

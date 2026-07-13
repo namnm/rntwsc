@@ -29,7 +29,7 @@
     "react-native-screens": "4.26.0",
     "react-native-svg": "15.15.5",
     "react-native-worklets": "0.10.2",
-    "rntwsc": "github:namnm/rntwsc#e397a3b43e487994ea9eba268f18d2729e03ab4a"
+    "rntwsc": "github:namnm/rntwsc#2476fd6704c530e3ce8c82e690013bebf3db8d0d"
   },
   "devDependencies": {
     "@react-native-community/cli": "20.2.0",

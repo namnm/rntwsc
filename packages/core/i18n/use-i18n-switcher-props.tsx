@@ -41,7 +41,7 @@ const I18nSwitcherLink = async ({
   const href = q ? `${pathname}?${q}` : pathname
 
   className = clsx('flex', className) as string
-  // use html a href=... instead of next link to trigger full page reload
+  // use html a href=... instead of nextjs link to trigger full page reload
   // to set cookie in proxy
   return (
     <a href={href} className={className}>

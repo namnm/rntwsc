@@ -1,19 +1,19 @@
 # Turbopack
 
-Turbopack is available as an additional, selectable bundler alongside webpack, for both next dev and next build. playground/turbopack runs Next with the turbopack flag, playground/webpack runs a copy of the same source (kept in sync via pnpm copy) with the webpack flag instead. packages/devtools/next-config/index.ts builds and returns configuration for both bundlers unconditionally, and Next picks whichever applies based on the flag used.
+Turbopack is available as an additional, selectable bundler alongside webpack, for both next dev and next build. playground/turbopack runs NextJS with the turbopack flag, playground/webpack runs a copy of the same source (kept in sync via pnpm copy) with the webpack flag instead. packages/devtools/next-config/index.ts builds and returns configuration for both bundlers unconditionally, and NextJS picks whichever applies based on the flag used.
 
 Turbopack is faster and should be used by default (playground/turbopack). Keep playground/webpack around for checking webpack-specific behavior, not as the everyday choice.
 
 ## Why this needed more than a config toggle
 
-Two things this project depends on that Next's default pipeline does not support the same way across both bundlers:
+Two things this project depends on that NextJS's default pipeline does not support the same way across both bundlers:
 
 1. A custom babel transform (Tailwind class name compilation, async component to sync rewriting, RSC boundary validation, react-compiler) that must run per file, gated on whether that file is being compiled for the server or for the client.
 2. Resolving foo.browser.ts as an alternate implementation of foo.ts, only when compiling for the client - similar to Metro's native, ios, and android resolution, but for a browser bundle target Metro has no concept of.
 
-## A custom loader instead of Next's own babel-loader
+## A custom loader instead of NextJS's own babel-loader
 
-Next's own babel invocation only ever passes a caller object with a few fields Next itself controls, chiefly isServer - and under Turbopack that field is never set at all. Rather than depend on it, next-config registers its own transform directly, both as a webpack module rule and as a Turbopack rule, pointed at the same loader: packages/devtools/next-config/ts-loader.js, which requires the tsx runtime and re-exports the real implementation in packages/devtools/babel-config/loader.ts.
+NextJS's own babel invocation only ever passes a caller object with a few fields NextJS itself controls, chiefly isServer - and under Turbopack that field is never set at all. Rather than depend on it, next-config registers its own transform directly, both as a webpack module rule and as a Turbopack rule, pointed at the same loader: packages/devtools/next-config/ts-loader.js, which requires the tsx runtime and re-exports the real implementation in packages/devtools/babel-config/loader.ts.
 
 Both bundlers pass isServer to this loader explicitly, as a loader option, instead of relying on babel's caller mechanism:
 
@@ -41,7 +41,7 @@ packages/devtools/next-config/browser-resolve-alias.ts builds this map once, at 
 
 ### Consumers of a published @rntwsc package via node_modules
 
-playground/app and both Next.js playgrounds consume @rntwsc/core as a real installed package, a git tarball, not the tsconfig alias. Since the published package's own source is still raw ts and tsx (see build.md - build-dist never compiles anything), it needs a browser variant map too, but next-config cannot afford to glob into node_modules on every request. Instead, build-dist precomputes this map once at pnpm dist time and writes it to dist/devtools/next-config/browser-variants.json. next-config imports that file directly and merges it in alongside the freshly globbed in-repo map.
+playground/app and both NextJS playgrounds consume @rntwsc/core as a real installed package, a git tarball, not the tsconfig alias. Since the published package's own source is still raw ts and tsx (see build.md - build-dist never compiles anything), it needs a browser variant map too, but next-config cannot afford to glob into node_modules on every request. Instead, build-dist precomputes this map once at pnpm dist time and writes it to dist/devtools/next-config/browser-variants.json. next-config imports that file directly and merges it in alongside the freshly globbed in-repo map.
 
 ## CSS variable extraction
 

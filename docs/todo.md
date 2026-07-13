@@ -6,7 +6,7 @@
 
 A package similar to create-next-app or the React Native CLI's init command, that scaffolds a new
 project from this framework instead of copying playground/app and playground/turbopack by hand.
-Should set up the workspace layout, tsconfig path aliases, babel and next config wiring, and a
+Should set up the workspace layout, tsconfig path aliases, babel and NextJS config wiring, and a
 starter page for both web and native, so a new project gets a working dev setup in one command.
 
 ## Hydration / Core

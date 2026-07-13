@@ -775,8 +775,8 @@ importers:
         specifier: 0.10.2
         version: 0.10.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.0(@babel/core@7.29.7))(react-native@0.86.0(@babel/core@7.29.7)(@react-native-community/cli@20.2.0(typescript@6.0.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.7))(@types/react@19.2.17)(react@19.2.3))(react@19.2.3)
       rntwsc:
-        specifier: github:namnm/rntwsc#e397a3b43e487994ea9eba268f18d2729e03ab4a
-        version: https://codeload.github.com/namnm/rntwsc/tar.gz/e397a3b43e487994ea9eba268f18d2729e03ab4a(6a820213a1163c49c1b23fc97e1356fb)
+        specifier: github:namnm/rntwsc#2476fd6704c530e3ce8c82e690013bebf3db8d0d
+        version: https://codeload.github.com/namnm/rntwsc/tar.gz/2476fd6704c530e3ce8c82e690013bebf3db8d0d(6a820213a1163c49c1b23fc97e1356fb)
     devDependencies:
       '@react-native-community/cli':
         specifier: 20.2.0
@@ -827,8 +827,8 @@ importers:
         specifier: 0.21.2
         version: 0.21.2(patch_hash=d0c41018d8159836f439aba99b69de866a9868fb3aa5ddcee797432271138b50)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       rntwsc:
-        specifier: github:namnm/rntwsc#e397a3b43e487994ea9eba268f18d2729e03ab4a
-        version: https://codeload.github.com/namnm/rntwsc/tar.gz/e397a3b43e487994ea9eba268f18d2729e03ab4a(6a820213a1163c49c1b23fc97e1356fb)
+        specifier: github:namnm/rntwsc#2476fd6704c530e3ce8c82e690013bebf3db8d0d
+        version: https://codeload.github.com/namnm/rntwsc/tar.gz/2476fd6704c530e3ce8c82e690013bebf3db8d0d(6a820213a1163c49c1b23fc97e1356fb)
     devDependencies:
       '@tailwindcss/postcss':
         specifier: 4.3.2
@@ -873,8 +873,8 @@ importers:
         specifier: 0.21.2
         version: 0.21.2(patch_hash=d0c41018d8159836f439aba99b69de866a9868fb3aa5ddcee797432271138b50)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       rntwsc:
-        specifier: github:namnm/rntwsc#e397a3b43e487994ea9eba268f18d2729e03ab4a
-        version: https://codeload.github.com/namnm/rntwsc/tar.gz/e397a3b43e487994ea9eba268f18d2729e03ab4a(6a820213a1163c49c1b23fc97e1356fb)
+        specifier: github:namnm/rntwsc#2476fd6704c530e3ce8c82e690013bebf3db8d0d
+        version: https://codeload.github.com/namnm/rntwsc/tar.gz/2476fd6704c530e3ce8c82e690013bebf3db8d0d(6a820213a1163c49c1b23fc97e1356fb)
     devDependencies:
       '@tailwindcss/postcss':
         specifier: 4.3.2
@@ -5666,8 +5666,8 @@ packages:
     resolution: {integrity: sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==}
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
 
-  rntwsc@https://codeload.github.com/namnm/rntwsc/tar.gz/e397a3b43e487994ea9eba268f18d2729e03ab4a:
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/namnm/rntwsc/tar.gz/e397a3b43e487994ea9eba268f18d2729e03ab4a}
+  rntwsc@https://codeload.github.com/namnm/rntwsc/tar.gz/2476fd6704c530e3ce8c82e690013bebf3db8d0d:
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/namnm/rntwsc/tar.gz/2476fd6704c530e3ce8c82e690013bebf3db8d0d}
     version: 0.0.2
     peerDependencies:
       '@floating-ui/react': '*'
@@ -11833,7 +11833,7 @@ snapshots:
 
   reusify@1.1.0: {}
 
-  rntwsc@https://codeload.github.com/namnm/rntwsc/tar.gz/e397a3b43e487994ea9eba268f18d2729e03ab4a(6a820213a1163c49c1b23fc97e1356fb):
+  rntwsc@https://codeload.github.com/namnm/rntwsc/tar.gz/2476fd6704c530e3ce8c82e690013bebf3db8d0d(6a820213a1163c49c1b23fc97e1356fb):
     dependencies:
       '@apollo/client': 4.2.6(graphql@17.0.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(rxjs@7.8.2)
       '@babel/code-frame': 7.29.7

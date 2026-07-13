@@ -9,7 +9,7 @@ import publishedBrowserAlias from '@/devtools/next-config/browser-variants.json'
 import { mapKeys, mapValues } from '@/libs/lodash'
 import type { StrMap } from '@/libs/utility-types'
 
-// we name it ts-loader to let next not complain about its builtin
+// we name it ts-loader to let nextjs not complain about its builtin
 const babelLoaderPath = require.resolve('@/devtools/next-config/ts-loader.js')
 const svgLoaderPath = require.resolve('@/devtools/next-config/svg-loader.js')
 
