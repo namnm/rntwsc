@@ -9,9 +9,9 @@ import {
 import type { DehydrateProps } from '@/core/hydration/dehydrate'
 import { dehydrated, rehydrated } from '@/core/hydration/dehydrate'
 import { setHydration } from '@/core/hydration/store'
-import { jsonSafe } from '@/core/json-safe'
 import { isBrowser } from '@/core/platform'
-import { useIsMounted } from '@/core/utils/use-mounted'
+import { useIsMounted } from '@/libs/hooks'
+import { jsonSafe } from '@/libs/json-safe'
 
 type Props = Required<DehydrateProps> & {
   // pass from the caller instead of module level

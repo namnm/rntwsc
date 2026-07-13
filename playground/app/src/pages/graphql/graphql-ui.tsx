@@ -1,8 +1,8 @@
-import { Span } from '@rntwsc/core/components/text'
-import type { GraphQLResponse } from '@rntwsc/core/graphql/config'
-import type { UseHydrationData } from '@rntwsc/core/hydration/config'
-import { jsonSafe } from '@rntwsc/core/json-safe'
-import { View } from '@rntwsc/core/tw/components/view'
+import { Span } from 'rntwsc/components/text'
+import type { GraphQLResponse } from 'rntwsc/graphql/config'
+import type { UseHydrationData } from 'rntwsc/hydration/config'
+import { jsonSafe } from 'rntwsc/libs/json-safe'
+import { View } from 'rntwsc/tw/components/view'
 
 import type { HelloData } from '#/pages/graphql/config'
 

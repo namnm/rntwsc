@@ -10,7 +10,7 @@ import {
   getLocaleUntyped,
   i18nCookieKey,
 } from '@/core/i18n/config'
-import { storage } from '@/core/storage'
+import { storage } from '@/libs/storage'
 
 export const useCurrentLocaleUntyped = () => {
   const { i18n } = useTranslation()

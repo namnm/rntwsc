@@ -11,7 +11,7 @@ import {
   usePortalItems,
 } from '@/core/components/portal/store'
 import { isWeb } from '@/core/platform'
-import { useIsMounted } from '@/core/utils/use-mounted'
+import { useIsMounted } from '@/libs/hooks'
 
 export type PortalProps = PropsWithChildren<
   Pick<PortalItem, 'disableBodyScroll'>

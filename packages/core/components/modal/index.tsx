@@ -3,14 +3,14 @@
 import type { PropsWithChildren } from 'react'
 
 import { Portal } from '@/core/components/portal'
-import type { ValueProps } from '@/core/ts-utils'
 import type { ClassName } from '@/core/tw/class-name'
 import { Pressable } from '@/core/tw/components/pressable'
 import { ScrollView } from '@/core/tw/components/scroll-view'
 import { View } from '@/core/tw/components/view'
 import type { Variant } from '@/core/tw/cva'
 import { cva } from '@/core/tw/cva'
-import { useControllableState } from '@/core/utils/use-controllable-state'
+import { useControllableState } from '@/libs/hooks'
+import type { ValueProps } from '@/libs/utility-types'
 
 const modalCva = cva({
   classNames: {

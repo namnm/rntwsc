@@ -1,9 +1,9 @@
-import { Span } from '@rntwsc/core/components/text'
-import { useRoute } from '@rntwsc/core/navigation'
-import type { LinkProps } from '@rntwsc/core/tw/components/link-untyped'
-import { LinkUntyped } from '@rntwsc/core/tw/components/link-untyped'
-import { View } from '@rntwsc/core/tw/components/view'
 import type { ReactNode } from 'react'
+import { Span } from 'rntwsc/components/text'
+import { useRoute } from 'rntwsc/navigation'
+import type { LinkProps } from 'rntwsc/tw/components/link-untyped'
+import { LinkUntyped } from 'rntwsc/tw/components/link-untyped'
+import { View } from 'rntwsc/tw/components/view'
 
 type NavSidebarLinkProps = Omit<LinkProps, 'query'> & {
   label: string

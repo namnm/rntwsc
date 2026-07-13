@@ -8,7 +8,7 @@ import {
   toClassNameDarkModeState,
 } from '@/core/dark-mode/config'
 import { isWeb } from '@/core/platform'
-import { useIsMounted } from '@/core/utils/use-mounted'
+import { useIsMounted } from '@/libs/hooks'
 
 // this is only available in browser and native
 // !mounted to make sure the data is matched with ssr

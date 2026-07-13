@@ -274,6 +274,7 @@
     //
     "ignoreDeprecations": "6.0"
   },
+
   "exclude": [
     // AUTOMATICALLY INHERIT FROM GITIGNORE - BEGIN
     "**/build/",

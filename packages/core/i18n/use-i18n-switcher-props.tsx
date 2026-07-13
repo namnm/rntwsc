@@ -4,9 +4,9 @@ import { useCurrentLangUntyped } from '@/core/i18n'
 import { getLocaleUntyped } from '@/core/i18n/config'
 import { useRoute } from '@/core/navigation'
 import { normalizePathname } from '@/core/navigation/normalize-pathname'
-import { qsStableStringify } from '@/core/qs'
 import type { ClassName } from '@/core/tw/class-name'
 import { clsx } from '@/core/tw/clsx'
+import { qsStableStringify } from '@/libs/qs'
 
 export type I18nSwitcherProps = {
   currentLang: string

@@ -14,15 +14,14 @@
     "pnpm": ">=11"
   },
   "dependencies": {
-    "@rntwsc/core": "github:namnm/rntwsc#7c52aa7d8296993cb538c86d5737608ccc6f570c&path:core",
     "accept-language": "3.0.20",
     "next": "16.2.10",
     "react-dom": "19.2.3",
     "react-native-svg-web": "1.0.9",
-    "react-native-web": "0.21.2"
+    "react-native-web": "0.21.2",
+    "rntwsc": "github:namnm/rntwsc#e397a3b43e487994ea9eba268f18d2729e03ab4a"
   },
   "devDependencies": {
-    "@rntwsc/devtools": "github:namnm/rntwsc#7c52aa7d8296993cb538c86d5737608ccc6f570c&path:devtools",
     "@tailwindcss/postcss": "4.3.2",
     "@types/react-dom": "19.2.3",
     "autoprefixer": "10.5.2",

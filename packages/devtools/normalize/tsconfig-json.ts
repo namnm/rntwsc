@@ -1,9 +1,9 @@
 import ts from 'typescript'
 
-import { jsonSafe } from '@/core/json-safe'
-import type { StrMap } from '@/core/ts-utils'
 import { fs, readJson5 } from '@/devtools/fs'
 import { path } from '@/devtools/path'
+import { jsonSafe } from '@/libs/json-safe'
+import type { StrMap } from '@/libs/utility-types'
 
 type CompilerOption = {
   name: string

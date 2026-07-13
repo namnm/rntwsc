@@ -1,0 +1,22 @@
+{
+  "name": "@rntwsc/libs-hooks",
+  "version": "0.0.0-locked",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=24.11",
+    "pnpm": ">=11"
+  },
+  "dependencies": {
+    "bezier-easing": "3.0.1",
+    "color-rgba": "3.0.0",
+    "react-use": "17.6.1"
+  },
+  "peerDependencies": {
+    "react": "*"
+  },
+  "devDependencies": {
+    "@types/color-rgba": "2.1.3",
+    "@types/react": "19.2.17"
+  }
+}

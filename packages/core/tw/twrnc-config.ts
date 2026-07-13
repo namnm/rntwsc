@@ -1,8 +1,8 @@
 import defaultTheme from 'tailwindcss/defaultTheme'
 
 import type { ThemeConfig } from '@/core/theme/config'
-import type { StrMap } from '@/core/ts-utils'
-import type { TwConfig } from '@/core/utils/twrnc'
+import type { TwConfig } from '@/libs/twrnc'
+import type { StrMap } from '@/libs/utility-types'
 
 const colors = [
   'primary',

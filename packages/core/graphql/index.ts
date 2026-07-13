@@ -5,7 +5,7 @@ import type { GraphQLResponse, UseApollo } from '@/core/graphql/config'
 import { hk, sck } from '@/core/graphql/config'
 import type { HydrationData, UseHydrationData } from '@/core/hydration/config'
 import { dehydrate } from '@/core/hydration/dehydrate'
-import { jsonSafe } from '@/core/json-safe'
+import { jsonSafe } from '@/libs/json-safe'
 
 const getCache = <T>() =>
   serverCache(

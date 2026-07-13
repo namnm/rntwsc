@@ -4,9 +4,9 @@ import type { PropsWithChildren } from 'react'
 import { createContext, useContext } from 'react'
 
 import type { ClassNameMarkerState } from '@/core/tw/class-name'
-import type { Updater } from '@/core/utils/immer'
-import { useImmer } from '@/core/utils/immer'
-import { useSafeContext } from '@/core/utils/use-safe-context'
+import { useSafeContext } from '@/libs/hooks'
+import type { Updater } from '@/libs/immer'
+import { useImmer } from '@/libs/immer'
 
 type GroupContextValue = ClassNameMarkerState
 const GroupContext = createContext<GroupContextValue | undefined>(undefined)

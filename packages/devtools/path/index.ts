@@ -1,7 +1,7 @@
 import path from 'node:path'
 
-import type { Falsish, NonFalsish } from '@/core/ts-utils'
 import { fs } from '@/devtools/fs'
+import type { Falsish, NonFalsish } from '@/libs/utility-types'
 
 export { path }
 

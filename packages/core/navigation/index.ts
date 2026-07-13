@@ -4,8 +4,8 @@ import { serverCache } from '@/core/cache'
 import { useCurrentLocaleUntyped } from '@/core/i18n'
 import { sck, urlHeaderKey } from '@/core/navigation/config'
 import { normalizePathname } from '@/core/navigation/normalize-pathname'
-import type { ParsedQs } from '@/core/qs'
-import { qsParse } from '@/core/qs'
+import type { ParsedQs } from '@/libs/qs'
+import { qsParse } from '@/libs/qs'
 
 export const useRoute = () =>
   serverCache(sck.route, async () => {

@@ -1,6 +1,6 @@
-import { mergeWithArray } from '@rntwsc/core/lodash'
-import { twrncConfig as coreConfig } from '@rntwsc/core/tw/twrnc-config'
-import type { TwConfig } from '@rntwsc/core/utils/twrnc'
+import { mergeWithArray } from 'rntwsc/libs/lodash'
+import type { TwConfig } from 'rntwsc/libs/twrnc'
+import { twrncConfig as coreConfig } from 'rntwsc/tw/twrnc-config'
 
 const override: TwConfig = {
   //

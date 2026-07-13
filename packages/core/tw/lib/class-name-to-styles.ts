@@ -1,6 +1,5 @@
 import { platform } from '@/core/platform'
 import type { DimensionsSize } from '@/core/responsive/use-window-dimensions'
-import type { Nullish, StrMap } from '@/core/ts-utils'
 import type {
   ClassName,
   ClassNameCalc,
@@ -12,6 +11,7 @@ import { getTwrnc } from '@/core/tw/config'
 import { twUnminifyWeb } from '@/core/tw/lib/class-name-minified'
 import { classNameToNative } from '@/core/tw/lib/class-name-to-native'
 import { hexToRgba } from '@/core/utils/hex-to-rgba'
+import type { Nullish, StrMap } from '@/libs/utility-types'
 
 export type ClassNameToStylesOptions = {
   className: ClassName

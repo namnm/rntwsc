@@ -1,6 +1,6 @@
-import { set } from '@/core/lodash'
-import type { StrMap } from '@/core/ts-utils'
 import { clsx } from '@/core/tw/clsx'
+import { set } from '@/libs/lodash'
+import type { StrMap } from '@/libs/utility-types'
 
 type ClassNames<Map> = {
   [K in keyof Map]?: string

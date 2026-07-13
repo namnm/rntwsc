@@ -1,13 +1,13 @@
 'use client'
 
-import { Button } from '@rntwsc/core/components/button'
-import type { ModalProps } from '@rntwsc/core/components/modal'
-import { Modal } from '@rntwsc/core/components/modal'
-import { Span } from '@rntwsc/core/components/text'
-import { useSafeAreaPadding } from '@rntwsc/core/responsive/use-safe-area'
-import { ScrollView } from '@rntwsc/core/tw/components/scroll-view'
-import { View } from '@rntwsc/core/tw/components/view'
 import { useState } from 'react'
+import { Button } from 'rntwsc/components/button'
+import type { ModalProps } from 'rntwsc/components/modal'
+import { Modal } from 'rntwsc/components/modal'
+import { Span } from 'rntwsc/components/text'
+import { useSafeAreaPadding } from 'rntwsc/responsive/use-safe-area'
+import { ScrollView } from 'rntwsc/tw/components/scroll-view'
+import { View } from 'rntwsc/tw/components/view'
 
 import { NavLayout } from '#/components/nav-layout'
 

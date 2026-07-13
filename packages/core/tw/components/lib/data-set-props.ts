@@ -1,6 +1,6 @@
-import { camelCase } from '@/core/lodash'
-import type { StrMap } from '@/core/ts-utils'
 import { dataPrefix } from '@/core/tw/components/lib/common-props'
+import { camelCase } from '@/libs/lodash'
+import type { StrMap } from '@/libs/utility-types'
 
 export const dataSetProps = (props: StrMap) => {
   const dataKeys = Object.keys(props).filter(k => k.startsWith(dataPrefix))

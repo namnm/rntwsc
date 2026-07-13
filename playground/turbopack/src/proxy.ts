@@ -1,5 +1,8 @@
 import '#/polyfill/init-i18n'
 
+import acceptLang from 'accept-language'
+import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import {
   getDefaultLocaleUntyped,
   getLangsUntyped,
@@ -8,12 +11,9 @@ import {
   i18nCookieMaxAge,
   i18nHeaderKey,
   isValidLocaleUntyped,
-} from '@rntwsc/core/i18n/config'
-import { urlHeaderKey } from '@rntwsc/core/navigation/config'
-import { normalizePathname } from '@rntwsc/core/navigation/normalize-pathname'
-import acceptLang from 'accept-language'
-import type { NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
+} from 'rntwsc/i18n/config'
+import { urlHeaderKey } from 'rntwsc/navigation/config'
+import { normalizePathname } from 'rntwsc/navigation/normalize-pathname'
 
 const locales = getLocalesUntyped()
 const langs = getLangsUntyped()

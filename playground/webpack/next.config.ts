@@ -1,6 +1,6 @@
 // must not import tsx, it will conflict with nextjs
-import { config } from '@rntwsc/devtools/next-config'
-import { path } from '@rntwsc/devtools/path'
+import { config } from 'rntwsc/devtools/next-config'
+import { path } from 'rntwsc/devtools/path'
 
 import babelPluginTwConfig from '../app/babel-plugin-tw-config'
 

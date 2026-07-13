@@ -24,7 +24,6 @@
     "pnpm": ">=11"
   },
   "devDependencies": {
-    "@rntwsc/devtools": "github:namnm/rntwsc#7c52aa7d8296993cb538c86d5737608ccc6f570c&path:devtools",
     "@types/node": "26.1.1",
     "tailwindcss": "4.3.2",
     "tsx": "4.23.0",

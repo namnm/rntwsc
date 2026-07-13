@@ -1,8 +1,8 @@
-import type { StrMap } from '@/core/ts-utils'
 import { writeTwExtractOutput } from '@/devtools/babel-plugin-tw/lib/config'
 import type { Ctx } from '@/devtools/babel-plugin-tw/lib/context'
 import { generateMinifiedClassName } from '@/devtools/babel-plugin-tw/lib/generate-minified-class-name'
 import { createVisitor } from '@/devtools/babel-plugin-tw/visitor'
+import type { StrMap } from '@/libs/utility-types'
 
 type Options = Pick<Ctx, 'err'> & {
   extractClassNameOutputPath: string

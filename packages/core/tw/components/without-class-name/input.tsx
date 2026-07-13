@@ -7,9 +7,9 @@ import type {
 } from 'react-native'
 import { TextInput } from 'react-native'
 
-import type { StrMap } from '@/core/ts-utils'
 import type { CommonProps } from '@/core/tw/components/lib/common-props'
 import { normalizePropsRnw } from '@/core/tw/components/lib/normalize-props-rnw'
+import type { StrMap } from '@/libs/utility-types'
 
 export type InputPropsWocn = CommonProps<
   Omit<

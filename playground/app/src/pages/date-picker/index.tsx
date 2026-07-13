@@ -1,12 +1,12 @@
 'use client'
 
-import { DatePicker } from '@rntwsc/core/components/date-picker'
-import { H1, Span } from '@rntwsc/core/components/text'
-import { upperFirst } from '@rntwsc/core/lodash'
-import { useSafeAreaPadding } from '@rntwsc/core/responsive/use-safe-area'
-import { ScrollView } from '@rntwsc/core/tw/components/scroll-view'
-import { View } from '@rntwsc/core/tw/components/view'
 import { useState } from 'react'
+import { DatePicker } from 'rntwsc/components/date-picker'
+import { H1, Span } from 'rntwsc/components/text'
+import { upperFirst } from 'rntwsc/libs/lodash'
+import { useSafeAreaPadding } from 'rntwsc/responsive/use-safe-area'
+import { ScrollView } from 'rntwsc/tw/components/scroll-view'
+import { View } from 'rntwsc/tw/components/view'
 
 import { NavLayout } from '#/components/nav-layout'
 

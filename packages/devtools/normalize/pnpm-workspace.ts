@@ -1,8 +1,8 @@
 import { parse } from 'yaml'
 
-import type { StrMap } from '@/core/ts-utils'
 import { fs } from '@/devtools/fs'
 import { path } from '@/devtools/path'
+import type { StrMap } from '@/libs/utility-types'
 
 export type PnpmWorkspace = {
   overrides?: StrMap<string>

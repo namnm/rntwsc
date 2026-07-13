@@ -1,11 +1,11 @@
 'use client'
 
-import { Span } from '@rntwsc/core/components/text'
-import { useTranslationUntyped } from '@rntwsc/core/i18n'
-import { useSetTheme, useTheme } from '@rntwsc/core/theme'
-import { getAvailableThemes } from '@rntwsc/core/theme/config'
-import { Pressable } from '@rntwsc/core/tw/components/pressable'
-import { View } from '@rntwsc/core/tw/components/view'
+import { Span } from 'rntwsc/components/text'
+import { useTranslationUntyped } from 'rntwsc/i18n'
+import { useSetTheme, useTheme } from 'rntwsc/theme'
+import { getAvailableThemes } from 'rntwsc/theme/config'
+import { Pressable } from 'rntwsc/tw/components/pressable'
+import { View } from 'rntwsc/tw/components/view'
 
 export const ThemeSwitcher = async ({ onPress }: { onPress?: () => void }) => {
   const [t, tThemes] = await Promise.all([

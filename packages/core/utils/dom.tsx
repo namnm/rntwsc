@@ -2,7 +2,7 @@
 
 import { useRef } from 'react'
 
-import { useOnMounted } from '@/core/utils/use-mounted'
+import { useOnMounted } from '@/libs/hooks'
 
 export const useParentDOM = (fn: (dom: HTMLElement) => () => void) => {
   const r = useRef<HTMLSpanElement>(null)

@@ -1,9 +1,9 @@
 import type { ReactElement, ReactNode } from 'react'
 import { isValidElement } from 'react'
 
-import type { StrMap } from '@/core/ts-utils'
 import type { ClassName } from '@/core/tw/class-name'
 import { clsx } from '@/core/tw/clsx'
+import type { StrMap } from '@/libs/utility-types'
 
 export type AnyProps = StrMap<unknown>
 

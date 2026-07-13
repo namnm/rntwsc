@@ -2,11 +2,11 @@ import colors from 'colors/safe'
 import type { StackFrame } from 'stack-trace'
 import * as stacktrace from 'stack-trace'
 
-import { jsonSafe } from '@/core/json-safe'
-import { get } from '@/core/lodash'
-import type { Falsish, Nullish } from '@/core/ts-utils'
 import { killSelfChildren } from '@/devtools/kill'
 import { path, stripInDir } from '@/devtools/path'
+import { jsonSafe } from '@/libs/json-safe'
+import { get } from '@/libs/lodash'
+import type { Falsish, Nullish } from '@/libs/utility-types'
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'fatal'
 

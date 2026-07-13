@@ -3,9 +3,6 @@
 
 import type { Platform } from 'react-native'
 
-import { jsonSafe } from '@/core/json-safe'
-import { camelCase } from '@/core/lodash'
-import type { Falsish, StrMap } from '@/core/ts-utils'
 import type {
   ClassNameDarkModeSelector,
   ClassNameHandlerSelector,
@@ -28,6 +25,9 @@ import {
   transitionTimingFunctionDefault,
   transitionTimingFunctionMap,
 } from '@/core/tw/lib/normalize-style-config'
+import { jsonSafe } from '@/libs/json-safe'
+import { camelCase } from '@/libs/lodash'
+import type { Falsish, StrMap } from '@/libs/utility-types'
 
 type Options = {
   platform: Platform['OS']

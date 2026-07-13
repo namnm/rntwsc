@@ -9,7 +9,7 @@ import type { ViewProps } from '@/core/tw/components/view'
 import { View } from '@/core/tw/components/view'
 import type { Variant } from '@/core/tw/cva'
 import { cva } from '@/core/tw/cva'
-import { useSafeContext } from '@/core/utils/use-safe-context'
+import { useSafeContext } from '@/libs/hooks'
 
 // context
 

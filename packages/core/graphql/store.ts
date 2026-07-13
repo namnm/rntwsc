@@ -9,7 +9,7 @@ import type { GraphQLResponse } from '@/core/graphql/config'
 import { hk } from '@/core/graphql/config'
 import { drainHydration, subscribeHydration } from '@/core/hydration/store'
 import { isBrowser } from '@/core/platform'
-import type { StrMap } from '@/core/ts-utils'
+import type { StrMap } from '@/libs/utility-types'
 
 // Apollo cache cannot store errors (writeQuery only accepts data).
 // We keep a parallel error store keyed by hydration key so the browser hook

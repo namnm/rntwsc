@@ -9,7 +9,6 @@ import reactHooksPlugin from 'eslint-plugin-react-hooks'
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort'
 import globals from 'globals'
 
-import type { StrMap } from '@/core/ts-utils'
 import {
   enforceUseClientGlobal,
   enforceUseClientImports,
@@ -22,6 +21,7 @@ import { getGitignorePath } from '@/devtools/gitignore'
 import { globSync } from '@/devtools/glob'
 import { pnpmWorkspaceSync } from '@/devtools/normalize/pnpm-workspace'
 import { path } from '@/devtools/path'
+import type { StrMap } from '@/libs/utility-types'
 
 const off = 0
 const warn = 1

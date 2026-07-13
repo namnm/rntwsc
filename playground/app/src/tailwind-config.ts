@@ -1,8 +1,8 @@
 // nodejs code here
 
-import { mergeWithArray } from '@rntwsc/core/lodash'
-import { config as coreConfig } from '@rntwsc/core/tw/tailwind-config'
-import { path } from '@rntwsc/devtools/path'
+import { path } from 'rntwsc/devtools/path'
+import { mergeWithArray } from 'rntwsc/libs/lodash'
+import { config as coreConfig } from 'rntwsc/tw/tailwind-config'
 import type { Config } from 'tailwindcss'
 
 const override: Config = {

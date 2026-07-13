@@ -18,7 +18,7 @@ setDarkMode(false) // light
 setDarkMode(undefined) // follow system
 ```
 
-On web, the choice is persisted in a cookie (dark-mode) so it survives SSR hydration without a flash. On native, it is persisted via storage (see packages/core/storage) instead.
+On web, the choice is persisted in a cookie (dark-mode) so it survives SSR hydration without a flash. On native, it is persisted via storage (see packages/libs/storage) instead.
 
 ## Resolving the effective state
 

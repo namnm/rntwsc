@@ -1,7 +1,7 @@
 import { types as t } from '@babel/core'
 
-import { jsonSafe } from '@/core/json-safe'
 import type { Ctx } from '@/devtools/babel-plugin-tw/lib/context'
+import { jsonSafe } from '@/libs/json-safe'
 
 export const jsToNode = (ctx: Ctx, value: any): any => {
   if (t.isNode(value)) {

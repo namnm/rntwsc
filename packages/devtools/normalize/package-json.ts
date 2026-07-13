@@ -1,14 +1,14 @@
 import { compare } from 'semver'
 
-import { jsonSafe } from '@/core/json-safe'
-import { jsonStable } from '@/core/json-stable'
-import { groupBy, kebabCase, omit } from '@/core/lodash'
-import type { StrMap } from '@/core/ts-utils'
 import { fs, readJson5 } from '@/devtools/fs'
 import { glob } from '@/devtools/glob'
 import { log } from '@/devtools/log'
 import { pnpmWorkspace } from '@/devtools/normalize/pnpm-workspace'
 import { path } from '@/devtools/path'
+import { jsonSafe } from '@/libs/json-safe'
+import { jsonStable } from '@/libs/json-stable'
+import { groupBy, kebabCase, omit } from '@/libs/lodash'
+import type { StrMap } from '@/libs/utility-types'
 
 const keys = [
   'dependencies',

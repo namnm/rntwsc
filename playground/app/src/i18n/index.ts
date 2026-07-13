@@ -2,7 +2,7 @@ import {
   useCurrentLangUntyped,
   useCurrentLocaleUntyped,
   useTranslationUntyped,
-} from '@rntwsc/core/i18n'
+} from 'rntwsc/i18n'
 import {
   getDefaultLangUntyped,
   getDefaultLocaleUntyped,
@@ -12,7 +12,7 @@ import {
   getLocaleUntyped,
   isValidLangUntyped,
   isValidLocaleUntyped,
-} from '@rntwsc/core/i18n/config'
+} from 'rntwsc/i18n/config'
 
 import type { Lang, Locale, Namespace, Resources } from '#/i18n/config'
 

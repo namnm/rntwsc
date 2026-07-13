@@ -5,7 +5,7 @@ import { NumberInput } from '@/core/components/input/number-input'
 import { Minus } from '@/core/icons/minus'
 import { Plus } from '@/core/icons/plus'
 import { Pressable } from '@/core/tw/components/pressable'
-import { useControllableState } from '@/core/utils/use-controllable-state'
+import { useControllableState } from '@/libs/hooks'
 
 type QuantityInputProps = NumberInputProps & {
   step?: number

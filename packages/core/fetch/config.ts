@@ -1,8 +1,8 @@
 import { serverCacheKey } from '@/core/cache/key'
 import { hydrationKey } from '@/core/hydration/config'
-import type { StrMap } from '@/core/ts-utils'
+import type { StrMap } from '@/libs/utility-types'
 
-export const sck = serverCacheKey('@rntwsc/fetch', ['fetch'] as const)
+export const sck = serverCacheKey('rntwsc/fetch', ['fetch'] as const)
 
 export type UseFetch = {
   url: string

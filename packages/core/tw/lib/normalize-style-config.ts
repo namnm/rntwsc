@@ -1,4 +1,4 @@
-import type { StrMap } from '@/core/ts-utils'
+import type { StrMap } from '@/libs/utility-types'
 
 export * from '@/core/tw/lib/normalize-style-config-shared'
 

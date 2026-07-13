@@ -1,26 +1,26 @@
 import type { NextConfig } from 'next'
 
-import { mapKeys, mapValues } from '@/core/lodash'
-import type { StrMap } from '@/core/ts-utils'
 import { getAlias } from '@/devtools/babel-config/get-alias'
 import type { BabelLoaderOptions } from '@/devtools/babel-loader'
 import { glob } from '@/devtools/glob'
 import { browserResolveAlias } from '@/devtools/next-config/browser-resolve-alias'
 // @ts-ignore: will be generated
 import publishedBrowserAlias from '@/devtools/next-config/browser-variants.json'
+import { mapKeys, mapValues } from '@/libs/lodash'
+import type { StrMap } from '@/libs/utility-types'
 
 // we name it ts-loader to let next not complain about its builtin
 const babelLoaderPath = require.resolve('@/devtools/next-config/ts-loader.js')
 const svgLoaderPath = require.resolve('@/devtools/next-config/svg-loader.js')
 
 const resolveAlias = {
-  'next-unchecked/headers': '@rntwsc/core/next/unchecked/headers',
-  'next-unchecked/navigation': '@rntwsc/core/next/unchecked/navigation',
+  'next-unchecked/headers': 'rntwsc/next/unchecked/headers',
+  'next-unchecked/navigation': 'rntwsc/next/unchecked/navigation',
   'react-native': 'react-native-web',
   'react-native-svg': 'react-native-svg-web',
 }
 
-const transpilePackages: string[] = ['@rntwsc/core']
+const transpilePackages: string[] = ['rntwsc']
 const serverExternalPackages: string[] = []
 
 type Options = Omit<BabelLoaderOptions, 'isServer'> & {

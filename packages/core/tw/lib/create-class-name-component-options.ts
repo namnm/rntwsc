@@ -1,5 +1,5 @@
-import type { StrMap } from '@/core/ts-utils'
 import type { CreateClassNameComponentOptions } from '@/core/tw/lib/create-class-name-component'
+import type { StrMap } from '@/libs/utility-types'
 
 type Return = CreateClassNameComponentOptions & {
   Component: any

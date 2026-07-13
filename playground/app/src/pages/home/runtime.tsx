@@ -1,6 +1,6 @@
-import { Span } from '@rntwsc/core/components/text'
-import { jsonSafe } from '@rntwsc/core/json-safe'
-import { runtimeStyle } from '@rntwsc/core/tw/runtime-style'
+import { Span } from 'rntwsc/components/text'
+import { jsonSafe } from 'rntwsc/libs/json-safe'
+import { runtimeStyle } from 'rntwsc/tw/runtime-style'
 
 export const DemoRuntime = () => {
   const cn = 'text-red-500'

@@ -1,5 +1,5 @@
-import type { StrMap } from '@/core/ts-utils'
 import { toAlias } from '@/devtools/babel-config/get-alias'
+import type { StrMap } from '@/libs/utility-types'
 
 const indexBrowserRegex = /\/index\.browser\.[jt]sx?$/
 const browserRegex = /\.browser\.[jt]sx?$/

@@ -1,7 +1,7 @@
 import { transformSync } from '@babel/core'
 
-import type { Nullish } from '@/core/ts-utils'
 import { config } from '@/devtools/babel-config'
+import type { Nullish } from '@/libs/utility-types'
 
 const commonjsPlugin =
   require.resolve('@babel/plugin-transform-modules-commonjs')

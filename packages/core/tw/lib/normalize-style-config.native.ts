@@ -1,10 +1,10 @@
 import { bounce, ping, pulse, spin } from 'react-native-css-animations'
 
-import type { StrMap } from '@/core/ts-utils'
 import type {
   CSSAnimationProperties,
   CSSTimingFunction,
 } from '@/core/tw/class-name'
+import type { StrMap } from '@/libs/utility-types'
 
 export * from '@/core/tw/lib/normalize-style-config-shared'
 

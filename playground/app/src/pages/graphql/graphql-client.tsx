@@ -1,9 +1,9 @@
 'use client'
 
-import { Button } from '@rntwsc/core/components/button'
-import { Span } from '@rntwsc/core/components/text'
-import { useApollo } from '@rntwsc/core/graphql'
-import { View } from '@rntwsc/core/tw/components/view'
+import { Button } from 'rntwsc/components/button'
+import { Span } from 'rntwsc/components/text'
+import { useApollo } from 'rntwsc/graphql'
+import { View } from 'rntwsc/tw/components/view'
 
 import type { HelloData } from '#/pages/graphql/config'
 import { HELLO_QUERY, playgroundGraphQLUrl } from '#/pages/graphql/config'

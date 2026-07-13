@@ -2,9 +2,9 @@ import type { OperationVariables, TypedDocumentNode } from '@apollo/client'
 
 import { serverCacheKey } from '@/core/cache/key'
 import { hydrationKey } from '@/core/hydration/config'
-import type { StrMap } from '@/core/ts-utils'
+import type { StrMap } from '@/libs/utility-types'
 
-export const sck = serverCacheKey('@rntwsc/graphql', ['fetch'] as const)
+export const sck = serverCacheKey('rntwsc/graphql', ['fetch'] as const)
 
 export type UseApollo<T = unknown> = {
   url: string

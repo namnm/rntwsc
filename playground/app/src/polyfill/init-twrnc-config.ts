@@ -1,4 +1,4 @@
-import { initTwrncConfig } from '@rntwsc/core/tw/config'
+import { initTwrncConfig } from 'rntwsc/tw/config'
 
 import { twrncConfig } from '#/twrnc-config'
 

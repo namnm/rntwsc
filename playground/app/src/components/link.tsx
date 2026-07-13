@@ -1,5 +1,5 @@
-import type { LinkComponent } from '@rntwsc/core/tw/components/link-untyped'
-import { LinkUntyped } from '@rntwsc/core/tw/components/link-untyped'
+import type { LinkComponent } from 'rntwsc/tw/components/link-untyped'
+import { LinkUntyped } from 'rntwsc/tw/components/link-untyped'
 
 import type { Routes, RoutesData } from '#/pages/routes'
 

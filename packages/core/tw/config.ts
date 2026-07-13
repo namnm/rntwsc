@@ -1,8 +1,8 @@
-import type { StrMap } from '@/core/ts-utils'
 import { twrncConfig } from '@/core/tw/twrnc-config'
 import { initSingleton } from '@/core/utils/init-singleton'
-import type { TwConfig } from '@/core/utils/twrnc'
-import { create } from '@/core/utils/twrnc'
+import type { TwConfig } from '@/libs/twrnc'
+import { create } from '@/libs/twrnc'
+import type { StrMap } from '@/libs/utility-types'
 
 let twMapMinified: StrMap<string> = {}
 let minifiedMapTw: StrMap<string> = {}

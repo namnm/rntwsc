@@ -1,7 +1,7 @@
 import child_process from 'node:child_process'
 
-import { jsonSafe } from '@/core/json-safe'
 import { path, resolvePath, resolvePathErr } from '@/devtools/path'
+import { jsonSafe } from '@/libs/json-safe'
 
 export const exec = (cmd: string) =>
   new Promise<void>((resolve, reject) => {

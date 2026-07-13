@@ -8,11 +8,7 @@
     "pnpm": ">=11"
   },
   "dependencies": {
-    "bezier-easing": "3.0.1",
-    "color-rgba": "3.0.0",
-    "immer": "11.1.11",
-    "twrnc": "4.16.0",
-    "use-immer": "0.11.0"
+    "color-rgba": "3.0.0"
   },
   "peerDependencies": {
     "react": "*",

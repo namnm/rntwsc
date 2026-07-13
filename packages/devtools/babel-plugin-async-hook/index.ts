@@ -1,9 +1,9 @@
 import type { NodePath, PluginObj } from '@babel/core'
 import { types as t } from '@babel/core'
 
-import { get } from '@/core/lodash'
 import { shouldTranspile } from '@/devtools/babel-config/should-transpile'
 import { getExpressionName } from '@/devtools/babel-plugin-tw/lib/get-expression-name'
+import { get } from '@/libs/lodash'
 
 const hookRegex = /^use[A-Z]/
 

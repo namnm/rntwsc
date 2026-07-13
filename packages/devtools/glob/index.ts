@@ -2,8 +2,8 @@ import fg from 'fast-glob'
 import type { Options } from 'globby'
 import { globby, globbySync } from 'globby'
 
-import { omit } from '@/core/lodash'
 import { path } from '@/devtools/path'
+import { omit } from '@/libs/lodash'
 
 export type { Options as GlobbyOptions } from 'globby'
 export { globby, globbySync } from 'globby'

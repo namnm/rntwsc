@@ -1,9 +1,9 @@
-import { Span } from '@rntwsc/core/components/text'
-import { useTranslationUntyped } from '@rntwsc/core/i18n'
-import { getLangUntyped } from '@rntwsc/core/i18n/config'
-import { useI18nSwitcherProps } from '@rntwsc/core/i18n/use-i18n-switcher-props'
-import { Pressable } from '@rntwsc/core/tw/components/pressable'
-import { View } from '@rntwsc/core/tw/components/view'
+import { Span } from 'rntwsc/components/text'
+import { useTranslationUntyped } from 'rntwsc/i18n'
+import { getLangUntyped } from 'rntwsc/i18n/config'
+import { useI18nSwitcherProps } from 'rntwsc/i18n/use-i18n-switcher-props'
+import { Pressable } from 'rntwsc/tw/components/pressable'
+import { View } from 'rntwsc/tw/components/view'
 
 import { languages } from '#/i18n/config'
 

@@ -4,21 +4,18 @@ import '#/polyfill/native'
 
 import { createStaticNavigation } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Portal } from '@rntwsc/core/components/portal'
-import { initDarkModeNative } from '@rntwsc/core/dark-mode/index.native'
-import {
-  I18nProviderNative,
-  initI18nNative,
-} from '@rntwsc/core/i18n/index.native'
-import { initThemeNative } from '@rntwsc/core/theme/index.native'
-import { TwClassNamePeerProvider } from '@rntwsc/core/tw/marker'
-import { tw } from '@rntwsc/core/tw/tw'
-import { composeProviders } from '@rntwsc/core/utils/compose-providers'
 import type { PropsWithChildren } from 'react'
 import { StrictMode, useEffect, useState } from 'react'
 import type { ViewStyle } from 'react-native'
 import { AppRegistry } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { Portal } from 'rntwsc/components/portal'
+import { initDarkModeNative } from 'rntwsc/dark-mode/index.native'
+import { I18nProviderNative, initI18nNative } from 'rntwsc/i18n/index.native'
+import { initThemeNative } from 'rntwsc/theme/index.native'
+import { TwClassNamePeerProvider } from 'rntwsc/tw/marker'
+import { tw } from 'rntwsc/tw/tw'
+import { composeProviders } from 'rntwsc/utils/compose-providers'
 
 import { rHome } from '#/pages/route-paths'
 import { routesNative } from '#/pages/routes.native'

@@ -2,17 +2,13 @@
 
 import '#/polyfill/server'
 
-import { useDarkModeUser } from '@rntwsc/core/dark-mode'
-import { useCurrentLangUntyped } from '@rntwsc/core/i18n'
-import { useTheme } from '@rntwsc/core/theme'
-import { getThemeClassName } from '@rntwsc/core/theme/config'
-import { clsx } from '@rntwsc/core/tw/clsx'
-import {
-  darkClassName,
-  lightClassName,
-  webClassName,
-} from '@rntwsc/core/tw/styles'
 import type { PropsWithChildren } from 'react'
+import { useDarkModeUser } from 'rntwsc/dark-mode'
+import { useCurrentLangUntyped } from 'rntwsc/i18n'
+import { useTheme } from 'rntwsc/theme'
+import { getThemeClassName } from 'rntwsc/theme/config'
+import { clsx } from 'rntwsc/tw/clsx'
+import { darkClassName, lightClassName, webClassName } from 'rntwsc/tw/styles'
 
 import { BrowserEnhancers } from '#/polyfill/browser'
 

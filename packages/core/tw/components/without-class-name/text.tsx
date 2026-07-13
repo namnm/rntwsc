@@ -3,9 +3,9 @@
 import type { NativeMethods, TextComponent, TextProps } from 'react-native'
 import { Text } from 'react-native'
 
-import type { StrMap } from '@/core/ts-utils'
 import type { CommonProps } from '@/core/tw/components/lib/common-props'
 import { normalizePropsRnw } from '@/core/tw/components/lib/normalize-props-rnw'
+import type { StrMap } from '@/libs/utility-types'
 
 export type TextPropsWocn = CommonProps<
   Omit<

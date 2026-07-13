@@ -1,6 +1,6 @@
-import type { StrMap } from '@/core/ts-utils'
 import type { ClassNameCalc } from '@/core/tw/class-name'
 import type { ExtraTwrncOptions } from '@/core/tw/lib/class-name-to-native'
+import type { StrMap } from '@/libs/utility-types'
 
 type CalcToken =
   | {

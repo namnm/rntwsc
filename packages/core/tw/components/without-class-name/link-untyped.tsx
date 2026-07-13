@@ -7,8 +7,8 @@ import type { GestureResponderEvent, TextStyle } from 'react-native'
 import { useCurrentLocaleUntyped } from '@/core/i18n'
 import { getDefaultLocaleUntyped } from '@/core/i18n/config'
 import { normalizePathname } from '@/core/navigation/normalize-pathname'
-import { qsStableStringify } from '@/core/qs'
-import type { NonUndefinedKeys } from '@/core/ts-utils'
+import { qsStableStringify } from '@/libs/qs'
+import type { NonUndefinedKeys } from '@/libs/utility-types'
 
 export type LinkPropsWocn<
   Routes = any,

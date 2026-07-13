@@ -1,18 +1,17 @@
-import type { StrMap } from '@/core/ts-utils'
 import { run as buildCssExtractVariablesJsons } from '@/devtools/css-extract-variables'
 import { fs } from '@/devtools/fs'
 import { glob, globby } from '@/devtools/glob'
 import { log } from '@/devtools/log'
 import { path } from '@/devtools/path'
+import type { StrMap } from '@/libs/utility-types'
 
 type Config = {
-  git?: string
-  scope?: string
+  name?: string
   version: string
   packages?: string
   dist?: string
   modules?: string[]
-  cross?: StrMap<string[]>
+  flatten?: string[]
   extraCopy?: StrMap<string[]>
 }
 type ParsedConfig = Omit<Required<Config>, 'packages' | 'dist'> & {
@@ -32,8 +31,7 @@ export const run = async (repoRoot: string) => {
     log.fatal('Missing "dist" in repo root package.json')
   }
 
-  const git = config.git || 'github:namnm/rntwsc'
-  const scope = config.scope || '@rntwsc'
+  const name = config.name || 'rntwsc'
   const version = config.version
   if (!version) {
     log.fatal('Missing "dist.version" in root package.json')
@@ -41,25 +39,23 @@ export const run = async (repoRoot: string) => {
 
   const packagesRoot = path.join(repoRoot, config.packages || 'packages')
   const distRoot = path.join(repoRoot, config.dist || 'dist')
-  const modules = config.modules || ['core', 'devtools']
-  const cross = config.cross || {
-    core: [],
-    devtools: ['core'],
-  }
+  const modules = config.modules || ['core', 'libs', 'devtools']
+  // Modules copied directly into the dist root instead of a named subfolder.
+  const flatten = config.flatten || ['core']
   const extraCopy = config.extraCopy || {
     core: [],
+    libs: [],
     devtools: ['tsconfig.base.json'],
   }
 
   const c: ParsedConfig = {
     repoRoot,
-    git,
-    scope,
+    name,
     version,
     packagesRoot,
     distRoot,
     modules,
-    cross,
+    flatten,
     extraCopy,
   }
 
@@ -70,11 +66,22 @@ export const run = async (repoRoot: string) => {
   await buildCssExtractVariablesJsons(c.distRoot, false)
   // generate css browser variants json
   await buildBrowserVariantsJson(c)
-  // build exports map and rewrite alias
-  // must run after the generation steps above have populated it
-  await Promise.all(modules.map(m => writePackageJson(c, m)))
-  await Promise.all(modules.map(m => rewriteAlias(c, m)))
+  // build the merged package.json's dependencies and exports map
+  // must run after the generation steps above have populated dist
+  await writePackageJson(c)
+  // rewrite alias imports across the whole merged package
+  await rewriteAlias(c)
 }
+
+// ---------------------------------------------------------------------------
+// Module destination prefix
+// ---------------------------------------------------------------------------
+
+// Resolve the dist-relative folder a module's files are copied into. Flattened
+// modules (e.g. "core") land directly at the dist root; others keep their name
+// as a subfolder (e.g. "libs" -> dist/libs, "devtools" -> dist/devtools).
+const destPrefix = (c: ParsedConfig, mod: string): string =>
+  c.flatten.includes(mod) ? '' : mod
 
 // ---------------------------------------------------------------------------
 // Copy code & assets
@@ -82,7 +89,7 @@ export const run = async (repoRoot: string) => {
 
 const copy = async (c: ParsedConfig, mod: string) => {
   const src = path.join(c.packagesRoot, mod)
-  const dst = path.join(c.distRoot, mod)
+  const dst = path.join(c.distRoot, destPrefix(c, mod))
 
   const srcFiles = await glob('**/*.{ts,tsx,js,svg,css,scss,patch}', {
     cwd: src,
@@ -114,15 +121,17 @@ const buildBrowserVariantsJson = async (c: ParsedConfig) => {
 
   await Promise.all(
     c.modules.map(async m => {
+      const prefix = destPrefix(c, m)
       const files = await glob('**/*.browser.{ts,tsx}', {
-        cwd: path.join(c.distRoot, m),
+        cwd: path.join(c.distRoot, prefix),
         relative: true,
         gitignore: false,
       })
       for (const f of files) {
         const isIndex = indexBrowserRegex.test(f)
         const base = f.replace(isIndex ? indexBrowserRegex : browserRegex, '')
-        const key = `${c.scope}/${m}${base ? `/${base}` : ''}`
+        const rel = [prefix, base].filter(Boolean).join('/')
+        const key = `${c.name}${rel ? `/${rel}` : ''}`
         map[key] = isIndex ? `${key}/index.browser` : `${key}.browser`
       }
     }),
@@ -138,15 +147,12 @@ const buildBrowserVariantsJson = async (c: ParsedConfig) => {
 // Merge package.json
 // ---------------------------------------------------------------------------
 
-// Write the dist package.json with merged deps and exports map.
-const writePackageJson = async (c: ParsedConfig, mod: string) => {
-  const [deps, exports] = await Promise.all([
-    mergeDeps(c, mod),
-    buildExports(c, mod),
-  ])
+// Write the single dist package.json with merged deps and exports map.
+const writePackageJson = async (c: ParsedConfig) => {
+  const [deps, exports] = await Promise.all([mergeDeps(c), buildExports(c)])
 
   const pkg: PkgJson = {
-    name: `${c.scope}/${mod}`,
+    name: c.name,
     version: c.version,
     type: 'commonjs',
     exports,
@@ -165,7 +171,7 @@ const writePackageJson = async (c: ParsedConfig, mod: string) => {
       pkg[k] = deps[k]
     })
 
-  await fs.outputJson(path.join(c.distRoot, mod, 'package.json'), pkg)
+  await fs.outputJson(path.join(c.distRoot, 'package.json'), pkg)
 }
 
 type Deps = {
@@ -187,17 +193,16 @@ type PkgJson = Partial<Deps> & {
 type ExportsValue = string | StrMap<string>
 type SubPkgJson = Partial<Deps>
 
-// Merge dependencies from all sub-package.json files within a module into one
-// flat set. Cross-module deps are added as peerDependencies so consumers
-// install them explicitly rather than getting duplicate copies.
-const mergeDeps = async (c: ParsedConfig, mod: string) => {
+// Merge dependencies from every sub-package.json across all modules into one
+// flat set for the single published package.
+const mergeDeps = async (c: ParsedConfig) => {
   const deps: Omit<Deps, 'devDependencies'> = {
     dependencies: {},
     peerDependencies: {},
   }
 
   const paths = await glob('**/package.json', {
-    cwd: path.join(c.packagesRoot, mod),
+    cwd: c.packagesRoot,
   })
 
   const promises = paths.map(async p => {
@@ -210,10 +215,6 @@ const mergeDeps = async (c: ParsedConfig, mod: string) => {
       })
   })
   await Promise.all(promises)
-  const cross = c.cross[mod] || []
-  for (const dep of cross) {
-    deps.dependencies[`${c.scope}/${dep}`] = `${c.git}#${c.version}&path:${dep}`
-  }
 
   return deps
 }
@@ -222,29 +223,30 @@ const platformSuffixes: StrMap<string> = {
   '.native': 'react-native',
 }
 
-const buildExports = async (
-  c: ParsedConfig,
-  mod: string,
-): Promise<StrMap<ExportsValue>> => {
-  const srcMod = path.join(c.distRoot, mod)
+const buildExports = async (c: ParsedConfig): Promise<StrMap<ExportsValue>> => {
   const [codeFiles, assetFiles] = await Promise.all([
     glob('**/*.{ts,tsx}', {
-      cwd: srcMod,
+      cwd: c.distRoot,
       ignore: ['**/*.test.*', '**/*.d.ts'],
       relative: true,
       gitignore: false,
     }),
     glob('**/*.{svg,css,scss,js,json}', {
-      cwd: srcMod,
+      cwd: c.distRoot,
       relative: true,
       gitignore: false,
     }),
   ])
 
   const codeExt = /\.(tsx?|jsx?)$/
-  const extraCopy = c.extraCopy[mod] || []
-  codeFiles.push(...extraCopy.filter(f => codeExt.test(f)))
-  assetFiles.push(...extraCopy.filter(f => !codeExt.test(f)))
+  for (const mod of c.modules) {
+    const prefix = destPrefix(c, mod)
+    const extra = (c.extraCopy[mod] || []).map(f =>
+      prefix ? `${prefix}/${f}` : f,
+    )
+    codeFiles.push(...extra.filter(f => codeExt.test(f)))
+    assetFiles.push(...extra.filter(f => !codeExt.test(f)))
+  }
 
   const exports: StrMap<ExportsValue> = {}
 
@@ -318,20 +320,18 @@ const buildExports = async (
 
 const aliasRegex = /(['"`])(@\/[^'"`]+)\1/g
 
-// Rewrite all @/ alias imports in dist files to @rntwsc/ scoped package
-// imports so they resolve correctly after installation in node_modules.
-const rewriteAlias = async (c: ParsedConfig, mod: string): Promise<void> => {
-  const distMod = path.join(c.distRoot, mod)
-
+// Rewrite all @/ alias imports in dist files to the published package's scope
+// so they resolve correctly after installation in node_modules.
+const rewriteAlias = async (c: ParsedConfig): Promise<void> => {
   const files: string[] = await globby('**/*.{ts,tsx,js,css,scss}', {
-    cwd: distMod,
+    cwd: c.distRoot,
     gitignore: false,
     absolute: true,
     onlyFiles: true,
   })
 
   const errs = (
-    await Promise.all(files.map(f => rewriteAliasInFile(c, f, mod)))
+    await Promise.all(files.map(f => rewriteAliasInFile(c, f)))
   ).flat()
   if (!errs.length) {
     return
@@ -340,19 +340,17 @@ const rewriteAlias = async (c: ParsedConfig, mod: string): Promise<void> => {
   for (const e of errs) {
     log.error(e)
   }
-  log.fatal(`${errs.length} unresolvable import(s) in module "${mod}"`)
+  log.fatal(`${errs.length} unresolvable import(s)`)
 }
 
-// Rewrite aliases in a single file. Same-module and cross-module imports both
-// become @rntwsc/ paths - same-module self-references resolve via the exports
-// map generated by buildExports.
+// Rewrite aliases in a single file. Every module now lives under the same
+// published package, so any @/<module>/... import simply maps to the dist
+// path that module was copied to (empty prefix for flattened modules).
 const rewriteAliasInFile = async (
   c: ParsedConfig,
   f: string,
-  mod: string,
 ): Promise<string[]> => {
   const errs: string[] = []
-  const cross = c.cross[mod] || []
   const original = await fs.readFile(f, 'utf8')
 
   const rewritten = original.replace(
@@ -364,16 +362,16 @@ const rewriteAliasInFile = async (
         slashIdx === -1 ? withoutAt : withoutAt.slice(0, slashIdx)
       const subPath = slashIdx === -1 ? '' : withoutAt.slice(slashIdx + 1)
 
-      if (importMod !== mod && !cross.includes(importMod)) {
+      if (!c.modules.includes(importMod)) {
         errs.push(
-          `${path.relative(c.packagesRoot, f)}: unresolvable import "${importPath}" - "${importMod}" is not in cross deps for "${mod}"`,
+          `${path.relative(c.packagesRoot, f)}: unresolvable import "${importPath}" - "${importMod}" is not a known module`,
         )
         return m
       }
 
-      const pkg = subPath
-        ? `${c.scope}/${importMod}/${subPath}`
-        : `${c.scope}/${importMod}`
+      const prefix = destPrefix(c, importMod)
+      const rel = [prefix, subPath].filter(Boolean).join('/')
+      const pkg = rel ? `${c.name}/${rel}` : c.name
       return `${q}${pkg}${q}`
     },
   )

@@ -2,13 +2,6 @@
 
 Build script for distributing the framework modules as standalone packages without publishing to npm. Consumers install via a pnpm git URL with a path selector.
 
-## Modules
-
-| Module            | Package          | Depends on |
-| ----------------- | ---------------- | ---------- |
-| packages/core     | @rntwsc/core     | (none)     |
-| packages/devtools | @rntwsc/devtools | core       |
-
 Each module is a collection of sub packages (for example core/tw, devtools/eslint). The build merges them into one installable package per module.
 
 ## Running

@@ -1,10 +1,10 @@
-import { Button } from '@rntwsc/core/components/button'
-import { H1, H2, H3, Span } from '@rntwsc/core/components/text'
-import { useTranslationUntyped } from '@rntwsc/core/i18n'
-import { isWeb } from '@rntwsc/core/platform'
-import { useSafeAreaPadding } from '@rntwsc/core/responsive/use-safe-area'
-import { ScrollView } from '@rntwsc/core/tw/components/scroll-view'
-import { View } from '@rntwsc/core/tw/components/view'
+import { Button } from 'rntwsc/components/button'
+import { H1, H2, H3, Span } from 'rntwsc/components/text'
+import { useTranslationUntyped } from 'rntwsc/i18n'
+import { isWeb } from 'rntwsc/platform'
+import { useSafeAreaPadding } from 'rntwsc/responsive/use-safe-area'
+import { ScrollView } from 'rntwsc/tw/components/scroll-view'
+import { View } from 'rntwsc/tw/components/view'
 
 import { NavLayout } from '#/components/nav-layout'
 

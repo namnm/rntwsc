@@ -19,7 +19,7 @@ import { useWindowDimensions } from '@/core/responsive/use-window-dimensions'
 import { Input } from '@/core/tw/components/input'
 import { Pressable } from '@/core/tw/components/pressable'
 import { View } from '@/core/tw/components/view'
-import { useControllableState } from '@/core/utils/use-controllable-state'
+import { useControllableState } from '@/libs/hooks'
 
 export type {
   SelectItem,

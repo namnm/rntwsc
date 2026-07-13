@@ -1,7 +1,7 @@
 // in turbopack, all css/scss must be placed inside src for esm
 // if any code in cjs import css/scss, it will error
 @use 'tailwindcss';
-@use '@rntwsc/core/tw/styles.scss' as tw;
-@use '@rntwsc/core/components/styles.scss' as components;
-@use '@rntwsc/core/themes/all.scss' as themes;
+@use 'rntwsc/tw/styles.scss' as tw;
+@use 'rntwsc/components/styles.scss' as components;
+@use 'rntwsc/themes/all.scss' as themes;
 @config './tailwind.config.cjs';

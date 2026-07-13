@@ -1,4 +1,4 @@
-import type { Nullish, StrMap } from '@/core/ts-utils'
+import type { Nullish, StrMap } from '@/libs/utility-types'
 
 // style should be flatten already in create class name component
 export const styleToProps = (props: StrMap, styleProps: string[] | Nullish) => {

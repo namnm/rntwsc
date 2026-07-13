@@ -1,10 +1,10 @@
 import { generate, parse, walk } from 'css-tree'
 import { compileString } from 'sass'
 
-import type { StrMap } from '@/core/ts-utils'
 import { fs } from '@/devtools/fs'
 import { glob } from '@/devtools/glob'
 import { log } from '@/devtools/log'
+import type { StrMap } from '@/libs/utility-types'
 
 const extractVariablesRegex = /\.extract-variables\.(css|scss)$/
 
