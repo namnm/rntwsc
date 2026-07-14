@@ -19,16 +19,16 @@
     "react-dom": "19.2.3",
     "react-native-svg-web": "1.0.9",
     "react-native-web": "0.21.2",
-    "rntwsc": "github:namnm/rntwsc#2476fd6704c530e3ce8c82e690013bebf3db8d0d"
+    "rntwsc": "github:namnm/rntwsc#f888cfbb1fc7945bc3adf7a45e6450d9344cd804"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.2",
     "@types/react-dom": "19.2.3",
-    "autoprefixer": "10.5.2",
+    "autoprefixer": "10.5.3",
     "baseline-browser-mapping": "latest",
     "cross-env": "10.1.0",
     "postcss-rename": "0.8.1",
     "tailwindcss": "4.3.2",
-    "tsx": "4.23.0"
+    "tsx": "4.23.1"
   }
 }

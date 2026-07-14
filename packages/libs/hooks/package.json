@@ -9,8 +9,7 @@
   },
   "dependencies": {
     "bezier-easing": "3.0.1",
-    "color-rgba": "3.0.0",
-    "react-use": "17.6.1"
+    "color-rgba": "3.0.0"
   },
   "peerDependencies": {
     "react": "*"
