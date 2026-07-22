@@ -1,0 +1,19 @@
+packages:
+  - ./app
+  - ./web
+allowBuilds:
+  '@parcel/watcher': false
+  esbuild: false
+  sharp: false
+overrides:
+  react: 19.2.3
+  react-dom: 19.2.3
+  react-native: 0.86.0
+  react-native-reanimated: 4.5.2
+  react-native-safe-area-context: 5.8.0
+  react-native-worklets: 0.11.1
+patchedDependencies:
+  eslint-plugin-import: patches/eslint-plugin-import.patch
+  eslint-plugin-react: patches/eslint-plugin-react.patch
+  react-native-web: patches/react-native-web.patch
+  unicorn-magic: patches/unicorn-magic.patch

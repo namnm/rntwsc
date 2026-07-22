@@ -1,4 +1,5 @@
-import { run as buildCssExtractVariablesJsons } from '@/devtools/css-extract-variables'
+import { writeReadmeWithGithubLinks } from '@/cli/readme'
+import { cssExtractVariables } from '@/devtools/css-extract-variables'
 import { fs } from '@/devtools/fs'
 import { glob, globby } from '@/devtools/glob'
 import { log } from '@/devtools/log'
@@ -61,9 +62,12 @@ export const run = async (repoRoot: string) => {
 
   await fs.remove(c.distRoot)
   // copy every module's assets and raw ts/tsx directly
-  await Promise.all(modules.map(m => copy(c, m)))
+  await Promise.all([
+    ...modules.map(m => copy(c, m)),
+    writeReadmeWithGithubLinks(c.repoRoot, c.distRoot),
+  ])
   // generate css extract variables jsons
-  await buildCssExtractVariablesJsons(c.distRoot, false)
+  await cssExtractVariables(c.distRoot, false)
   // generate css browser variants json
   await buildBrowserVariantsJson(c)
   // build the merged package.json's dependencies and exports map

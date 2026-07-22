@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "css-tree": "3.2.1",
-    "sass": "1.101.0"
+    "sass": "1.101.3"
   },
   "devDependencies": {
     "@types/css-tree": "2.3.11"

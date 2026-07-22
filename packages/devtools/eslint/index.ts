@@ -1,7 +1,7 @@
 import { binRequireResolve, cmd, exec } from '@/devtools/exec'
 import { resolvePath } from '@/devtools/path'
 
-export const eslint = async (target: string, repoRoot: string) =>
+export const eslintCmd = async (target: string, repoRoot: string) =>
   cmd({
     bin: await binRequireResolve('@/devtools/eslint', undefined, repoRoot),
     args: [
@@ -13,5 +13,5 @@ export const eslint = async (target: string, repoRoot: string) =>
     target,
   })
 
-export const run = (repoRoot: string, target = repoRoot) =>
-  eslint(target, repoRoot).then(exec)
+export const eslint = (repoRoot: string, target = repoRoot) =>
+  eslintCmd(target, repoRoot).then(exec)

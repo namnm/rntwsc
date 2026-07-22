@@ -1,4 +1,5 @@
-# AUTOMATICALLY INHERIT FROM GITIGNORE - BEGIN
+# AUTOMATED PRAGMA - BEGIN
+
 # Xcode
 #
 **/build/
@@ -71,10 +72,6 @@
 # testing
 **/coverage/
 
-# python
-**/__pycache__/
-**/.venv/
-
 # misc
 **/.DS_Store
 **/.env
@@ -102,13 +99,17 @@
 **/dist/
 **/dist-*/
 
-# terraform
-**/.terraform/
-**/.terraform.lock.hcl
+# python
+**/__pycache__/
+**/.venv/
 
 # go rust
 **/.*-cache/
 **/target/
+
+# terraform
+**/.terraform/
+**/.terraform.lock.hcl
 
 # pick one between npm/yarn/pnpm
 **/package-lock.json
@@ -118,13 +119,12 @@
 # mirror copy from playground/turbopack/src
 **/playground/webpack/src/
 
-# yaml templates
-**/*template.yaml
-**/*template*/**/*.yaml
 # other files those dont need prettier
 **/package-lock.json
 **/yarn.lock
 **/pnpm-lock.yaml
+
 # match with eslint ignore
 **/*.min.*
-# AUTOMATICALLY INHERIT FROM GITIGNORE - END
+
+# AUTOMATED PRAGMA - END

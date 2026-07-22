@@ -1,0 +1,16 @@
+{
+  "name": "@rntwsc/cli-create-rntwsc-app",
+  "version": "0.0.0-locked",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=24.11",
+    "pnpm": ">=11"
+  },
+  "dependencies": {
+    "tsx": "4.23.1"
+  },
+  "bin": {
+    "create-rntwsc-app": "./bin/create-rntwsc-app.js"
+  }
+}

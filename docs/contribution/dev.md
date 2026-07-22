@@ -1,3 +1,15 @@
+<!-- START doctoc -->
+
+- [Development](#development)
+  - [Prerequisites](#prerequisites)
+  - [Running the playground](#running-the-playground)
+  - [Building packages](#building-packages)
+  - [Extracting theme CSS variables](#extracting-theme-css-variables)
+  - [Workspace layout](#workspace-layout)
+  - [Adding an SVG icon](#adding-an-svg-icon)
+
+<!-- END doctoc -->
+
 # Development
 
 ## Prerequisites

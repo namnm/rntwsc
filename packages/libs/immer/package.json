@@ -8,7 +8,7 @@
     "pnpm": ">=11"
   },
   "dependencies": {
-    "immer": "11.1.11",
+    "immer": "11.1.15",
     "use-immer": "0.11.0"
   }
 }

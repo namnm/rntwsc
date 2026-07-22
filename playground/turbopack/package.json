@@ -22,13 +22,13 @@
     "rntwsc": "github:namnm/rntwsc#f888cfbb1fc7945bc3adf7a45e6450d9344cd804"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "4.3.2",
+    "@tailwindcss/postcss": "4.3.3",
     "@types/react-dom": "19.2.3",
-    "autoprefixer": "10.5.3",
+    "autoprefixer": "10.5.4",
     "baseline-browser-mapping": "latest",
     "cross-env": "10.1.0",
     "postcss-rename": "0.8.1",
-    "tailwindcss": "4.3.2",
+    "tailwindcss": "4.3.3",
     "tsx": "4.23.1"
   }
 }

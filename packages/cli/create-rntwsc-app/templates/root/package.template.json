@@ -1,0 +1,33 @@
+{
+  "name": "__PROJECT_NAME__",
+  "version": "0.0.0-locked",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "fmt": "node ./devtools normalize,doctoc,eslint,prettier",
+    "normalize": "node ./devtools normalize",
+    "doctoc": "node ./devtools doctoc",
+    "eslint": "node ./devtools eslint",
+    "stylelint": "node ./devtools stylelint",
+    "prettier": "node ./devtools prettier",
+    "ts": "node ./devtools tsc,type-coverage",
+    "tsc": "node ./devtools tsc",
+    "type-coverage": "node ./devtools type-coverage",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "engines": {
+    "node": ">=24.11",
+    "pnpm": ">=11"
+  },
+  "dependencies": {
+    "rntwsc": "__RNTWSC_VERSION__"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.1",
+    "tailwindcss": "4.3.3",
+    "tsx": "4.23.1",
+    "typescript": "6.0.3",
+    "vitest": "4.1.10"
+  }
+}

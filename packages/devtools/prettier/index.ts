@@ -1,7 +1,7 @@
 import { binRequireResolve, cmd, exec } from '@/devtools/exec'
 import { resolvePath } from '@/devtools/path'
 
-export const prettier = async (target: string, repoRoot: string) =>
+export const prettierCmd = async (target: string, repoRoot: string) =>
   cmd({
     bin: await binRequireResolve('@/devtools/prettier', undefined, repoRoot),
     args: [
@@ -13,5 +13,5 @@ export const prettier = async (target: string, repoRoot: string) =>
     target,
   })
 
-export const run = (repoRoot: string, target = repoRoot) =>
-  prettier(target, repoRoot).then(exec)
+export const prettier = (repoRoot: string, target = repoRoot) =>
+  prettierCmd(target, repoRoot).then(exec)

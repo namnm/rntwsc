@@ -1,3 +1,14 @@
+<!-- START doctoc -->
+
+- [Theme](#theme)
+  - [Setup](#setup)
+  - [Reading the current theme](#reading-the-current-theme)
+  - [Switching theme](#switching-theme)
+  - [Drop-in switcher](#drop-in-switcher)
+  - [Custom theme](#custom-theme)
+
+<!-- END doctoc -->
+
 # Theme
 
 10 built-in themes, each with a dark mode variant. Works across server, browser, and native. See dark-mode.md for the separate dark, light, and system toggle that switches between a theme's two variants.

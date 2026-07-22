@@ -5,9 +5,9 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "fmt": "node ./devtools normalize,eslint,stylelint,prettier",
-    "doctoc": "node ./devtools doctoc",
+    "fmt": "node ./devtools sync-create-rntwsc-app-templates,normalize,doctoc,eslint,stylelint,prettier",
     "normalize": "node ./devtools normalize",
+    "doctoc": "node ./devtools doctoc",
     "eslint": "node ./devtools eslint",
     "stylelint": "node ./devtools stylelint",
     "prettier": "node ./devtools prettier",
@@ -16,8 +16,10 @@
     "type-coverage": "node ./devtools type-coverage",
     "test": "vitest run",
     "test:watch": "vitest",
-    "css-extract-variables": "node ./devtools css-extract-variables",
-    "dist": "node ./devtools build-dist"
+    "dist": "node ./devtools build-dist",
+    "dist:cli": "node ./devtools build-dist-cli",
+    "extract": "node ./devtools css-extract-variables",
+    "sync": "node ./devtools sync-create-rntwsc-app-templates"
   },
   "engines": {
     "node": ">=24.11",
@@ -25,12 +27,12 @@
   },
   "devDependencies": {
     "@types/node": "26.1.1",
-    "tailwindcss": "4.3.2",
+    "tailwindcss": "4.3.3",
     "tsx": "4.23.1",
     "typescript": "6.0.3",
     "vitest": "4.1.10"
   },
   "dist": {
-    "version": "0.0.2"
+    "version": "0.0.5"
   }
 }

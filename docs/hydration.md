@@ -1,3 +1,14 @@
+<!-- START doctoc -->
+
+- [Hydration](#hydration)
+  - [Fetch](#fetch)
+  - [GraphQL](#graphql)
+  - [Rendering dehydrateJsx](#rendering-dehydratejsx)
+  - [Benefit: works the same across the initial load and a client navigation](#benefit-works-the-same-across-the-initial-load-and-a-client-navigation)
+  - [Benefit: refetch works after hydration too](#benefit-refetch-works-after-hydration-too)
+
+<!-- END doctoc -->
+
 # Hydration
 
 useFetch and useApollo fetch data once on the server, embed the result into the page, and the client picks it up with no second request and no loading flash. The same hook works as a plain fetch or as a GraphQL query, and the same call also works unmodified on a client navigation, where it just fetches normally.

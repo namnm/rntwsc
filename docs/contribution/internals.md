@@ -1,3 +1,11 @@
+<!-- START doctoc -->
+
+- [Internals](#internals)
+  - [Turbopack](#turbopack)
+  - [Patching react-native-web](#patching-react-native-web)
+
+<!-- END doctoc -->
+
 # Internals
 
 ## Turbopack

@@ -1,0 +1,7 @@
+{
+  "description": "Tailwind CSS クラス名を使用した React Native。NextJS App Router SSR ストリームと 互換性があります。",
+  "tagline": "__APP_NAME_PASCAL__",
+  "hero_description": "一度書けばどこでも動く。Next.js App Router の RSC および SSR ストリーミングに完全対応した Tailwind CSS クラス名を React Native で使用できます。クラス名はネイティブではビルド時にトランスパイルされ、ウェブではそのまま保持されます。",
+  "get_started": "はじめる",
+  "view_github": "GitHub で見る"
+}

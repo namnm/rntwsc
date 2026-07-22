@@ -1,3 +1,15 @@
+<!-- START doctoc -->
+
+- [TODO](#todo)
+  - [Tooling](#tooling)
+    - [create-rntwsc-app](#create-rntwsc-app)
+  - [Hydration / Core](#hydration--core)
+    - [Native: split index.native.ts into its own implementation](#native-split-indexnativets-into-its-own-implementation)
+    - [Request cancellation / race condition](#request-cancellation--race-condition)
+    - [Apollo auto-refetch does not clear hydrationErr](#apollo-auto-refetch-does-not-clear-hydrationerr)
+
+<!-- END doctoc -->
+
 # TODO
 
 ## Tooling

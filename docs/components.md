@@ -1,3 +1,11 @@
+<!-- START doctoc -->
+
+- [Components](#components)
+  - [Available components](#available-components)
+  - [Demos](#demos)
+
+<!-- END doctoc -->
+
 # Components
 
 Built-in React Native components, styled with Tailwind class names (see tailwind.md), working across server, browser, and native. Import each one from its own path, for example:

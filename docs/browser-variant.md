@@ -1,3 +1,10 @@
+<!-- START doctoc -->
+
+- [Browser variant](#browser-variant)
+  - [When to add a browser file](#when-to-add-a-browser-file)
+
+<!-- END doctoc -->
+
 # Browser variant
 
 Works like Metro's native, ios, and android resolution, but for the browser bundle. A foo.browser.ts or foo.browser.tsx file next to foo.ts is picked up automatically as the browser build's implementation of the same module - resolved at the bundler's resolver level (webpack alias, Turbopack resolveAlias), before any babel transform runs, so Next's own RSC boundary validation already sees the correct file. See contribution/turbopack.md for the resolver mechanism in both bundlers.

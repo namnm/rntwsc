@@ -1,3 +1,13 @@
+<!-- START doctoc -->
+
+- [Navigation](#navigation)
+  - [Add a route](#add-a-route)
+  - [Link](#link)
+  - [Read the current route](#read-the-current-route)
+  - [Internals](#internals)
+
+<!-- END doctoc -->
+
 # Navigation
 
 Works across server, browser, and native with a unified API.

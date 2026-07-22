@@ -1,15 +1,15 @@
-// shortcut to run devtools scripts
+// shortcut to run devtools scripts - published as rntwsc/devtools
+// also usable by a consumer monorepo to run the same eslint/prettier/stylelint/tsc
 
-import { run as buildDist } from '@/devtools/build-dist'
-import { run as cssExtractVariables } from '@/devtools/css-extract-variables'
-import { run as doctoc } from '@/devtools/doctoc'
-import { run as eslint } from '@/devtools/eslint'
+import { cssExtractVariables } from '@/devtools/css-extract-variables'
+import { doctoc } from '@/devtools/doctoc'
+import { eslint } from '@/devtools/eslint'
 import { log } from '@/devtools/log'
-import { run as normalize } from '@/devtools/normalize'
-import { run as prettier } from '@/devtools/prettier'
-import { run as stylelint } from '@/devtools/stylelint'
-import { run as tsc } from '@/devtools/tsc'
-import { run as typeCoverage } from '@/devtools/type-coverage'
+import { normalize } from '@/devtools/normalize'
+import { prettier } from '@/devtools/prettier'
+import { stylelint } from '@/devtools/stylelint'
+import { tsc } from '@/devtools/tsc'
+import { typeCoverage } from '@/devtools/type-coverage'
 
 const fns = {
   doctoc,
@@ -20,7 +20,6 @@ const fns = {
   tsc,
   'type-coverage': typeCoverage,
   'css-extract-variables': cssExtractVariables,
-  'build-dist': buildDist,
 }
 type Pkg = keyof typeof fns
 const supported = Object.keys(fns) as Pkg[]
@@ -69,7 +68,6 @@ export const run = async (o: Options) => {
   checkAndPush(promises, 'tsc', o)
   checkAndPush(promises, 'type-coverage', o)
   checkAndPush(promises, 'css-extract-variables', o)
-  checkAndPush(promises, 'build-dist', o)
 
   await Promise.all(promises).catch((err: Error) => log.stack(err, 'fatal'))
 }

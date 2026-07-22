@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<document
+  colorMatched="YES"
+  initialViewController="01J-lp-oVM"
+  launchScreen="YES"
+  propertyAccessControl="none"
+  targetRuntime="iOS.CocoaTouch"
+  toolsVersion="15702"
+  type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB"
+  useAutolayout="YES"
+  useSafeAreas="YES"
+  useTraitCollections="YES"
+  version="3.0"
+>
+  <device appearance="light" id="retina4_7" orientation="portrait" />
+  <dependencies>
+    <deployment identifier="iOS" />
+    <plugIn
+      identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin"
+      version="15704"
+    />
+    <capability minToolsVersion="9.0" name="Safe area layout guides" />
+    <capability
+      minToolsVersion="8.0"
+      name="documents saved in the Xcode 8 format"
+    />
+  </dependencies>
+  <scenes>
+    <!--View Controller-->
+    <scene sceneID="EHf-IW-A2E">
+      <objects>
+        <viewController id="01J-lp-oVM" sceneMemberID="viewController">
+          <view contentMode="scaleToFill" id="Ze5-6b-2t3" key="view">
+            <rect height="667" key="frame" width="375" x="0.0" y="0.0" />
+            <autoresizingMask
+              heightSizable="YES"
+              key="autoresizingMask"
+              widthSizable="YES"
+            />
+            <subviews>
+              <label
+                baselineAdjustment="alignBaselines"
+                clipsSubviews="YES"
+                contentMode="left"
+                horizontalHuggingPriority="251"
+                id="GJd-Yh-RWb"
+                lineBreakMode="middleTruncation"
+                minimumFontSize="18"
+                opaque="NO"
+                text="__APP_NAME_PASCAL__"
+                textAlignment="center"
+                translatesAutoresizingMaskIntoConstraints="NO"
+                userInteractionEnabled="NO"
+                verticalHuggingPriority="251"
+              >
+                <rect height="43" key="frame" width="375" x="0.0" y="202" />
+                <fontDescription
+                  key="fontDescription"
+                  pointSize="36"
+                  type="boldSystem"
+                />
+                <nil key="highlightedColor" />
+              </label>
+              <label
+                baselineAdjustment="alignBaselines"
+                clipsSubviews="YES"
+                contentMode="left"
+                horizontalHuggingPriority="251"
+                id="MN2-I3-ftu"
+                lineBreakMode="tailTruncation"
+                minimumFontSize="9"
+                opaque="NO"
+                text="Powered by React Native"
+                textAlignment="center"
+                translatesAutoresizingMaskIntoConstraints="NO"
+                userInteractionEnabled="NO"
+                verticalHuggingPriority="251"
+              >
+                <rect height="21" key="frame" width="375" x="0.0" y="626" />
+                <fontDescription
+                  key="fontDescription"
+                  pointSize="17"
+                  type="system"
+                />
+                <nil key="highlightedColor" />
+              </label>
+            </subviews>
+            <color
+              cocoaTouchSystemColor="whiteColor"
+              key="backgroundColor"
+              systemColor="systemBackgroundColor"
+            />
+            <constraints>
+              <constraint
+                constant="20"
+                firstAttribute="bottom"
+                firstItem="Bcu-3y-fUS"
+                id="OZV-Vh-mqD"
+                secondAttribute="bottom"
+                secondItem="MN2-I3-ftu"
+              />
+              <constraint
+                firstAttribute="centerX"
+                firstItem="Bcu-3y-fUS"
+                id="Q3B-4B-g5h"
+                secondAttribute="centerX"
+                secondItem="GJd-Yh-RWb"
+              />
+              <constraint
+                firstAttribute="centerX"
+                firstItem="MN2-I3-ftu"
+                id="akx-eg-2ui"
+                secondAttribute="centerX"
+                secondItem="Bcu-3y-fUS"
+              />
+              <constraint
+                firstAttribute="leading"
+                firstItem="MN2-I3-ftu"
+                id="i1E-0Y-4RG"
+                secondAttribute="leading"
+                secondItem="Bcu-3y-fUS"
+              />
+              <constraint
+                constant="1"
+                firstAttribute="centerY"
+                firstItem="GJd-Yh-RWb"
+                id="moa-c2-u7t"
+                multiplier="1/3"
+                secondAttribute="bottom"
+                secondItem="Ze5-6b-2t3"
+              />
+              <constraint
+                firstAttribute="leading"
+                firstItem="GJd-Yh-RWb"
+                id="x7j-FC-K8j"
+                secondAttribute="leading"
+                secondItem="Bcu-3y-fUS"
+                symbolic="YES"
+              />
+            </constraints>
+            <viewLayoutGuide id="Bcu-3y-fUS" key="safeArea" />
+          </view>
+        </viewController>
+        <placeholder
+          id="iYj-Kq-Ea1"
+          placeholderIdentifier="IBFirstResponder"
+          sceneMemberID="firstResponder"
+          userLabel="First Responder"
+        />
+      </objects>
+      <point key="canvasLocation" x="52.173913043478265" y="375" />
+    </scene>
+  </scenes>
+</document>

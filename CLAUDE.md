@@ -1,9 +1,18 @@
+<!-- START doctoc -->
+
+- [Coding Conventions](#coding-conventions)
+- [Formatting Rules](#formatting-rules)
+  - [Characters](#characters)
+  - [Formatting](#formatting)
+
+<!-- END doctoc -->
+
 > Read [README.md](README.md) and [docs/contribution.md](docs/contribution.md).
 
 # Coding Conventions
 
 - Always use English in code and comments. Chat responses are in Vietnamese.
-- Prefer arrow function and method.
+- Do not write long comments in code. 1-2 lines are good, be concise, focus, dev friendly.
 
 # Formatting Rules
 

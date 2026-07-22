@@ -32,7 +32,7 @@ const toVars = (src: string, filename: string): StrMap<string> => {
   return vars
 }
 
-export const run = async (dir: string, gitignore = true) => {
+export const cssExtractVariables = async (dir: string, gitignore = true) => {
   const files = await glob('**/*.extract-variables.{css,scss}', {
     cwd: dir,
     gitignore,

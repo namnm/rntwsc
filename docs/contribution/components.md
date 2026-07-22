@@ -1,3 +1,16 @@
+<!-- START doctoc -->
+
+- [Component development](#component-development)
+  - [Key locations](#key-locations)
+  - [Reference components](#reference-components)
+  - [Adding a component](#adding-a-component)
+  - [cva conventions](#cva-conventions)
+  - [Trigger to drawer pattern](#trigger-to-drawer-pattern)
+  - [Single or multiple props pattern](#single-or-multiple-props-pattern)
+  - [SVG icons](#svg-icons)
+
+<!-- END doctoc -->
+
 # Component development
 
 ## Key locations

@@ -1,3 +1,14 @@
+<!-- START doctoc -->
+
+- [Dark mode](#dark-mode)
+  - [Reading and setting dark mode](#reading-and-setting-dark-mode)
+  - [Resolving the effective state](#resolving-the-effective-state)
+  - [Drop-in switcher](#drop-in-switcher)
+  - [Setup on native](#setup-on-native)
+  - [Internals](#internals)
+
+<!-- END doctoc -->
+
 # Dark mode
 
 Three states: dark, light, or system (follow the OS color scheme). Independent from theme - dark mode toggles the dark variant of whichever theme is active, via the dark: selector prefix (see tailwind.md). Works across server, browser, and native.

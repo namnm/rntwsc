@@ -1,3 +1,18 @@
+<!-- START doctoc -->
+
+- [Tailwind](#tailwind)
+  - [Core usage](#core-usage)
+  - [Extras: transitions (Reanimated)](#extras-transitions-reanimated)
+  - [Extras: animations (Reanimated)](#extras-animations-reanimated)
+  - [Extras: grid (computed layout, View only)](#extras-grid-computed-layout-view-only)
+  - [Extras: other](#extras-other)
+  - [Special props](#special-props)
+  - [Selectors](#selectors)
+  - [Minify](#minify)
+  - [cva convention](#cva-convention)
+
+<!-- END doctoc -->
+
 # Tailwind
 
 All class strings are compiled to style objects at build time by a Babel plugin. Unsupported class names are caught at compile time.

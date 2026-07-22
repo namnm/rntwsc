@@ -3,7 +3,7 @@ import { fs } from '@/devtools/fs'
 import { glob } from '@/devtools/glob'
 import { path } from '@/devtools/path'
 
-export const ts = async (repoRoot: string) => {
+export const tscCmd = async (repoRoot: string) => {
   const tsconfig = await getTsconfig(repoRoot)
 
   const tsc = tsconfig.map(async p =>
@@ -50,5 +50,5 @@ const getTsconfigUncached = async (repoRoot: string) => {
   return arr
 }
 
-export const run = (repoRoot: string) =>
-  ts(repoRoot).then(cmds => Promise.all(cmds.map(c => exec(c))))
+export const tsc = (repoRoot: string) =>
+  tscCmd(repoRoot).then(cmds => Promise.all(cmds.map(c => exec(c))))

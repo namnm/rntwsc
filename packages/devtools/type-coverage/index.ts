@@ -1,7 +1,7 @@
 import { binRequireResolve, cmd, exec } from '@/devtools/exec'
 import { getTsconfig } from '@/devtools/tsc'
 
-export const ts = async (repoRoot: string) => {
+export const typeCoverageCmd = async (repoRoot: string) => {
   const tsconfig = await getTsconfig(repoRoot)
 
   const coverage = tsconfig.map(async p =>
@@ -20,5 +20,5 @@ export const ts = async (repoRoot: string) => {
   return Promise.all([...coverage])
 }
 
-export const run = (repoRoot: string) =>
-  ts(repoRoot).then(cmds => Promise.all(cmds.map(c => exec(c))))
+export const typeCoverage = (repoRoot: string) =>
+  typeCoverageCmd(repoRoot).then(cmds => Promise.all(cmds.map(c => exec(c))))

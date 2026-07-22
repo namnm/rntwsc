@@ -1,3 +1,14 @@
+<!-- START doctoc -->
+
+- [Build and release packages](#build-and-release-packages)
+  - [Running](#running)
+  - [What it does (packages/devtools/build-dist/index.ts)](#what-it-does-packagesdevtoolsbuild-distindexts)
+  - [Consuming the published package](#consuming-the-published-package)
+  - [dist output structure](#dist-output-structure)
+  - [Build order](#build-order)
+
+<!-- END doctoc -->
+
 # Build and release packages
 
 Build script for distributing the framework modules as standalone packages without publishing to npm. Consumers install via a pnpm git URL with a path selector.

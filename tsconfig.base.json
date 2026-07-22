@@ -274,9 +274,8 @@
     //
     "ignoreDeprecations": "6.0"
   },
-
   "exclude": [
-    // AUTOMATICALLY INHERIT FROM GITIGNORE - BEGIN
+    // AUTOMATED PRAGMA - BEGIN
     "**/build/",
     "**/xcuserdata/",
     "**/DerivedData/",
@@ -294,8 +293,6 @@
     "**/ios/Pods/",
     "**/vendor/bundle/",
     "**/coverage/",
-    "**/__pycache__/",
-    "**/.venv/",
     "**/.vscode/",
     "**/.next/",
     "**/.vercel/",
@@ -304,13 +301,18 @@
     "**/.tamagui/",
     "**/dist/",
     "**/dist-*/",
-    "**/.terraform/",
+    "**/__pycache__/",
+    "**/.venv/",
     "**/.*-cache/",
     "**/target/",
+    "**/.terraform/",
     "**/playground/webpack/src/",
     // match with eslint
     "**/*.min.*",
-    // AUTOMATICALLY INHERIT FROM GITIGNORE - END
-    "trailing comma here"
+    // AUTOMATED PRAGMA - END
+    // create-rntwsc-app templates intentionally import "rntwsc/..." as an
+    // external consumer would - that package is not installed in this
+    // monorepo (only the @/ alias is), so this tree must stay out of tsc
+    "**/packages/cli/*/templates/"
   ]
 }

@@ -1,3 +1,12 @@
+<!-- START doctoc -->
+
+- [Assets](#assets)
+  - [Image](#image)
+  - [SVG](#svg)
+  - [HTML semantics and accessibility](#html-semantics-and-accessibility)
+
+<!-- END doctoc -->
+
 # Assets
 
 ## Image

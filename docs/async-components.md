@@ -1,3 +1,9 @@
+<!-- START doctoc -->
+
+- [Async components](#async-components)
+
+<!-- END doctoc -->
+
 # Async components
 
 Async components are transpiled to sync for browser and native bundles. Only async components that call an await use.. hook are affected:

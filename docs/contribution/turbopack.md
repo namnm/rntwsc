@@ -1,3 +1,18 @@
+<!-- START doctoc -->
+
+- [Turbopack](#turbopack)
+  - [Why this needed more than a config toggle](#why-this-needed-more-than-a-config-toggle)
+  - [A custom loader instead of NextJS's own babel-loader](#a-custom-loader-instead-of-nextjss-own-babel-loader)
+  - [Module format: turbopack app is ESM, webpack app is CommonJS](#module-format-turbopack-app-is-esm-webpack-app-is-commonjs)
+  - [Browser variant resolution: resolver level, not babel](#browser-variant-resolution-resolver-level-not-babel)
+    - [Consumers of a published @rntwsc package via node_modules](#consumers-of-a-published-rntwsc-package-via-node_modules)
+  - [CSS variable extraction](#css-variable-extraction)
+  - [SVG handling under Turbopack](#svg-handling-under-turbopack)
+  - [RSC boundary validation and the next-unchecked wrapper](#rsc-boundary-validation-and-the-next-unchecked-wrapper)
+  - [What ships to consumers](#what-ships-to-consumers)
+
+<!-- END doctoc -->
+
 # Turbopack
 
 Turbopack is available as an additional, selectable bundler alongside webpack, for both next dev and next build. playground/turbopack runs NextJS with the turbopack flag, playground/webpack runs a copy of the same source (kept in sync via pnpm copy) with the webpack flag instead. packages/devtools/next-config/index.ts builds and returns configuration for both bundlers unconditionally, and NextJS picks whichever applies based on the flag used.

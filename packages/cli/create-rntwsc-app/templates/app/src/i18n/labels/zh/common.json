@@ -1,0 +1,7 @@
+{
+  "description": "React Native 與 Tailwind CSS 類別名稱完全相容。相容於 NextJS App Router SSR 串流。",
+  "tagline": "__APP_NAME_PASCAL__",
+  "hero_description": "一次編寫，隨處運行。在 React Native 中使用 Tailwind CSS 類別名稱，完全支援 Next.js App Router RSC 和 SSR 串流。類別名稱在原生端於建置時轉譯，在網頁端原樣保留。",
+  "get_started": "開始使用",
+  "view_github": "在 GitHub 上查看"
+}

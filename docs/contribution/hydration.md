@@ -1,3 +1,15 @@
+<!-- START doctoc -->
+
+- [Hydration implementation](#hydration-implementation)
+  - [Hydration key](#hydration-key)
+  - [Server: fetch, cache, and embed](#server-fetch-cache-and-embed)
+  - [Browser: scan, store, and match](#browser-scan-store-and-match)
+  - [Browser hooks: read first, fetch only on a miss](#browser-hooks-read-first-fetch-only-on-a-miss)
+  - [Why dehydrate.tsx has no variant of its own](#why-dehydratetsx-has-no-variant-of-its-own)
+  - [Native](#native)
+
+<!-- END doctoc -->
+
 # Hydration implementation
 
 See hydration.md for the consumer-facing usage and benefits. This doc covers how the dehydrate and rehydrate mechanism used by useFetch and useApollo actually works, across server, browser, and native.

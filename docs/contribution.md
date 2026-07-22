@@ -1,3 +1,9 @@
+<!-- START doctoc -->
+
+- [Contribution](#contribution)
+
+<!-- END doctoc -->
+
 # Contribution
 
 | Topic                                                  | File                                                     |

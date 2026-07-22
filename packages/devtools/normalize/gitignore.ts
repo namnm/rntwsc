@@ -6,18 +6,16 @@ import { path } from '@/devtools/path'
 const extraEslintignore = `
 **/*.min.*
 `
-const extraPrettierignore = `
-# yaml templates
-**/*template.yaml
-**/*template*/**/*.yaml
+export const extraPrettierignore = `
 # other files those dont need prettier
 **/package-lock.json
 **/yarn.lock
 **/pnpm-lock.yaml
+
 # match with eslint ignore
 ${extraEslintignore.trim()}
 `
-const extraDockerignore = `
+export const extraDockerignore = `
 **/.git/
 **/.gitignore
 `
@@ -26,7 +24,7 @@ const validLineRegex = /^(\*\*\/|!\*\*\/)/
 
 const linesEqual = (a: string, b: string) => {
   const [linesA, linesB] = [a.split('\n'), b.split('\n')].map(arr =>
-    arr.map(v => v.trim()).filter(v => v),
+    arr.map(v => v.trim()),
   )
   return (
     linesA.length === linesB.length &&
@@ -34,18 +32,41 @@ const linesEqual = (a: string, b: string) => {
   )
 }
 
-const beginMarkerMsg = 'AUTOMATICALLY INHERIT FROM GITIGNORE - BEGIN'
-const endMarkerMsg = 'AUTOMATICALLY INHERIT FROM GITIGNORE - END'
-const beginMarker = `# ${beginMarkerMsg}`
-const endMarker = `# ${endMarkerMsg}`
+export const beginMarkerMsg = 'AUTOMATED PRAGMA - BEGIN'
+export const endMarkerMsg = 'AUTOMATED PRAGMA - END'
+export const beginMarker = `# ${beginMarkerMsg}`
+export const endMarker = `# ${endMarkerMsg}`
 
-export const normalizeGitignore = async (repoRoot: string) => {
+export const getNormalizedGitignore = async (
+  repoRoot: string,
+  includeExtra?: boolean,
+): Promise<string> => {
   const gitignorePath = getGitignorePath(repoRoot)
-  const gitignore = await fs.readFile(gitignorePath, 'utf8')
+  const raw = await fs.readFile(gitignorePath, 'utf8')
+
+  const beginIdx = raw.indexOf(beginMarker)
+  const endIdx = raw.indexOf(endMarker)
+  if (beginIdx === -1 || endIdx === -1) {
+    log.fatal(
+      `.gitignore is missing the "${beginMarkerMsg}"/"${endMarkerMsg}" markers`,
+    )
+  }
+  const gitignore = includeExtra
+    ? raw
+    : raw.slice(beginIdx + beginMarker.length, endIdx)
+
   const lines = gitignore.split('\n')
+  const normalizedLines = []
 
   for (const line of lines) {
     const trimmed = line.trim()
+    if (trimmed.endsWith(beginMarkerMsg) || trimmed.endsWith(endMarkerMsg)) {
+      continue
+    }
+    if (!trimmed && !normalizedLines[normalizedLines.length - 1]) {
+      continue
+    }
+    normalizedLines.push(trimmed)
     if (!trimmed || trimmed.startsWith('#')) {
       continue
     }
@@ -54,80 +75,72 @@ export const normalizeGitignore = async (repoRoot: string) => {
     }
   }
 
+  return normalizedLines.join('\n')
+}
+
+export const normalizeGitignore = async (repoRoot: string) => {
+  const normalized = await getNormalizedGitignore(repoRoot, true)
+
   await Promise.all([
-    writePrettierignore(gitignore, repoRoot),
-    writeDockerignore(gitignore, repoRoot),
-    writeTsconfigBase(gitignore, repoRoot),
+    writePrettierignore(normalized, repoRoot),
+    writeDockerignore(normalized, repoRoot),
+    writeTsconfigExclude(normalized, path.join(repoRoot, 'tsconfig.base.json')),
   ])
 }
 
-const writePrettierignore = async (gitignore: string, repoRoot: string) => {
-  const prettierignorePath = path.join(repoRoot, '.prettierignore')
-  const existing = await fs.readFile(prettierignorePath, 'utf8').catch(() => '')
-  const beginIdx = existing.indexOf(beginMarker)
-  const endIdx = existing.indexOf(endMarker)
+export const writeManagedFile = async (
+  targetPath: string,
+  gitignore: string,
+  extra: string,
+) => {
+  const existing = await fs.readFile(targetPath, 'utf8').catch(() => null)
 
   let userContent = ''
-  if (beginIdx !== -1 && endIdx !== -1) {
-    userContent = existing.slice(endIdx + endMarker.length).trimStart()
-  } else if (existing.trim()) {
-    userContent = existing.trimStart()
+  if (existing !== null) {
+    const beginIdx = existing.indexOf(beginMarker)
+    const endIdx = existing.indexOf(endMarker)
+    if (beginIdx !== -1 && endIdx !== -1) {
+      userContent = existing.slice(endIdx + endMarker.length).trimStart()
+    } else if (existing.trim()) {
+      userContent = existing.trimStart()
+    }
   }
 
-  const lines = [
-    beginMarker,
-    gitignore.trimEnd(),
-    extraPrettierignore.trimEnd(),
-    endMarker,
-  ]
+  const lines = [beginMarker, '', gitignore.trim()]
+  if (extra.trim()) {
+    lines.push(extra.trimEnd())
+  }
+  lines.push('', endMarker)
   if (userContent) {
     lines.push('', userContent.trimEnd())
   }
   lines.push('')
 
   const content = lines.join('\n')
-  if (linesEqual(content, existing)) {
+  if (existing !== null && linesEqual(content, existing)) {
     return
   }
-  await fs.writeFile(prettierignorePath, content, 'utf8')
+  await fs.outputFile(targetPath, content, 'utf8')
 }
 
-const writeDockerignore = async (gitignore: string, repoRoot: string) => {
-  const dockerignorePath = path.join(repoRoot, '.dockerignore')
-  const existing = await fs.readFile(dockerignorePath, 'utf8').catch(() => null)
-  if (existing === null) {
-    return
-  }
-  const beginIdx = existing.indexOf(beginMarker)
-  const endIdx = existing.indexOf(endMarker)
+const writePrettierignore = (gitignore: string, repoRoot: string) =>
+  writeManagedFile(
+    path.join(repoRoot, '.prettierignore'),
+    gitignore,
+    extraPrettierignore,
+  )
 
-  let userContent = ''
-  if (beginIdx !== -1 && endIdx !== -1) {
-    userContent = existing.slice(endIdx + endMarker.length).trimStart()
-  } else if (existing.trim()) {
-    userContent = existing.trimStart()
-  }
+const writeDockerignore = (gitignore: string, repoRoot: string) =>
+  writeManagedFile(
+    path.join(repoRoot, '.dockerignore'),
+    gitignore,
+    extraDockerignore,
+  )
 
-  const lines = [
-    beginMarker,
-    gitignore.trimEnd(),
-    extraDockerignore.trimEnd(),
-    endMarker,
-  ]
-  if (userContent) {
-    lines.push('', userContent.trimEnd())
-  }
-  lines.push('')
-
-  const content = lines.join('\n')
-  if (linesEqual(content, existing)) {
-    return
-  }
-  await fs.writeFile(dockerignorePath, content, 'utf8')
-}
-
-const writeTsconfigBase = async (gitignore: string, repoRoot: string) => {
-  const tsconfigBasePath = path.join(repoRoot, 'tsconfig.base.json')
+export const writeTsconfigExclude = async (
+  gitignore: string,
+  tsconfigBasePath: string,
+) => {
   const existing = await fs.readFile(tsconfigBasePath, 'utf8')
 
   const dirs = [
