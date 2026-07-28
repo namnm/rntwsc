@@ -2,11 +2,11 @@
 
 import { useCallback, useSyncExternalStore } from 'react'
 
-import { hk } from '@/core/fetch/config'
-import type { HydrationData } from '@/core/hydration/config'
-import { drainHydration, subscribeHydration } from '@/core/hydration/store'
-import { isBrowser } from '@/core/platform'
-import type { StrMap } from '@/libs/utility-types'
+import { hk } from '#/core/fetch/config'
+import type { HydrationData } from '#/core/hydration/config'
+import { drainHydration, subscribeHydration } from '#/core/hydration/store'
+import { isBrowser } from '#/core/platform'
+import type { StrMap } from '#/libs/utility-types'
 
 const store: StrMap<HydrationData> = {}
 const listeners = new Set<() => void>()

@@ -2,19 +2,19 @@
 
 import { Button } from 'rntwsc/components/button'
 import { Span } from 'rntwsc/components/text'
-import { useApollo } from 'rntwsc/graphql'
+import { useFetchGraphQL } from 'rntwsc/graphql'
 import { View } from 'rntwsc/tw/components/view'
 
-import type { HelloData } from '#/pages/graphql/config'
-import { HELLO_QUERY, playgroundGraphQLUrl } from '#/pages/graphql/config'
-import { GraphQLUi } from '#/pages/graphql/graphql-ui'
+import type { HelloData } from '@/pages/graphql/config'
+import { HELLO_QUERY, playgroundGraphQLUrl } from '@/pages/graphql/config'
+import { GraphQLUi } from '@/pages/graphql/graphql-ui'
 
 type Props = {
   label: string
   refetch?: boolean
 }
 export const GraphQLClient = async ({ label, refetch }: Props) => {
-  const r = await useApollo<HelloData>({
+  const r = await useFetchGraphQL<HelloData>({
     url: playgroundGraphQLUrl + '?client=true',
     query: HELLO_QUERY,
   })

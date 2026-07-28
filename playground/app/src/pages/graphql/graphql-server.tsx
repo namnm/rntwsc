@@ -1,16 +1,16 @@
 import { Span } from 'rntwsc/components/text'
-import { useApollo } from 'rntwsc/graphql'
+import { useFetchGraphQL } from 'rntwsc/graphql'
 import { View } from 'rntwsc/tw/components/view'
 
-import type { HelloData } from '#/pages/graphql/config'
-import { HELLO_QUERY, playgroundGraphQLUrl } from '#/pages/graphql/config'
-import { GraphQLUi } from '#/pages/graphql/graphql-ui'
+import type { HelloData } from '@/pages/graphql/config'
+import { HELLO_QUERY, playgroundGraphQLUrl } from '@/pages/graphql/config'
+import { GraphQLUi } from '@/pages/graphql/graphql-ui'
 
 type Props = {
   label: string
 }
 export const GraphQLServer = async ({ label }: Props) => {
-  const r = await useApollo<HelloData>({
+  const r = await useFetchGraphQL<HelloData>({
     url: playgroundGraphQLUrl,
     query: HELLO_QUERY,
   })

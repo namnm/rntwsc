@@ -9,7 +9,7 @@ import {
   themeCookieKey,
   themeCookieMaxAge,
   toValidTheme,
-} from '@/core/theme/config'
+} from '#/core/theme/config'
 
 let initialized = false
 // toValidTheme is only correct after initTheme is called

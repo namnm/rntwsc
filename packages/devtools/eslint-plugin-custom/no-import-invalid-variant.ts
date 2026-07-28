@@ -1,7 +1,7 @@
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils'
 
-import { fs } from '@/devtools/fs'
-import { stripInDir } from '@/devtools/path'
+import { fs } from '#/devtools/fs'
+import { stripInDir } from '#/devtools/path'
 
 const variants = ['native', 'ios', 'android', 'browser'] as const
 

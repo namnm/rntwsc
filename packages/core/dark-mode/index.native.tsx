@@ -5,8 +5,8 @@ import {
   darkModeDisabled,
   darkModeEnabled,
   darkModeToBolean,
-} from '@/core/dark-mode/config'
-import { storage } from '@/libs/storage'
+} from '#/core/dark-mode/config'
+import { storage } from '#/libs/storage'
 
 let currentDarkMode: boolean | undefined = undefined
 const listeners = new Set<() => void>()

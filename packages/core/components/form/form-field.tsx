@@ -12,10 +12,10 @@ import type {
 } from 'react-hook-form'
 import { Controller } from 'react-hook-form'
 
-import { Span } from '@/core/components/text'
-import type { ViewProps } from '@/core/tw/components/view'
-import { View } from '@/core/tw/components/view'
-import type { StrMap } from '@/libs/utility-types'
+import { Span } from '#/core/components/text'
+import type { ViewProps } from '#/core/tw/components/view'
+import { View } from '#/core/tw/components/view'
+import type { StrMap } from '#/libs/utility-types'
 
 type Rules<T extends FieldValues> = Omit<
   RegisterOptions<T, Path<T>>,

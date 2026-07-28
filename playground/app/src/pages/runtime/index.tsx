@@ -3,8 +3,8 @@ import { useSafeAreaPadding } from 'rntwsc/responsive/use-safe-area'
 import { ScrollView } from 'rntwsc/tw/components/scroll-view'
 import { View } from 'rntwsc/tw/components/view'
 
-import { NavLayout } from '#/components/nav-layout'
-import { DemoRuntime } from '#/pages/home/runtime'
+import { NavLayout } from '@/components/nav-layout'
+import { DemoRuntime } from '@/pages/home/runtime'
 
 export const RuntimePage = async () => {
   const padding = useSafeAreaPadding()

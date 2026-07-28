@@ -1,1 +1,1 @@
-export { ModalPage as default } from '#/pages/modal'
+export { ModalPage as default } from '@/pages/modal'

@@ -20,9 +20,9 @@ Built-in themes: ruby, phoenix, sunny, forest, ocean, corporate, blossom, mystic
 Initialize once at app startup (for example in your polyfill entry):
 
 ```ts
-import { initTheme } from '@/core/theme/config'
-import { allBuiltinThemes } from '@/core/themes/all'
-import { corporateTheme } from '@/core/themes/corporate'
+import { initTheme } from '#/core/theme/config'
+import { allBuiltinThemes } from '#/core/themes/all'
+import { corporateTheme } from '#/core/themes/corporate'
 
 // (available themes, default theme)
 initTheme(allBuiltinThemes, corporateTheme)
@@ -31,7 +31,7 @@ initTheme(allBuiltinThemes, corporateTheme)
 ## Reading the current theme
 
 ```tsx
-import { useTheme, useSetTheme } from '@/core/theme'
+import { useTheme, useSetTheme } from '#/core/theme'
 
 // server component (async)
 const theme = await useTheme()
@@ -56,15 +56,15 @@ On web, setTheme updates the cookie and swaps the theme class on the document el
 ## Drop-in switcher
 
 ```tsx
-import { ThemeSwitcher } from '#/components/theme-switcher'
+import { ThemeSwitcher } from '@/components/theme-switcher'
 ;<ThemeSwitcher />
 ```
 
 ## Custom theme
 
 ```ts
-import type { ThemeConfig } from '@/core/theme/config'
-import { tw } from '@/core/tw/tw'
+import type { ThemeConfig } from '#/core/theme/config'
+import { tw } from '#/core/tw/tw'
 
 export const myTheme: ThemeConfig = {
   name: 'my-theme',

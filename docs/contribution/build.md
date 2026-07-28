@@ -31,7 +31,7 @@ pnpm dist
 
 4. Write package.json - merges dependencies and peerDependencies from every sub package's own package.json into one, adds the other module as a peerDependency pointing at the same git tarball and version (devtools depends on core this way), sets the package type to commonjs, and writes an explicit exports map. The exports map has one entry per source file plus a directory entry for every folder with an index file. A file suffixed native gets a react-native condition; everything else falls under default.
 
-5. Rewrite imports - rewrites every @/ alias import inside the dist ts, tsx, js, css, and scss files into a @rntwsc/ scoped import (for example @/core/tw becomes @rntwsc/core/tw). An import into the other module is only allowed if that module is declared as a cross dependency for the current one; anything else fails the build with a list of unresolved imports.
+5. Rewrite imports - rewrites every #/ alias import inside the dist ts, tsx, js, css, and scss files into a @rntwsc/ scoped import (for example #/core/tw becomes @rntwsc/core/tw). An import into the other module is only allowed if that module is declared as a cross dependency for the current one; anything else fails the build with a list of unresolved imports.
 
 ## Consuming the published package
 

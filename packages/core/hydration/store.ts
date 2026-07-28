@@ -2,14 +2,14 @@
 
 import { useCallback, useSyncExternalStore } from 'react'
 
-import type { HydrationData, HydrationKey } from '@/core/hydration/config'
+import type { HydrationData, HydrationKey } from '#/core/hydration/config'
 import {
   dehydrateDataKey,
   dehydrateDataValueKey,
-} from '@/core/hydration/config'
-import { rehydrated } from '@/core/hydration/dehydrate'
-import { isBrowser } from '@/core/platform'
-import type { StrMap } from '@/libs/utility-types'
+} from '#/core/hydration/config'
+import { rehydrated } from '#/core/hydration/dehydrate'
+import { isBrowser } from '#/core/platform'
+import type { StrMap } from '#/libs/utility-types'
 
 const store: StrMap<HydrationData> = {}
 const listeners = new Set<() => void>()

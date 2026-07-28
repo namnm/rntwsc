@@ -1,7 +1,7 @@
 import { transformSync } from '@babel/core'
 import svgrLoader from '@svgr/webpack'
 
-import type { LoaderCallback, LoaderThis } from '@/devtools/babel-loader'
+import type { LoaderCallback, LoaderThis } from '#/devtools/babel-loader'
 
 const commonjsPlugin =
   require.resolve('@babel/plugin-transform-modules-commonjs')

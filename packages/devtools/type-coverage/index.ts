@@ -1,5 +1,5 @@
-import { binRequireResolve, cmd, exec } from '@/devtools/exec'
-import { getTsconfig } from '@/devtools/tsc'
+import { binRequireResolve, cmd, exec } from '#/devtools/exec'
+import { getTsconfig } from '#/devtools/tsc'
 
 export const typeCoverageCmd = async (repoRoot: string) => {
   const tsconfig = await getTsconfig(repoRoot)

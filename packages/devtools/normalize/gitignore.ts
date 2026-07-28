@@ -1,10 +1,13 @@
-import { fs } from '@/devtools/fs'
-import { getGitignorePath } from '@/devtools/gitignore'
-import { log } from '@/devtools/log'
-import { path } from '@/devtools/path'
+import { fs } from '#/devtools/fs'
+import { getGitignorePath } from '#/devtools/gitignore'
+import { log } from '#/devtools/log'
+import { path } from '#/devtools/path'
 
 const extraEslintignore = `
+**/min/**/*
+**/.templates/**/*
 **/*.min.*
+**/*.template.*
 `
 export const extraPrettierignore = `
 # other files those dont need prettier

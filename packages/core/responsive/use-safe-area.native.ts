@@ -3,7 +3,7 @@
 import type { EdgeInsets } from 'react-native-safe-area-context'
 import { useSafeAreaInsets as useSafeAreaInsetsOriginal } from 'react-native-safe-area-context'
 
-import type { ClassName } from '@/core/tw/class-name'
+import type { ClassName } from '#/core/tw/class-name'
 
 export const useSafeAreaInsets = (): EdgeInsets | undefined =>
   useSafeAreaInsetsOriginal()

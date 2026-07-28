@@ -1,9 +1,9 @@
 import type { NodePath, types as t } from '@babel/core'
 
-import type { Ctx } from '@/devtools/babel-plugin-tw/lib/context'
-import { jsToNode } from '@/devtools/babel-plugin-tw/lib/js-to-node'
-import { reconstructFn } from '@/devtools/babel-plugin-tw/lib/reconstruct-fn'
-import { transpileClassNameJsx } from '@/devtools/babel-plugin-tw/lib/transpile-class-name-jsx'
+import type { Ctx } from '#/devtools/babel-plugin-tw/lib/context'
+import { jsToNode } from '#/devtools/babel-plugin-tw/lib/js-to-node'
+import { reconstructFn } from '#/devtools/babel-plugin-tw/lib/reconstruct-fn'
+import { transpileClassNameJsx } from '#/devtools/babel-plugin-tw/lib/transpile-class-name-jsx'
 
 export const transpileClsx = (ctx: Ctx, path: NodePath<t.CallExpression>) => {
   let transpiled: any = path

@@ -1,19 +1,38 @@
 import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next/initReactI18next'
 
-import { serverCacheKey } from '@/core/cache/key'
-import { initSingleton } from '@/core/utils/init-singleton'
-import type { Falsish, StrMap } from '@/libs/utility-types'
+import { serverCacheKey } from '#/core/cache/key'
+import { initSingleton } from '#/core/utils/init-singleton'
+import type { Falsish, StrMap } from '#/libs/utility-types'
 
 export const sck = serverCacheKey('rntwsc/i18n', [
   'currentLocale',
   'currentLang',
+  'currentDirection',
   'translation',
 ] as const)
 
 export const i18nCookieKey = 'i18n-locale'
 export const i18nCookieMaxAge = 60 * 60 * 24 * 365
 export const i18nHeaderKey = `x-${i18nCookieKey}`
+
+export type Direction = 'ltr' | 'rtl'
+
+// ISO 639-1 language codes that are written right-to-left
+const rtlLangs = new Set([
+  'ar', // Arabic
+  'he', // Hebrew
+  'fa', // Persian
+  'ur', // Urdu
+  'yi', // Yiddish
+  'ps', // Pashto
+  'sd', // Sindhi
+  'dv', // Divehi
+])
+const isRtlLangUnchecked = (lang: string | Falsish): boolean =>
+  !!lang && rtlLangs.has(lang)
+const getDirectionUnchecked = (lang: string | Falsish): Direction =>
+  isRtlLangUnchecked(lang) ? 'rtl' : 'ltr'
 
 const isValidLocaleUnchecked = (locale: string | Falsish): locale is string =>
   !!locale && localeSet.has(locale)
@@ -83,6 +102,8 @@ export const {
   getLocalesUntyped,
   getLangsUntyped,
   getDefaultLangUntyped,
+  isRtlLangUntyped,
+  getDirectionUntyped,
 } = initSingleton({
   init: {
     initI18n: initI18nUnchecked,
@@ -97,5 +118,7 @@ export const {
     getLangsUntyped: getLangsUnchecked,
     getDefaultLocaleUntyped: getDefaultLocaleUnchecked,
     getDefaultLangUntyped: getDefaultLangUnchecked,
+    isRtlLangUntyped: isRtlLangUnchecked,
+    getDirectionUntyped: getDirectionUnchecked,
   },
 })

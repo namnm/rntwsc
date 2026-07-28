@@ -1,5 +1,5 @@
-import type { Variant } from '@/core/tw/cva'
-import { cva } from '@/core/tw/cva'
+import type { Variant } from '#/core/tw/cva'
+import { cva } from '#/core/tw/cva'
 
 export const inputCva = cva({
   classNames: {

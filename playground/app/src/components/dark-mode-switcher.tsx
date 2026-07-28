@@ -11,11 +11,9 @@ export const DarkModeSwitcher = async ({
 }: {
   onPress?: () => void
 }) => {
-  const [t, dark] = await Promise.all([
-    useTranslationUntyped('sidebar'),
-    useDarkModeUser(),
-  ])
-  const setDarkMode = useSetDarkMode()
+  const t = await useTranslationUntyped('sidebar')
+  const dark = await useDarkModeUser()
+  const setDarkMode = await useSetDarkMode()
 
   const options = [
     {

@@ -1,8 +1,8 @@
 import { parse, stringify } from 'yaml'
 
-import { fs } from '@/devtools/fs'
-import { path } from '@/devtools/path'
-import type { StrMap } from '@/libs/utility-types'
+import { fs } from '#/devtools/fs'
+import { path } from '#/devtools/path'
+import type { StrMap } from '#/libs/utility-types'
 
 type Workspace = {
   allowBuilds?: StrMap<boolean>
@@ -11,7 +11,7 @@ type Workspace = {
 }
 
 const cliRoot = 'packages/cli/create-rntwsc-app'
-const templateRoot = `${cliRoot}/templates/root`
+const templateRoot = `${cliRoot}/.templates/root`
 
 export const syncTemplatePnpmWorkspace = async (repoRoot: string) => {
   const rootWorkspaceRaw = await fs.readFile(

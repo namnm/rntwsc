@@ -1,6 +1,6 @@
 import type { ImageStyle, TextStyle, ViewStyle } from 'react-native'
 
-import type { Falsish, StrMap } from '@/libs/utility-types'
+import type { Falsish, StrMap } from '#/libs/utility-types'
 
 export type ClassNameWebSingle = string | Falsish
 export type ClassNameWeb = ClassNameWebSingle | ClassNameWeb[]

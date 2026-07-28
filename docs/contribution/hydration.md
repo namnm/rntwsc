@@ -12,7 +12,7 @@
 
 # Hydration implementation
 
-See hydration.md for the consumer-facing usage and benefits. This doc covers how the dehydrate and rehydrate mechanism used by useFetch and useApollo actually works, across server, browser, and native.
+See hydration.md for the consumer-facing usage and benefits. This doc covers how the dehydrate and rehydrate mechanism used by useFetch and useFetchGraphQL actually works, across server, browser, and native.
 
 ## Hydration key
 
@@ -34,7 +34,7 @@ packages/core/fetch/store.ts and packages/core/graphql/store.ts each keep their 
 
 packages/core/fetch/index.browser.ts and packages/core/graphql/index.browser.ts compute the identical hydration key from their own call arguments and read straight from their own store (useFetchData, or Apollo's useQuery against the cache that was just pre-populated). If the key matches something that was dehydrated, the value is there synchronously on first render, no request happens. If nothing matches (a route reached by client navigation, never rendered on the server for this request), the value is missing, and each hook's own effect fires a real request the normal client side way - a plain fetch for useFetch, Apollo's own network request for useQuery.
 
-refetch() only does real work on the client: useFetch's browser variant issues a plain fetch and writes the result back into its own store; useApollo's browser variant clears its own hydration error entry first, then calls Apollo's own refetch. The server variant's refetch is a no-op, since a Server Component render only ever happens once per request.
+refetch() only does real work on the client: useFetch's browser variant issues a plain fetch and writes the result back into its own store; useFetchGraphQL's browser variant clears its own hydration error entry first, then calls Apollo's own refetch. The server variant's refetch is a no-op, since a Server Component render only ever happens once per request.
 
 ## Why dehydrate.tsx has no variant of its own
 

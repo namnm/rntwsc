@@ -2,11 +2,11 @@
 
 import Image from 'react-native-fast-image'
 
-import { createAnimatedComponent } from '@/core/tw/components/lib/create-animated-component'
-import { isReanimated } from '@/core/tw/components/lib/is-reanimated'
-import { renderReanimated } from '@/core/tw/components/lib/render-reanimated'
-import { styleToProps } from '@/core/tw/components/lib/style-to-props'
-import type { ImagePropsWocn } from '@/core/tw/components/without-class-name/image'
+import { createAnimatedComponent } from '#/core/tw/components/lib/create-animated-component'
+import { isReanimated } from '#/core/tw/components/lib/is-reanimated'
+import { renderReanimated } from '#/core/tw/components/lib/render-reanimated'
+import { styleToProps } from '#/core/tw/components/lib/style-to-props'
+import type { ImagePropsWocn } from '#/core/tw/components/without-class-name/image'
 
 const styleProps = ['resizeMode']
 

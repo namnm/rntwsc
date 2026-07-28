@@ -37,7 +37,7 @@ Once native needs any of this behavior, it needs its own file instead of a re-ex
 
 ### Request cancellation / race condition
 
-useFetch and useApollo do not cancel a pending request when:
+useFetch and useFetchGraphQL do not cancel a pending request when:
 
 - The component unmounts while a fetch is in flight
 - The URL or variables change before the previous request finishes

@@ -1,7 +1,7 @@
 import type { TypedDocumentNode } from '@apollo/client'
 import { gql } from '@apollo/client'
 
-import { serverOrigin } from '#/pages/fetch/config'
+import { serverOrigin } from '@/pages/fetch/config'
 
 export const playgroundGraphQLUrl = `${serverOrigin}/api/graphql`
 

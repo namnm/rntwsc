@@ -1,8 +1,8 @@
 import { execFileSync } from 'node:child_process'
 import { promises as fsp } from 'node:fs'
 
-import { structuralManifest } from '@/cli/create-rntwsc-app/src/manifest'
-import { path } from '@/devtools/path'
+import { structuralManifest } from '#/cli/create-rntwsc-app/src/manifest'
+import { path } from '#/devtools/path'
 
 const baseTokenPairs: [string, string][] = [
   ['com.awesomeproject', '__APP_PACKAGE_ID__'],
@@ -124,7 +124,7 @@ export const syncPlayground = async (repoRoot: string) => {
   const playgroundRoot = path.join(repoRoot, 'playground')
   const templatesRoot = path.join(
     repoRoot,
-    'packages/cli/create-rntwsc-app/templates',
+    'packages/cli/create-rntwsc-app/.templates',
   )
 
   for (const entry of structuralManifest) {

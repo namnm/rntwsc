@@ -1,17 +1,17 @@
 import type { NextConfig } from 'next'
 
-import { getAlias } from '@/devtools/babel-config/get-alias'
-import type { BabelLoaderOptions } from '@/devtools/babel-loader'
-import { glob } from '@/devtools/glob'
-import { browserResolveAlias } from '@/devtools/next-config/browser-resolve-alias'
+import { getAlias } from '#/devtools/babel-config/get-alias'
+import type { BabelLoaderOptions } from '#/devtools/babel-loader'
+import { glob } from '#/devtools/glob'
+import { browserResolveAlias } from '#/devtools/next-config/browser-resolve-alias'
 // @ts-ignore: will be generated
-import publishedBrowserAlias from '@/devtools/next-config/browser-variants.json'
-import { mapKeys, mapValues } from '@/libs/lodash'
-import type { StrMap } from '@/libs/utility-types'
+import publishedBrowserAlias from '#/devtools/next-config/browser-variants.json'
+import { mapKeys, mapValues } from '#/libs/lodash'
+import type { StrMap } from '#/libs/utility-types'
 
 // we name it ts-loader to let nextjs not complain about its builtin
-const babelLoaderPath = require.resolve('@/devtools/next-config/ts-loader.js')
-const svgLoaderPath = require.resolve('@/devtools/next-config/svg-loader.js')
+const babelLoaderPath = require.resolve('#/devtools/next-config/ts-loader.js')
+const svgLoaderPath = require.resolve('#/devtools/next-config/svg-loader.js')
 
 const resolveAlias = {
   'next-unchecked/headers': 'rntwsc/next/unchecked/headers',

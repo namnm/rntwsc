@@ -1,10 +1,10 @@
 import type { PluginPass } from '@babel/core'
 import type { Platform } from 'react-native'
 
-import { fs } from '@/devtools/fs'
-import { path } from '@/devtools/path'
-import { get } from '@/libs/lodash'
-import type { StrMap } from '@/libs/utility-types'
+import { fs } from '#/devtools/fs'
+import { path } from '#/devtools/path'
+import { get } from '#/libs/lodash'
+import type { StrMap } from '#/libs/utility-types'
 
 export const twFn = {
   tw: (v: string) => v.endsWith('tw'),

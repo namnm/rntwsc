@@ -1,8 +1,8 @@
 import type { ComponentType } from 'react'
 import type { SvgProps } from 'react-native-svg'
 
-import { useSvgIconProps } from '@/core/components/icon/use-svg-icon-props'
-import type { ClassName } from '@/core/tw/class-name'
+import { useSvgIconProps } from '#/core/components/icon/use-svg-icon-props'
+import type { ClassName } from '#/core/tw/class-name'
 
 export type SvgIconProps = SvgProps & {
   size?: number

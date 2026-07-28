@@ -3,9 +3,9 @@ import { useSafeAreaPadding } from 'rntwsc/responsive/use-safe-area'
 import { ScrollView } from 'rntwsc/tw/components/scroll-view'
 import { View } from 'rntwsc/tw/components/view'
 
-import { NavLayout } from '#/components/nav-layout'
-import { FetchClient } from '#/pages/fetch/fetch-client'
-import { FetchServer } from '#/pages/fetch/fetch-server'
+import { NavLayout } from '@/components/nav-layout'
+import { FetchClient } from '@/pages/fetch/fetch-client'
+import { FetchServer } from '@/pages/fetch/fetch-server'
 
 export const FetchPage = () => {
   const padding = useSafeAreaPadding()

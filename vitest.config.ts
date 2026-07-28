@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   resolve: {
     alias: {
-      '@': path.join(__dirname, './packages'),
+      '#': path.join(__dirname, './packages'),
     },
   },
   test: {

@@ -1,5 +1,5 @@
-import { binRequireResolve, cmd, exec } from '@/devtools/exec'
-import { glob } from '@/devtools/glob'
+import { binRequireResolve, cmd, exec } from '#/devtools/exec'
+import { glob } from '#/devtools/glob'
 
 export const doctocCmd = async (repoRoot: string) => {
   const md = await glob('**/*.md', {
@@ -8,7 +8,7 @@ export const doctocCmd = async (repoRoot: string) => {
 
   const promises = md.map(async p =>
     cmd({
-      bin: await binRequireResolve('@/devtools/doctoc', undefined, repoRoot),
+      bin: await binRequireResolve('#/devtools/doctoc', undefined, repoRoot),
       args: [
         ['--loglevel', 'warn'],
         ['--toc-pragma-style', 'compact'],

@@ -1,10 +1,10 @@
 import type { NodePath, types as t } from '@babel/core'
 
-import { twFn } from '@/devtools/babel-plugin-tw/lib/config'
-import { context } from '@/devtools/babel-plugin-tw/lib/context'
-import { getExpressionName } from '@/devtools/babel-plugin-tw/lib/get-expression-name'
-import { jsToNode } from '@/devtools/babel-plugin-tw/lib/js-to-node'
-import type { TraverseOptions } from '@/devtools/babel-plugin-tw/visitor'
+import { twFn } from '#/devtools/babel-plugin-tw/lib/config'
+import { context } from '#/devtools/babel-plugin-tw/lib/context'
+import { getExpressionName } from '#/devtools/babel-plugin-tw/lib/get-expression-name'
+import { jsToNode } from '#/devtools/babel-plugin-tw/lib/js-to-node'
+import type { TraverseOptions } from '#/devtools/babel-plugin-tw/visitor'
 
 export const traverseTaggedTemplateExpression = (
   path: NodePath<t.TaggedTemplateExpression>,

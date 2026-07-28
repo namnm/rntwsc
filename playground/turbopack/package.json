@@ -14,12 +14,11 @@
     "pnpm": ">=11"
   },
   "dependencies": {
-    "accept-language": "3.0.20",
     "next": "16.2.10",
     "react-dom": "19.2.3",
     "react-native-svg-web": "1.0.9",
     "react-native-web": "0.21.2",
-    "rntwsc": "github:namnm/rntwsc#f888cfbb1fc7945bc3adf7a45e6450d9344cd804"
+    "rntwsc": "github:namnm/rntwsc#d903c25701062e5f393d5d8e3c4a1e56e2b418b9"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.3",

@@ -1,7 +1,7 @@
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 
-import type { ManifestEntry } from '@/cli/create-rntwsc-app/src/manifest'
+import type { ManifestEntry } from '#/cli/create-rntwsc-app/src/manifest'
 
 export type Tokens = {
   PROJECT_NAME: string

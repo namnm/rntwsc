@@ -1,7 +1,7 @@
-import { fs } from '@/devtools/fs'
-import { path } from '@/devtools/path'
+import { fs } from '#/devtools/fs'
+import { path } from '#/devtools/path'
 
-const templateRoot = 'packages/cli/create-rntwsc-app/templates/root'
+const templateRoot = 'packages/cli/create-rntwsc-app/.templates/root'
 
 const files = [
   {
@@ -26,11 +26,11 @@ const files = [
   },
 ]
 
-const aliasRegex = /(['"`])(@\/[^'"`]+)\1/g
+const aliasRegex = /(['"`])(#\/[^'"`]+)\1/g
 const flattenedModules = new Set(['core'])
 
 const rewriteImportPath = (importPath: string): string => {
-  if (importPath === '@/cli/devtools') {
+  if (importPath === '#/cli/devtools') {
     return 'rntwsc/devtools'
   }
   const withoutAt = importPath.slice(2)

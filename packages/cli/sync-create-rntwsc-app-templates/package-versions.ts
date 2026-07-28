@@ -1,6 +1,6 @@
-import { fs } from '@/devtools/fs'
-import { path } from '@/devtools/path'
-import type { StrMap } from '@/libs/utility-types'
+import { fs } from '#/devtools/fs'
+import { path } from '#/devtools/path'
+import type { StrMap } from '#/libs/utility-types'
 
 type PackageJson = {
   dependencies?: StrMap<string>
@@ -39,7 +39,7 @@ const syncVersions = async (templatePath: string, realPath: string) => {
 export const syncTemplatePackageVersions = async (repoRoot: string) => {
   const cliRoot = path.join(
     repoRoot,
-    'packages/cli/create-rntwsc-app/templates',
+    'packages/cli/create-rntwsc-app/.templates',
   )
   await Promise.all([
     syncVersions(

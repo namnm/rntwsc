@@ -13,7 +13,8 @@
   },
   "peerDependencies": {
     "next": "*",
-    "react": "*"
+    "react": "*",
+    "react-native": "*"
   },
   "devDependencies": {
     "@types/react": "19.2.17"

@@ -7,6 +7,9 @@
     "node": ">=24.11",
     "pnpm": ">=11"
   },
+  "dependencies": {
+    "accept-language": "3.0.20"
+  },
   "peerDependencies": {
     "next": "*"
   }

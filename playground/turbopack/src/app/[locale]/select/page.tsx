@@ -1,1 +1,1 @@
-export { SelectPage as default } from '#/pages/select'
+export { SelectPage as default } from '@/pages/select'

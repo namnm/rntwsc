@@ -1,7 +1,7 @@
 import { twMerge as twMergeOriginal } from 'tailwind-merge'
 
-import { minifiedToTw, twToMinified } from '@/core/tw/config'
-import type { StrMap } from '@/libs/utility-types'
+import { minifiedToTw, twToMinified } from '#/core/tw/config'
+import type { StrMap } from '#/libs/utility-types'
 
 // on web the class names will be minified using babel-plugin-tw and postcss-rename
 // remap to tw and merge then remap again to minified one

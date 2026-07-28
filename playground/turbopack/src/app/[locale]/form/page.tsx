@@ -1,1 +1,1 @@
-export { FormPage as default } from '#/pages/form'
+export { FormPage as default } from '@/pages/form'

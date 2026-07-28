@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react'
 
-import { isBrowser } from '@/core/platform'
-import { rnwClassName } from '@/core/tw/lib/react-native-web'
+import { isBrowser } from '#/core/platform'
+import { rnwClassName } from '#/core/tw/lib/react-native-web'
 
 if (isBrowser) {
   // @ts-ignore

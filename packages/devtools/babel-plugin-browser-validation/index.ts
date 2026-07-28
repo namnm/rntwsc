@@ -1,7 +1,7 @@
 import type { PluginObj } from '@babel/core'
 
-import { shouldTranspile } from '@/devtools/babel-config/should-transpile'
-import { get } from '@/libs/lodash'
+import { shouldTranspile } from '#/devtools/babel-config/should-transpile'
+import { get } from '#/libs/lodash'
 
 const SERVER_ONLY_MODULES: string[] = ['next*/headers', 'server-*']
 

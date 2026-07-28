@@ -16,7 +16,7 @@ Three states: dark, light, or system (follow the OS color scheme). Independent f
 ## Reading and setting dark mode
 
 ```tsx
-import { useDarkModeUser, useSetDarkMode } from '@/core/dark-mode'
+import { useDarkModeUser, useSetDarkMode } from '#/core/dark-mode'
 
 // server component (async) - the user's stored choice, true, false, or undefined (system)
 const dark = await useDarkModeUser()
@@ -36,7 +36,7 @@ On web, the choice is persisted in a cookie (dark-mode) so it survives SSR hydra
 useDarkModeUser only returns the user's stored choice, not whether the OS is actually in dark mode. packages/core/dark-mode/use-dark-mode-state.ts's useDarkModeState combines the two: it reads useDarkModeUser and react-native's useColorScheme, resolves system as the OS color scheme when the user has not chosen explicitly, and returns the class name state (dark: true/false, light: true/false) that drives the dark: and light: Tailwind selectors on the root element.
 
 ```tsx
-import { useDarkModeState } from '@/core/dark-mode/use-dark-mode-state'
+import { useDarkModeState } from '#/core/dark-mode/use-dark-mode-state'
 
 // only meaningful in browser and native - null on the server until mounted,
 // so the resolved system value never mismatches what was server rendered
@@ -50,7 +50,7 @@ There is no framework-provided switcher component - playground/app/src/component
 ## Setup on native
 
 ```ts
-import { initDarkModeNative } from '@/core/dark-mode/index.native'
+import { initDarkModeNative } from '#/core/dark-mode/index.native'
 
 // call once at app startup, before rendering, same as theme and i18n init
 await initDarkModeNative()

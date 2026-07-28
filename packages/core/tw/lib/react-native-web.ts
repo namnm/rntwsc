@@ -1,7 +1,7 @@
-import type { ClassName } from '@/core/tw/class-name'
-import { clsx } from '@/core/tw/clsx'
-import { tw } from '@/core/tw/tw'
-import type { StrMap } from '@/libs/utility-types'
+import type { ClassName } from '#/core/tw/class-name'
+import { clsx } from '#/core/tw/clsx'
+import { tw } from '#/core/tw/tw'
+import type { StrMap } from '#/libs/utility-types'
 
 type Common = {
   className?: ClassName

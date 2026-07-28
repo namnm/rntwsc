@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from 'react'
 import type { EdgeInsets } from 'react-native-safe-area-context'
 
-import type { ClassName } from '@/core/tw/class-name'
+import type { ClassName } from '#/core/tw/class-name'
 
 let initialized = false
 let cache: ReturnType<typeof getInsets> = undefined

@@ -2,10 +2,10 @@ import { getDefaultConfig } from '@react-native/metro-config'
 import { makeMetroConfig } from '@rnx-kit/metro-config'
 import MetroSymlinksResolver from '@rnx-kit/metro-resolver-symlinks'
 
-import { path } from '@/devtools/path'
+import { path } from '#/devtools/path'
 
 const babelTransformerPath =
-  require.resolve('@/devtools/metro-config/transformer.js')
+  require.resolve('#/devtools/metro-config/transformer.js')
 
 type Options = {
   dir: string

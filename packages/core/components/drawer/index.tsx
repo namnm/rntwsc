@@ -3,14 +3,15 @@
 import type { PropsWithChildren } from 'react'
 import { useEffect } from 'react'
 
-import { Portal } from '@/core/components/portal'
-import { isWeb } from '@/core/platform'
-import type { ClassName } from '@/core/tw/class-name'
-import { Pressable } from '@/core/tw/components/pressable'
-import { ScrollView } from '@/core/tw/components/scroll-view'
-import { View } from '@/core/tw/components/view'
-import type { Variant } from '@/core/tw/cva'
-import { cva } from '@/core/tw/cva'
+import { Portal } from '#/core/components/portal'
+import { useIsRtl } from '#/core/i18n/use-is-rtl'
+import { isWeb } from '#/core/platform'
+import type { ClassName } from '#/core/tw/class-name'
+import { Pressable } from '#/core/tw/components/pressable'
+import { ScrollView } from '#/core/tw/components/scroll-view'
+import { View } from '#/core/tw/components/view'
+import type { Variant } from '#/core/tw/cva'
+import { cva } from '#/core/tw/cva'
 
 const drawerCva = cva({
   classNames: {
@@ -37,16 +38,19 @@ const drawerCva = cva({
   },
 })
 
-export type DrawerProps = Variant<typeof drawerCva> &
+export type DrawerProps = Omit<Variant<typeof drawerCva>, 'side'> &
   PropsWithChildren<{
     open: boolean
     onClose: () => void
+    // 'start'/'end' follow reading direction (left/right mirrored in rtl);
+    // 'left'/'right' pin to a physical screen edge regardless of direction
+    side?: 'bottom' | 'left' | 'right' | 'start' | 'end'
     className?: ClassName
     contentClassName?: ClassName
     contentContainerClassName?: ClassName
   }>
 
-export const Drawer = ({
+export const Drawer = async ({
   side = 'bottom',
   open,
   onClose,
@@ -55,6 +59,8 @@ export const Drawer = ({
   contentContainerClassName,
   children,
 }: DrawerProps) => {
+  const rtl = await useIsRtl()
+
   useEffect(() => {
     if (!open || !isWeb) {
       return
@@ -72,10 +78,21 @@ export const Drawer = ({
     return null
   }
 
+  const resolvedSide =
+    side === 'start'
+      ? rtl
+        ? 'right'
+        : 'left'
+      : side === 'end'
+        ? rtl
+          ? 'left'
+          : 'right'
+        : side
+
   const cn = drawerCva({
-    side,
+    side: resolvedSide,
   })
-  const showHandle = side === 'bottom'
+  const showHandle = resolvedSide === 'bottom'
 
   return (
     <Portal disableBodyScroll>

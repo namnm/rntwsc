@@ -1,10 +1,10 @@
-import { writeReadmeWithGithubLinks } from '@/cli/readme'
-import { cssExtractVariables } from '@/devtools/css-extract-variables'
-import { fs } from '@/devtools/fs'
-import { glob, globby } from '@/devtools/glob'
-import { log } from '@/devtools/log'
-import { path } from '@/devtools/path'
-import type { StrMap } from '@/libs/utility-types'
+import { writeReadmeWithGithubLinks } from '#/cli/readme'
+import { cssExtractVariables } from '#/devtools/css-extract-variables'
+import { fs } from '#/devtools/fs'
+import { glob, globby } from '#/devtools/glob'
+import { log } from '#/devtools/log'
+import { path } from '#/devtools/path'
+import type { StrMap } from '#/libs/utility-types'
 
 type Config = {
   name?: string
@@ -25,7 +25,7 @@ type ParsedConfig = Omit<Required<Config>, 'packages' | 'dist'> & {
 // Main
 // ---------------------------------------------------------------------------
 
-export const run = async (repoRoot: string) => {
+export const buildDist = async (repoRoot: string) => {
   const packageJsonRoot = await fs.readJson(path.join(repoRoot, 'package.json'))
   const config: Config = packageJsonRoot.dist
   if (!config) {
@@ -70,6 +70,8 @@ export const run = async (repoRoot: string) => {
   await cssExtractVariables(c.distRoot, false)
   // generate css browser variants json
   await buildBrowserVariantsJson(c)
+  // generate the aggregated ambient declarations entrypoint
+  await writeTypesIndex(c)
   // build the merged package.json's dependencies and exports map
   // must run after the generation steps above have populated dist
   await writePackageJson(c)
@@ -148,17 +150,43 @@ const buildBrowserVariantsJson = async (c: ParsedConfig) => {
 }
 
 // ---------------------------------------------------------------------------
+// Ambient declarations entrypoint
+// ---------------------------------------------------------------------------
+
+// Collect every ambient "declaration.d.ts" copied into dist and reference them
+// all from a single dist-root "index.d.ts", with paths relative to dist root
+// (they can't be authored in the source tree since "core" flattens to dist
+// root while other modules keep their subfolder, changing the paths).
+const writeTypesIndex = async (c: ParsedConfig) => {
+  const files = await glob('**/declaration.d.ts', {
+    cwd: c.distRoot,
+    relative: true,
+    gitignore: false,
+  })
+  files.sort()
+
+  const content = `${files.map(f => `/// <reference path='./${f}' />`).join('\n')}\n`
+  await fs.outputFile(path.join(c.distRoot, 'index.d.ts'), content)
+}
+
+// ---------------------------------------------------------------------------
 // Merge package.json
 // ---------------------------------------------------------------------------
 
 // Write the single dist package.json with merged deps and exports map.
 const writePackageJson = async (c: ParsedConfig) => {
   const [deps, exports] = await Promise.all([mergeDeps(c), buildExports(c)])
+  // "." isn't emitted by buildExports (it only scans code/asset files, not
+  // ".d.ts"), so consumers get it via "types" and "/// <reference types=".."
+  exports['.'] = {
+    types: './index.d.ts',
+  }
 
   const pkg: PkgJson = {
     name: c.name,
     version: c.version,
     type: 'commonjs',
+    types: './index.d.ts',
     exports,
   }
   depKeys
@@ -192,6 +220,7 @@ type PkgJson = Partial<Deps> & {
   name: string
   version: string
   type: string
+  types: string
   exports: StrMap<ExportsValue>
 }
 type ExportsValue = string | StrMap<string>
@@ -322,9 +351,9 @@ const buildExports = async (c: ParsedConfig): Promise<StrMap<ExportsValue>> => {
 // Rewrite imports
 // ---------------------------------------------------------------------------
 
-const aliasRegex = /(['"`])(@\/[^'"`]+)\1/g
+const aliasRegex = /(['"`])(#\/[^'"`]+)\1/g
 
-// Rewrite all @/ alias imports in dist files to the published package's scope
+// Rewrite all #/ alias imports in dist files to the published package's scope
 // so they resolve correctly after installation in node_modules.
 const rewriteAlias = async (c: ParsedConfig): Promise<void> => {
   const files: string[] = await globby('**/*.{ts,tsx,js,css,scss}', {
@@ -348,7 +377,7 @@ const rewriteAlias = async (c: ParsedConfig): Promise<void> => {
 }
 
 // Rewrite aliases in a single file. Every module now lives under the same
-// published package, so any @/<module>/... import simply maps to the dist
+// published package, so any #/<module>/... import simply maps to the dist
 // path that module was copied to (empty prefix for flattened modules).
 const rewriteAliasInFile = async (
   c: ParsedConfig,

@@ -1,5 +1,5 @@
 // nodejs code here
-// should not import from @/devtools to make the depedency smaller
+// should not import from #/devtools to make the depedency smaller
 
 import path from 'node:path'
 import type { Config } from 'tailwindcss'

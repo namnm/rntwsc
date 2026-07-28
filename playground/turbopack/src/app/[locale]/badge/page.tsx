@@ -1,1 +1,1 @@
-export { BadgePage as default } from '#/pages/badge'
+export { BadgePage as default } from '@/pages/badge'

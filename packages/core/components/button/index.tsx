@@ -3,21 +3,22 @@
 import type { PropsWithChildren } from 'react'
 import { useState } from 'react'
 
-import { useButtonMouseDown } from '@/core/components/button/use-button-mouse-down'
-import { InsetShadow } from '@/core/components/inset'
-import { useRipple } from '@/core/components/ripple'
-import { Slot, Slottable } from '@/core/components/slot'
-import { Spinner } from '@/core/components/spinner'
-import { Span } from '@/core/components/text'
-import { TextStyleProvider } from '@/core/components/text/text-style-context'
-import { isWeb } from '@/core/platform'
-import type { ClassName } from '@/core/tw/class-name'
-import type { PressableProps } from '@/core/tw/components/pressable'
-import { Pressable } from '@/core/tw/components/pressable'
-import { View } from '@/core/tw/components/view'
-import type { Variant } from '@/core/tw/cva'
-import { cva } from '@/core/tw/cva'
-import { composeHandlers } from '@/core/utils/compose-handlers'
+import { useButtonMouseDown } from '#/core/components/button/use-button-mouse-down'
+import { InsetShadow } from '#/core/components/inset'
+import { useRipple } from '#/core/components/ripple'
+import { Slot, Slottable } from '#/core/components/slot'
+import { Spinner } from '#/core/components/spinner'
+import { Span } from '#/core/components/text'
+import { useIsRtl } from '#/core/i18n/use-is-rtl'
+import { isWeb } from '#/core/platform'
+import type { ClassName } from '#/core/tw/class-name'
+import type { PressableProps } from '#/core/tw/components/pressable'
+import { Pressable } from '#/core/tw/components/pressable'
+import { TextStyleProvider } from '#/core/tw/components/text-style-context'
+import { View } from '#/core/tw/components/view'
+import type { Variant } from '#/core/tw/cva'
+import { cva } from '#/core/tw/cva'
+import { composeHandlers } from '#/core/utils/compose-handlers'
 
 const buttonCva = cva({
   classNames: {
@@ -605,7 +606,7 @@ export type ButtonProps = Variant<typeof buttonCva> &
     asChild?: boolean
   }>
 
-export const Button = ({
+export const Button = async ({
   type = 'basic',
   appearance = 'solid',
   size = 'md',
@@ -629,6 +630,8 @@ export const Button = ({
   asChild,
   ...props
 }: ButtonProps) => {
+  const rtl = await useIsRtl()
+
   const isSolidOrSoft = appearance === 'solid' || appearance === 'soft'
 
   ripple = ripple && isSolidOrSoft
@@ -672,8 +675,11 @@ export const Button = ({
     shape,
     elevation,
     disabled,
-    groupFirst,
-    groupLast,
+    // in a button group, corner rounding follows visual (reading-direction) order;
+    // flex-row already mirrors the DOM order under rtl, so the rounding flag must
+    // mirror too, or the wrong corner gets rounded
+    groupFirst: rtl ? groupLast : groupFirst,
+    groupLast: rtl ? groupFirst : groupLast,
   })
 
   const [jsxRipples, propsForRipples] = useRipple({

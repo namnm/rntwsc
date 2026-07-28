@@ -1,1 +1,1 @@
-export { ButtonPage as default } from '#/pages/button'
+export { ButtonPage as default } from '@/pages/button'

@@ -1,1 +1,1 @@
-export { GraphQLPage as default } from '#/pages/graphql'
+export { GraphQLPage as default } from '@/pages/graphql'

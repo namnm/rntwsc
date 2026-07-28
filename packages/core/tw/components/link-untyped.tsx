@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
 
-import type { ClassName } from '@/core/tw/class-name'
-import type { LinkPropsWocn } from '@/core/tw/components/without-class-name/link-untyped'
-import { LinkUntypedWocn } from '@/core/tw/components/without-class-name/link-untyped'
-import { createClassNameComponent } from '@/core/tw/lib/create-class-name-component'
+import type { ClassName } from '#/core/tw/class-name'
+import type { LinkPropsWocn } from '#/core/tw/components/without-class-name/link-untyped'
+import { LinkUntypedWocn } from '#/core/tw/components/without-class-name/link-untyped'
+import { createClassNameComponent } from '#/core/tw/lib/create-class-name-component'
 
 export type LinkProps<
   Routes = any,

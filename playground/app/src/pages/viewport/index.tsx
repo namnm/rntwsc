@@ -3,7 +3,7 @@ import { useSafeAreaPadding } from 'rntwsc/responsive/use-safe-area'
 import { ScrollView } from 'rntwsc/tw/components/scroll-view'
 import { View } from 'rntwsc/tw/components/view'
 
-import { NavLayout } from '#/components/nav-layout'
+import { NavLayout } from '@/components/nav-layout'
 
 const DemoBox = ({
   label,

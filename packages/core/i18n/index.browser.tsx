@@ -7,9 +7,10 @@ import { usePathname } from 'next-unchecked/navigation'
 
 import {
   getDefaultLocaleUntyped,
+  getDirectionUntyped,
   getLangUntyped,
   getLocalesUntyped,
-} from '@/core/i18n/config'
+} from '#/core/i18n/config'
 
 export const useCurrentLocaleUntyped = () => {
   const p = usePathname()
@@ -25,6 +26,11 @@ export const useCurrentLocaleUntyped = () => {
 export const useCurrentLangUntyped = () => {
   const locale = useCurrentLocaleUntyped()
   return getLangUntyped(locale)
+}
+
+export const useCurrentDirection = () => {
+  const lang = useCurrentLangUntyped()
+  return getDirectionUntyped(lang)
 }
 
 export const useTranslationUntyped = (namespace: string) => {

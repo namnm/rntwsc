@@ -2,8 +2,8 @@
 
 import { useRef } from 'react'
 
-import { transitionDurationDefault } from '@/core/tw/lib/normalize-style-config-shared'
-import { isClickDOM, useParentDOM } from '@/core/utils/dom'
+import { transitionDurationDefault } from '#/core/tw/lib/normalize-style-config-shared'
+import { isClickDOM, useParentDOM } from '#/core/utils/dom'
 
 // fix active: selector and press in to work with
 // touch pad or any mouse up happens too quickly

@@ -1,7 +1,7 @@
 import type { ChildProcess } from 'node:child_process'
 import { execSync } from 'node:child_process'
 
-import type { Falsish } from '@/libs/utility-types'
+import type { Falsish } from '#/libs/utility-types'
 
 export const kill = (proc: ChildProcess | Falsish) => {
   if (!proc) {

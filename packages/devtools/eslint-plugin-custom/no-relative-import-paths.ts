@@ -3,7 +3,7 @@
 
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils'
 
-import { path } from '@/devtools/path'
+import { path } from '#/devtools/path'
 
 type NoRelativeImportPathsOptions = {
   absPath: string

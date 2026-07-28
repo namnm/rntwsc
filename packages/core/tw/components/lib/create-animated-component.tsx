@@ -1,8 +1,8 @@
 import type { TextStyle, ViewStyle } from 'react-native'
 import Animated from 'react-native-reanimated'
 
-import type { CSSTransitionProperties } from '@/core/tw/class-name'
-import { set } from '@/libs/lodash'
+import type { CSSTransitionProperties } from '#/core/tw/class-name'
+import { set } from '#/libs/lodash'
 
 type Options = {
   passWrapperStyleToProps?: boolean

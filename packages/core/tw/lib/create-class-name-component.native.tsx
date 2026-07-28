@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 import { useEffect, useRef, useState } from 'react'
 
-import { useDarkModeState } from '@/core/dark-mode/use-dark-mode-state'
-import { useResponsiveState } from '@/core/responsive/use-responsive-state'
-import { useWindowDimensions } from '@/core/responsive/use-window-dimensions'
-import { useThemeVariables } from '@/core/theme/use-theme-variables'
+import { useDarkModeState } from '#/core/dark-mode/use-dark-mode-state'
+import { useResponsiveState } from '#/core/responsive/use-responsive-state'
+import { useWindowDimensions } from '#/core/responsive/use-window-dimensions'
+import { useThemeVariables } from '#/core/theme/use-theme-variables'
 import type {
   ClassName,
   ClassNameDarkModeState,
@@ -17,8 +17,8 @@ import type {
   ClassNameState,
   ClassNameWithSelector,
   StyleSingle,
-} from '@/core/tw/class-name'
-import type { CommonProps } from '@/core/tw/components/lib/common-props'
+} from '#/core/tw/class-name'
+import type { CommonProps } from '#/core/tw/components/lib/common-props'
 import {
   darkModeSelectorsSet,
   emptyMarkerKey,
@@ -28,20 +28,20 @@ import {
   propsSelectors,
   propsSelectorsSet,
   responsiveSelectorsSet,
-} from '@/core/tw/lib/class-name-to-native'
-import type { ClassNameToStylesOptions } from '@/core/tw/lib/class-name-to-styles'
-import type { CreateClassNameComponentOptions } from '@/core/tw/lib/create-class-name-component'
-import { createClassNameComponentOptions } from '@/core/tw/lib/create-class-name-component-options'
+} from '#/core/tw/lib/class-name-to-native'
+import type { ClassNameToStylesOptions } from '#/core/tw/lib/class-name-to-styles'
+import type { CreateClassNameComponentOptions } from '#/core/tw/lib/create-class-name-component'
+import { createClassNameComponentOptions } from '#/core/tw/lib/create-class-name-component-options'
 import {
   MarkerGroupProvider,
   useMarkerGroupState,
   useMarkerPeerSetState,
   useMarkerPeerState,
-} from '@/core/tw/lib/marker.native'
-import { runtimeStyle } from '@/core/tw/runtime-style'
-import { useOnUnmounted } from '@/libs/hooks'
-import { get, isEqual } from '@/libs/lodash'
-import type { Falsish, StrMap } from '@/libs/utility-types'
+} from '#/core/tw/lib/marker.native'
+import { runtimeStyle } from '#/core/tw/runtime-style'
+import { useOnUnmounted } from '#/libs/hooks'
+import { get, isEqual } from '#/libs/lodash'
+import type { Falsish, StrMap } from '#/libs/utility-types'
 
 type Props = Pick<CommonProps, 'twStableProvider'> & StrMap
 
@@ -296,9 +296,12 @@ const withResponsive = (Inner: FC<InnerProps>) => (props: InnerProps) => {
   return <Inner {...props} responsiveState={responsiveState} />
 }
 
-const withDarkMode = (Inner: FC<InnerProps>) => async (props: InnerProps) => {
-  const darkModeState = await useDarkModeState()
-  return <Inner {...props} darkModeState={darkModeState} />
+const withDarkMode = (Inner: FC<InnerProps>) => {
+  const DarkModeWrapper = async (props: InnerProps) => {
+    const darkModeState = await useDarkModeState()
+    return <Inner {...props} darkModeState={darkModeState} />
+  }
+  return DarkModeWrapper
 }
 
 const withActive =

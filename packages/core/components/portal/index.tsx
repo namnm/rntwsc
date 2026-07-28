@@ -3,15 +3,15 @@
 import type { PropsWithChildren } from 'react'
 import { Fragment, useEffect, useId, useLayoutEffect } from 'react'
 
-import { PortalContainer } from '@/core/components/portal/container'
-import type { PortalItem } from '@/core/components/portal/store'
+import { PortalContainer } from '#/core/components/portal/container'
+import type { PortalItem } from '#/core/components/portal/store'
 import {
   addPortal,
   removePortal,
   usePortalItems,
-} from '@/core/components/portal/store'
-import { isWeb } from '@/core/platform'
-import { useIsMounted } from '@/libs/hooks'
+} from '#/core/components/portal/store'
+import { isWeb } from '#/core/platform'
+import { useIsMounted } from '#/libs/hooks'
 
 export type PortalProps = PropsWithChildren<
   Pick<PortalItem, 'disableBodyScroll'>

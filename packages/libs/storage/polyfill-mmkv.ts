@@ -2,7 +2,7 @@
 
 import { createMMKV } from 'react-native-mmkv'
 
-import { setAdapter } from '@/libs/storage'
+import { setAdapter } from '#/libs/storage'
 
 const mmkv = createMMKV()
 

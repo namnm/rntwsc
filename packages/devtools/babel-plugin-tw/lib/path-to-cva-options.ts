@@ -1,20 +1,20 @@
 import type { NodePath } from '@babel/core'
 import { types as t } from '@babel/core'
 
-import type { Ctx } from '@/devtools/babel-plugin-tw/lib/context'
+import type { Ctx } from '#/devtools/babel-plugin-tw/lib/context'
 import type {
   ArrWp,
   Literal,
   MapWp,
   WithPath,
-} from '@/devtools/babel-plugin-tw/lib/path-to-js'
+} from '#/devtools/babel-plugin-tw/lib/path-to-js'
 import {
   pathToArray,
   pathToLiteral,
   pathToObject,
   pathToObjectString,
   pathToString,
-} from '@/devtools/babel-plugin-tw/lib/path-to-js'
+} from '#/devtools/babel-plugin-tw/lib/path-to-js'
 
 export type ClassNames = MapWp<string>
 export type Attr = MapWp<string | ClassNames>

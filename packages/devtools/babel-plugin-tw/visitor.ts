@@ -1,15 +1,15 @@
 import type { PluginPass, Visitor } from '@babel/core'
 import { z } from 'zod'
 
-import { shouldTranspile } from '@/devtools/babel-config/should-transpile'
-import { getPlatform } from '@/devtools/babel-plugin-tw/lib/config'
+import { shouldTranspile } from '#/devtools/babel-config/should-transpile'
+import { getPlatform } from '#/devtools/babel-plugin-tw/lib/config'
 import type {
   ContextOptions,
   Ctx,
-} from '@/devtools/babel-plugin-tw/lib/context'
-import { traverseCallExpression } from '@/devtools/babel-plugin-tw/lib/traverse-call-expression'
-import { traverseJSXOpeningElement } from '@/devtools/babel-plugin-tw/lib/traverse-jsx-opening-element'
-import { traverseTaggedTemplateExpression } from '@/devtools/babel-plugin-tw/lib/traverse-tagged-template-expression'
+} from '#/devtools/babel-plugin-tw/lib/context'
+import { traverseCallExpression } from '#/devtools/babel-plugin-tw/lib/traverse-call-expression'
+import { traverseJSXOpeningElement } from '#/devtools/babel-plugin-tw/lib/traverse-jsx-opening-element'
+import { traverseTaggedTemplateExpression } from '#/devtools/babel-plugin-tw/lib/traverse-tagged-template-expression'
 
 const pluginPassOptsSchema = z.object({
   reactNativeVersion: z.string(),

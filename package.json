@@ -5,7 +5,7 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "fmt": "node ./devtools sync-create-rntwsc-app-templates,normalize,doctoc,eslint,stylelint,prettier",
+    "fmt": "node ./devtools css-extract-variables,sync-create-rntwsc-app-templates,normalize,doctoc,eslint,stylelint,prettier",
     "normalize": "node ./devtools normalize",
     "doctoc": "node ./devtools doctoc",
     "eslint": "node ./devtools eslint",
@@ -15,15 +15,18 @@
     "tsc": "node ./devtools tsc",
     "type-coverage": "node ./devtools type-coverage",
     "test": "vitest run",
-    "test:watch": "vitest",
+    "testw": "vitest",
     "dist": "node ./devtools build-dist",
-    "dist:cli": "node ./devtools build-dist-cli",
+    "cli": "node ./devtools build-cli",
     "extract": "node ./devtools css-extract-variables",
     "sync": "node ./devtools sync-create-rntwsc-app-templates"
   },
   "engines": {
     "node": ">=24.11",
     "pnpm": ">=11"
+  },
+  "dependencies": {
+    "rntwsc": "github:namnm/rntwsc#d903c25701062e5f393d5d8e3c4a1e56e2b418b9"
   },
   "devDependencies": {
     "@types/node": "26.1.1",
@@ -33,6 +36,6 @@
     "vitest": "4.1.10"
   },
   "dist": {
-    "version": "0.0.5"
+    "version": "0.0.10"
   }
 }

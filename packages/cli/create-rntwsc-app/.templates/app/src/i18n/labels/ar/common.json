@@ -1,0 +1,7 @@
+{
+  "description": "React Native مع أسماء فئات Tailwind CSS. متوافق مع بث SSR الخاص بـ NextJS App Router.",
+  "tagline": "__APP_NAME_PASCAL__",
+  "hero_description": "اكتب مرة واحدة، شغّل في كل مكان. استخدم أسماء فئات Tailwind CSS في React Native مع دعم كامل لـ Next.js App Router RSC وبث SSR. يتم تحويل أسماء الفئات وقت البناء على الأجهزة، وتبقى كما هي على الويب.",
+  "get_started": "ابدأ الآن",
+  "view_github": "عرض على GitHub"
+}

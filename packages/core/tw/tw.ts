@@ -1,4 +1,4 @@
-import type { ClassNameSingle } from '@/core/tw/class-name'
+import type { ClassNameSingle } from '#/core/tw/class-name'
 
 type FnTaggedTemplateLiteral = (
   strings: TemplateStringsArray,

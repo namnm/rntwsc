@@ -1,9 +1,9 @@
 import * as tsParser from '@typescript-eslint/parser'
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils'
 
-import { fs } from '@/devtools/fs'
-import { path } from '@/devtools/path'
-import { upperFirst } from '@/libs/lodash'
+import { fs } from '#/devtools/fs'
+import { path } from '#/devtools/path'
+import { upperFirst } from '#/libs/lodash'
 
 const variants = ['native', 'ios', 'android', 'browser'] as const
 type Variant = (typeof variants)[number]

@@ -3,10 +3,10 @@ import {
   extraPrettierignore,
   getNormalizedGitignore,
   writeManagedFile,
-} from '@/devtools/normalize/gitignore'
-import { path } from '@/devtools/path'
+} from '#/devtools/normalize/gitignore'
+import { path } from '#/devtools/path'
 
-const templateRoot = 'packages/cli/create-rntwsc-app/templates/root'
+const templateRoot = 'packages/cli/create-rntwsc-app/.templates/root'
 
 export const syncTemplateIgnores = async (repoRoot: string) => {
   const normalized = await getNormalizedGitignore(repoRoot)

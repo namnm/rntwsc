@@ -1,8 +1,8 @@
 import type { StableStringifyOptions } from 'json-stable-stringify'
 import jsonStableStringify from 'json-stable-stringify'
 
-import { jsonSafe } from '@/libs/json-safe'
-import type { Falsish } from '@/libs/utility-types'
+import { jsonSafe } from '#/libs/json-safe'
+import type { Falsish } from '#/libs/utility-types'
 
 export const jsonStable = (v: unknown, options?: StableStringifyOptions) => {
   let j: string | Falsish

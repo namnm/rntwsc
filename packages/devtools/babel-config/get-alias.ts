@@ -1,6 +1,6 @@
-import { readJson5Sync } from '@/devtools/fs'
-import { path } from '@/devtools/path'
-import type { StrMap } from '@/libs/utility-types'
+import { readJson5Sync } from '#/devtools/fs'
+import { path } from '#/devtools/path'
+import type { StrMap } from '#/libs/utility-types'
 
 type Options = {
   relative?: true

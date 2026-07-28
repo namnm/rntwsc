@@ -1,15 +1,15 @@
 // shortcut to run devtools scripts - published as rntwsc/devtools
 // also usable by a consumer monorepo to run the same eslint/prettier/stylelint/tsc
 
-import { cssExtractVariables } from '@/devtools/css-extract-variables'
-import { doctoc } from '@/devtools/doctoc'
-import { eslint } from '@/devtools/eslint'
-import { log } from '@/devtools/log'
-import { normalize } from '@/devtools/normalize'
-import { prettier } from '@/devtools/prettier'
-import { stylelint } from '@/devtools/stylelint'
-import { tsc } from '@/devtools/tsc'
-import { typeCoverage } from '@/devtools/type-coverage'
+import { cssExtractVariables } from '#/devtools/css-extract-variables'
+import { doctoc } from '#/devtools/doctoc'
+import { eslint } from '#/devtools/eslint'
+import { log } from '#/devtools/log'
+import { normalize } from '#/devtools/normalize'
+import { prettier } from '#/devtools/prettier'
+import { stylelint } from '#/devtools/stylelint'
+import { tsc } from '#/devtools/tsc'
+import { typeCoverage } from '#/devtools/type-coverage'
 
 const fns = {
   doctoc,
@@ -64,9 +64,11 @@ export const run = async (o: Options) => {
     await Promise.all(fmtPromises)
   }
 
-  checkAndPush(promises, 'prettier', o)
+  await r('prettier', o)
+
   checkAndPush(promises, 'tsc', o)
   checkAndPush(promises, 'type-coverage', o)
+
   checkAndPush(promises, 'css-extract-variables', o)
 
   await Promise.all(promises).catch((err: Error) => log.stack(err, 'fatal'))

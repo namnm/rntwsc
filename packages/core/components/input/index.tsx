@@ -2,16 +2,17 @@
 
 import type { ReactNode } from 'react'
 
-import { TextStyleProvider } from '@/core/components/text/text-style-context'
-import type { ClassName } from '@/core/tw/class-name'
-import { clsx } from '@/core/tw/clsx'
-import type { InputProps } from '@/core/tw/components/input'
-import { Input } from '@/core/tw/components/input'
-import type { PressableProps } from '@/core/tw/components/pressable'
-import { Pressable } from '@/core/tw/components/pressable'
-import { View } from '@/core/tw/components/view'
-import type { Variant } from '@/core/tw/cva'
-import { cva } from '@/core/tw/cva'
+import { useIsRtl } from '#/core/i18n/use-is-rtl'
+import type { ClassName } from '#/core/tw/class-name'
+import { clsx } from '#/core/tw/clsx'
+import type { InputProps } from '#/core/tw/components/input'
+import { Input } from '#/core/tw/components/input'
+import type { PressableProps } from '#/core/tw/components/pressable'
+import { Pressable } from '#/core/tw/components/pressable'
+import { TextStyleProvider } from '#/core/tw/components/text-style-context'
+import { View } from '#/core/tw/components/view'
+import type { Variant } from '#/core/tw/cva'
+import { cva } from '#/core/tw/cva'
 
 const classNames = cva({
   classNames: {
@@ -76,6 +77,9 @@ const classNames = cva({
     suffix: {
       true: {},
     },
+    rtl: {
+      true: {},
+    },
   },
   compoundVariants: [
     // ========================================================================
@@ -110,8 +114,11 @@ const classNames = cva({
     },
     // ========================================================================
     // prefix / suffix padding
+    // prefix sits at the reading-start side, suffix at the reading-end side
+    // (left/right in ltr, mirrored in rtl)
     {
       prefix: true,
+      rtl: false,
       size: 'sm',
       classNames: {
         input: 'pl-6',
@@ -119,6 +126,7 @@ const classNames = cva({
     },
     {
       prefix: true,
+      rtl: false,
       size: 'md',
       classNames: {
         input: 'pl-7',
@@ -126,13 +134,39 @@ const classNames = cva({
     },
     {
       prefix: true,
+      rtl: false,
       size: 'lg',
       classNames: {
         input: 'pl-8',
       },
     },
     {
+      prefix: true,
+      rtl: true,
+      size: 'sm',
+      classNames: {
+        input: 'pr-6',
+      },
+    },
+    {
+      prefix: true,
+      rtl: true,
+      size: 'md',
+      classNames: {
+        input: 'pr-7',
+      },
+    },
+    {
+      prefix: true,
+      rtl: true,
+      size: 'lg',
+      classNames: {
+        input: 'pr-8',
+      },
+    },
+    {
       suffix: true,
+      rtl: false,
       size: 'sm',
       classNames: {
         input: 'pr-6',
@@ -140,6 +174,7 @@ const classNames = cva({
     },
     {
       suffix: true,
+      rtl: false,
       size: 'md',
       classNames: {
         input: 'pr-7',
@@ -147,9 +182,34 @@ const classNames = cva({
     },
     {
       suffix: true,
+      rtl: false,
       size: 'lg',
       classNames: {
         input: 'pr-8',
+      },
+    },
+    {
+      suffix: true,
+      rtl: true,
+      size: 'sm',
+      classNames: {
+        input: 'pl-6',
+      },
+    },
+    {
+      suffix: true,
+      rtl: true,
+      size: 'md',
+      classNames: {
+        input: 'pl-7',
+      },
+    },
+    {
+      suffix: true,
+      rtl: true,
+      size: 'lg',
+      classNames: {
+        input: 'pl-8',
       },
     },
   ],
@@ -157,7 +217,7 @@ const classNames = cva({
 
 export type TextInputProps = Omit<
   Variant<typeof classNames>,
-  'prefix' | 'suffix'
+  'prefix' | 'suffix' | 'rtl'
 > &
   InputProps & {
     prefix?: ((cn: ClassName) => ReactNode) | ReactNode
@@ -168,7 +228,7 @@ export type TextInputProps = Omit<
     disabled?: boolean
   }
 
-export const TextInput = ({
+export const TextInput = async ({
   appearance = 'outlined',
   size = 'md',
   shape = 'rounded',
@@ -181,6 +241,8 @@ export const TextInput = ({
   disabled,
   ...props
 }: TextInputProps) => {
+  const rtl = await useIsRtl()
+
   const cn = classNames({
     appearance,
     size,
@@ -188,21 +250,24 @@ export const TextInput = ({
     invalid,
     prefix: !!prefix,
     suffix: !!suffix,
+    rtl,
   })
 
+  // prefix sits at the reading-start side, suffix at the reading-end side
   const renderAffix = (
     affix: TextInputProps['prefix'],
-    position: 'left' | 'right',
+    position: 'start' | 'end',
     onPress?: TextInputProps['onPrefixPress'],
   ) => {
     if (!affix) {
       return null
     }
 
+    const atLeft = rtl ? position === 'end' : position === 'start'
     const baseClass = clsx([
       cn.slot,
       'absolute inset-y-0 z-10 shrink-0 items-center justify-center p-0',
-      position === 'left' ? 'left-0' : 'right-0',
+      atLeft ? 'left-0' : 'right-0',
     ])
 
     if (typeof affix === 'function') {
@@ -221,7 +286,7 @@ export const TextInput = ({
 
   return (
     <View className={['relative w-full self-start', containerClassName]}>
-      {renderAffix(prefix, 'left', onPrefixPress)}
+      {renderAffix(prefix, 'start', onPrefixPress)}
       <Input
         {...props}
         editable={disabled ? false : props.editable}
@@ -231,7 +296,7 @@ export const TextInput = ({
           props.className,
         ]}
       />
-      {renderAffix(suffix, 'right', onSuffixPress)}
+      {renderAffix(suffix, 'end', onSuffixPress)}
     </View>
   )
 }

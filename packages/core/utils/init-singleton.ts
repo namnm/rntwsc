@@ -1,4 +1,4 @@
-import type { StrMap } from '@/libs/utility-types'
+import type { StrMap } from '#/libs/utility-types'
 
 /**
  * To ensure singleton is initialized before use, this helper wraps

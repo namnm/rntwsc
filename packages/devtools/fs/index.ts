@@ -1,7 +1,7 @@
 import fs from 'fs-extra'
 import json5 from 'json5'
 
-import { path } from '@/devtools/path'
+import { path } from '#/devtools/path'
 
 export { fs }
 

@@ -4,13 +4,13 @@ import { execFileSync } from 'node:child_process'
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 
-import { generate } from '@/cli/create-rntwsc-app/src/generate'
-import { fullManifest } from '@/cli/create-rntwsc-app/src/manifest'
+import { generate } from '#/cli/create-rntwsc-app/src/generate'
+import { fullManifest } from '#/cli/create-rntwsc-app/src/manifest'
 import {
   defaultPackageId,
   toKebabCase,
   toPascalCase,
-} from '@/cli/create-rntwsc-app/src/names'
+} from '#/cli/create-rntwsc-app/src/names'
 
 const packageRoot = path.join(__dirname, '..')
 const templatesRoot = path.join(packageRoot, 'templates')

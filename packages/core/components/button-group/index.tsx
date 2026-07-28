@@ -3,9 +3,10 @@
 import type { ReactElement } from 'react'
 import { Children, cloneElement } from 'react'
 
-import type { ButtonProps } from '@/core/components/button'
-import { View } from '@/core/tw/components/view'
-import { tw } from '@/core/tw/tw'
+import type { ButtonProps } from '#/core/components/button'
+import { groupOverlapClassName } from '#/core/components/button/group-overlap-class-name'
+import { useIsRtl } from '#/core/i18n/use-is-rtl'
+import { View } from '#/core/tw/components/view'
 
 export type ButtonGroupProps = Pick<
   ButtonProps,
@@ -20,7 +21,7 @@ export type ButtonGroupProps = Pick<
   | 'children'
 >
 
-export const ButtonGroup = ({
+export const ButtonGroup = async ({
   type = 'primary',
   appearance = 'solid',
   size = 'md',
@@ -31,16 +32,19 @@ export const ButtonGroup = ({
   className,
   children,
 }: ButtonGroupProps) => {
+  const rtl = await useIsRtl()
   const arr = Children.toArray(children)
   const count = arr.length
 
   children = arr.map((_c, i) => {
     const c = _c as ReactElement<ButtonProps>
-    const isOutline = appearance === 'outline'
     const isOnlyChild = count === 1
     const isFirst = i === 0
     const isLast = i === count - 1
     const isMiddle = !isFirst && !isLast
+
+    const isOutline = appearance === 'outline'
+    const overlapClassName = groupOverlapClassName(isOutline, isFirst, rtl)
 
     return cloneElement(c, {
       type: c.props.type || type,
@@ -53,7 +57,7 @@ export const ButtonGroup = ({
       inset,
       ripple,
       disabled: c.props.disabled || disabled,
-      className: [isOutline && !isFirst && tw`ml-[-1px]`, c.props.className],
+      className: [overlapClassName, c.props.className],
     })
   })
 

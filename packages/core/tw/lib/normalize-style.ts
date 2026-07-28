@@ -1,10 +1,10 @@
-import { isWeb } from '@/core/platform'
+import { isWeb } from '#/core/platform'
 import {
   animationMap,
   transitionTimingFunctionMap,
-} from '@/core/tw/lib/normalize-style-config'
-import { camelCase } from '@/libs/lodash'
-import type { Falsish, FnAny, StrMap } from '@/libs/utility-types'
+} from '#/core/tw/lib/normalize-style-config'
+import { camelCase } from '#/libs/lodash'
+import type { Falsish, FnAny, StrMap } from '#/libs/utility-types'
 
 type Style = StrMap &
   Partial<{

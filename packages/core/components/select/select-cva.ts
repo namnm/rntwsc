@@ -1,7 +1,7 @@
-import type { InputCva } from '@/core/components/input/input-cva'
-import type { ClassName } from '@/core/tw/class-name'
-import { cva } from '@/core/tw/cva'
-import type { MultipleProps, SingleProps } from '@/libs/utility-types'
+import type { InputCva } from '#/core/components/input/input-cva'
+import type { ClassName } from '#/core/tw/class-name'
+import { cva } from '#/core/tw/cva'
+import type { MultipleProps, SingleProps } from '#/libs/utility-types'
 
 export const selectCva = cva({
   classNames: {

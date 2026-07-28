@@ -1,1 +1,1 @@
-export { NativeRefsPage as default } from '#/pages/native-refs'
+export { NativeRefsPage as default } from '@/pages/native-refs'

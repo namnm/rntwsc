@@ -1,1 +1,1 @@
-export { GridPage as default } from '#/pages/grid'
+export { GridPage as default } from '@/pages/grid'

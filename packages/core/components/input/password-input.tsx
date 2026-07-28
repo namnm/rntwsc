@@ -2,10 +2,10 @@
 
 import { useState } from 'react'
 
-import type { TextInputProps } from '@/core/components/input'
-import { TextInput } from '@/core/components/input'
-import { Eye } from '@/core/icons/eye'
-import { EyeSlash } from '@/core/icons/eye-slash'
+import type { TextInputProps } from '#/core/components/input'
+import { TextInput } from '#/core/components/input'
+import { Eye } from '#/core/icons/eye'
+import { EyeSlash } from '#/core/icons/eye-slash'
 
 export type PasswordInputProps = TextInputProps
 

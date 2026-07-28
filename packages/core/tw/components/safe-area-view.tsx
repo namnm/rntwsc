@@ -1,1 +1,1 @@
-export { View as SafeAreaView } from '@/core/tw/components/view'
+export { View as SafeAreaView } from '#/core/tw/components/view'

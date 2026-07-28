@@ -1,4 +1,4 @@
-import { jsonSafe } from '@/libs/json-safe'
+import { jsonSafe } from '#/libs/json-safe'
 
 type Level = 'debug' | 'info' | 'warn' | 'error'
 const createSimpleLog =

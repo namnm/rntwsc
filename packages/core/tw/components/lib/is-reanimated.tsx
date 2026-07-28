@@ -1,4 +1,4 @@
-import type { CommonProps } from '@/core/tw/components/lib/common-props'
+import type { CommonProps } from '#/core/tw/components/lib/common-props'
 
 type Style = {
   transitionProperty?: unknown

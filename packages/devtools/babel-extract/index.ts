@@ -3,9 +3,9 @@ import { parse } from '@babel/parser'
 import type { NodePath, Visitor } from '@babel/traverse'
 import traverse from '@babel/traverse'
 
-import { twExtract } from '@/devtools/babel-plugin-tw/extract'
-import { fs } from '@/devtools/fs'
-import { globSync } from '@/devtools/glob'
+import { twExtract } from '#/devtools/babel-plugin-tw/extract'
+import { fs } from '#/devtools/fs'
+import { globSync } from '#/devtools/glob'
 
 type Options = {
   extractClassNameOutputPath: string

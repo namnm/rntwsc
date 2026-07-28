@@ -1,4 +1,4 @@
-import { tw } from '@/core/tw/tw'
+import { tw } from '#/core/tw/tw'
 
 // it is difficult to write tailwind class name for complex css
 // we will write css and put it here to get transpile reference

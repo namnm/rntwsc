@@ -1,14 +1,14 @@
 import { compare } from 'semver'
 
-import { fs, readJson5 } from '@/devtools/fs'
-import { glob } from '@/devtools/glob'
-import { log } from '@/devtools/log'
-import { pnpmWorkspace } from '@/devtools/normalize/pnpm-workspace'
-import { path } from '@/devtools/path'
-import { jsonSafe } from '@/libs/json-safe'
-import { jsonStable } from '@/libs/json-stable'
-import { groupBy, kebabCase, omit } from '@/libs/lodash'
-import type { StrMap } from '@/libs/utility-types'
+import { fs, readJson5 } from '#/devtools/fs'
+import { glob } from '#/devtools/glob'
+import { log } from '#/devtools/log'
+import { pnpmWorkspace } from '#/devtools/normalize/pnpm-workspace'
+import { path } from '#/devtools/path'
+import { jsonSafe } from '#/libs/json-safe'
+import { jsonStable } from '#/libs/json-stable'
+import { groupBy, kebabCase, omit } from '#/libs/lodash'
+import type { StrMap } from '#/libs/utility-types'
 
 const keys = [
   'dependencies',

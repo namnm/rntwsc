@@ -1,1 +1,1 @@
-export { AccordionPage as default } from '#/pages/accordion'
+export { AccordionPage as default } from '@/pages/accordion'

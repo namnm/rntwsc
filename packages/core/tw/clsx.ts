@@ -1,5 +1,5 @@
-import type { ClassName } from '@/core/tw/class-name'
-import { twMergeWeb } from '@/core/tw/lib/class-name-minified'
+import type { ClassName } from '#/core/tw/class-name'
+import { twMergeWeb } from '#/core/tw/lib/class-name-minified'
 
 // on web it will return string, on native it is just a placeholder to transpile without any additional logic
 export const clsx = (...classNames: ClassName[]): ClassName => {

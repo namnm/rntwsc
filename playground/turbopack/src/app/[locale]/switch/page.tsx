@@ -1,1 +1,1 @@
-export { SwitchPage as default } from '#/pages/switch'
+export { SwitchPage as default } from '@/pages/switch'

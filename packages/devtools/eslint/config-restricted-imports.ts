@@ -1,4 +1,4 @@
-const message = 'Use `@/core/tw` instead'
+const message = 'Use `#/core/tw` instead'
 
 export const restrictedImports = [
   {
@@ -11,7 +11,7 @@ export const restrictedImports = [
     name: 'react',
     importNames: ['cache'],
     message:
-      'React cache only works correctly in rsc component tree, in realistic we also need to cover ssr client bundle component tree, please use `@/core/cache` instead',
+      'React cache only works correctly in rsc component tree, in realistic we also need to cover ssr client bundle component tree, please use `#/core/cache` instead',
   },
   {
     name: 'react-native',

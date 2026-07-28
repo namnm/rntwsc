@@ -3,9 +3,9 @@ import { useSafeAreaPadding } from 'rntwsc/responsive/use-safe-area'
 import { ScrollView } from 'rntwsc/tw/components/scroll-view'
 import { View } from 'rntwsc/tw/components/view'
 
-import { NavLayout } from '#/components/nav-layout'
-import { GraphQLClient } from '#/pages/graphql/graphql-client'
-import { GraphQLServer } from '#/pages/graphql/graphql-server'
+import { NavLayout } from '@/components/nav-layout'
+import { GraphQLClient } from '@/pages/graphql/graphql-client'
+import { GraphQLServer } from '@/pages/graphql/graphql-server'
 
 export const GraphQLPage = () => {
   const padding = useSafeAreaPadding()

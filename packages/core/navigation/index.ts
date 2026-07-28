@@ -1,18 +1,16 @@
 import { headers } from 'next-unchecked/headers'
 
-import { serverCache } from '@/core/cache'
-import { useCurrentLocaleUntyped } from '@/core/i18n'
-import { sck, urlHeaderKey } from '@/core/navigation/config'
-import { normalizePathname } from '@/core/navigation/normalize-pathname'
-import type { ParsedQs } from '@/libs/qs'
-import { qsParse } from '@/libs/qs'
+import { serverCache } from '#/core/cache'
+import { useCurrentLocaleUntyped } from '#/core/i18n'
+import { sck, urlHeaderKey } from '#/core/navigation/config'
+import { normalizePathname } from '#/core/navigation/normalize-pathname'
+import type { ParsedQs } from '#/libs/qs'
+import { qsParse } from '#/libs/qs'
 
-export const useRoute = () =>
-  serverCache(sck.route, async () => {
-    const [h, locale] = await Promise.all([
-      headers(),
-      useCurrentLocaleUntyped(),
-    ])
+export const useRoute = () => {
+  const useServerCache = async () => {
+    const h = await headers()
+    const locale = await useCurrentLocaleUntyped()
     const u = h.get(urlHeaderKey)
     if (!u) {
       throw new Error('Missing request url in headers')
@@ -32,6 +30,8 @@ export const useRoute = () =>
       pathname,
       query,
     }
-  })
+  }
+  return serverCache(sck.route, useServerCache)
+}
 
 export const useIsRouteFocused = () => true

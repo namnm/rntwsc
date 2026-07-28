@@ -2,14 +2,14 @@
 
 import { Children, createContext, isValidElement } from 'react'
 
-import { TextStyleProvider } from '@/core/components/text/text-style-context'
-import type { TextProps } from '@/core/tw/components/text'
-import { TextWithoutContext } from '@/core/tw/components/text'
-import type { ViewProps } from '@/core/tw/components/view'
-import { View } from '@/core/tw/components/view'
-import type { Variant } from '@/core/tw/cva'
-import { cva } from '@/core/tw/cva'
-import { useSafeContext } from '@/libs/hooks'
+import type { TextProps } from '#/core/tw/components/text'
+import { TextWithoutContext } from '#/core/tw/components/text'
+import { TextStyleProvider } from '#/core/tw/components/text-style-context'
+import type { ViewProps } from '#/core/tw/components/view'
+import { View } from '#/core/tw/components/view'
+import type { Variant } from '#/core/tw/cva'
+import { cva } from '#/core/tw/cva'
+import { useSafeContext } from '#/libs/hooks'
 
 // context
 

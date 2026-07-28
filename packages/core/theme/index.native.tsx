@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react'
 
-import { themeCookieKey, toValidTheme } from '@/core/theme/config'
-import { storage } from '@/libs/storage'
+import { themeCookieKey, toValidTheme } from '#/core/theme/config'
+import { storage } from '#/libs/storage'
 
 let currentTheme: string | undefined = undefined
 const listeners = new Set<() => void>()

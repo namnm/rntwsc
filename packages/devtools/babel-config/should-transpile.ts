@@ -1,4 +1,4 @@
-import type { Falsish } from '@/libs/utility-types'
+import type { Falsish } from '#/libs/utility-types'
 
 export const shouldTranspileExtension = /\.tsx?/
 

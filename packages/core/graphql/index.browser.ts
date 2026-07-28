@@ -3,17 +3,17 @@
 import { useQuery } from '@apollo/client/react'
 import { useCallback, useMemo, useRef } from 'react'
 
-import type { GraphQLResponse, UseApollo } from '@/core/graphql/config'
-import { hk } from '@/core/graphql/config'
+import type { GraphQLResponse, UseApollo } from '#/core/graphql/config'
+import { hk, normalizeGraphQLResponse } from '#/core/graphql/config'
 import {
   clearHydrationErr,
   useApolloClient,
   useHydrationErr,
-} from '@/core/graphql/store'
-import type { HydrationData, UseHydrationData } from '@/core/hydration/config'
-import { dehydrate } from '@/core/hydration/dehydrate'
+} from '#/core/graphql/store'
+import type { HydrationData, UseHydrationData } from '#/core/hydration/config'
+import { dehydrate } from '#/core/hydration/dehydrate'
 
-export const useApollo = <T>({
+export const useFetchGraphQL = <T>({
   url,
   query,
   variables,
@@ -50,10 +50,10 @@ export const useApollo = <T>({
     // only set data when apollo has result or there are graphql errors to surface
     const data: GraphQLResponse<T> | undefined =
       r.data || hydrationErr?.errors
-        ? {
+        ? normalizeGraphQLResponse({
             data: r.data,
             errors: hydrationErr?.errors,
-          }
+          })
         : undefined
     return {
       data,

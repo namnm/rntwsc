@@ -1,11 +1,12 @@
 'use client'
 
-import type { NumberInputProps } from '@/core/components/input/number-input'
-import { NumberInput } from '@/core/components/input/number-input'
-import { Minus } from '@/core/icons/minus'
-import { Plus } from '@/core/icons/plus'
-import { Pressable } from '@/core/tw/components/pressable'
-import { useControllableState } from '@/libs/hooks'
+import type { NumberInputProps } from '#/core/components/input/number-input'
+import { NumberInput } from '#/core/components/input/number-input'
+import { useIsRtl } from '#/core/i18n/use-is-rtl'
+import { Minus } from '#/core/icons/minus'
+import { Plus } from '#/core/icons/plus'
+import { Pressable } from '#/core/tw/components/pressable'
+import { useControllableState } from '#/libs/hooks'
 
 type QuantityInputProps = NumberInputProps & {
   step?: number
@@ -13,7 +14,7 @@ type QuantityInputProps = NumberInputProps & {
   max?: number
 }
 
-export const QuantityInput = ({
+export const QuantityInput = async ({
   value,
   defaultValue,
   onChangeText,
@@ -22,6 +23,7 @@ export const QuantityInput = ({
   max = Infinity,
   ...props
 }: QuantityInputProps) => {
+  const rtl = await useIsRtl()
   const [state, setState] = useControllableState({
     value,
     defaultValue,
@@ -49,7 +51,10 @@ export const QuantityInput = ({
       ]}
       prefix={className => (
         <Pressable
-          className={[className, 'border-r border-gray-200']}
+          className={[
+            className,
+            rtl ? 'border-l border-gray-200' : 'border-r border-gray-200',
+          ]}
           onPress={() => onPress(-step)}
         >
           <Minus className='text-[10px]' />
@@ -57,7 +62,10 @@ export const QuantityInput = ({
       )}
       suffix={className => (
         <Pressable
-          className={[className, 'border-l border-gray-200']}
+          className={[
+            className,
+            rtl ? 'border-r border-gray-200' : 'border-l border-gray-200',
+          ]}
           onPress={() => onPress(step)}
         >
           <Plus className='text-[10px]' />

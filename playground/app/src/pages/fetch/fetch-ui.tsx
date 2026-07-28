@@ -6,28 +6,21 @@ export type HelloData = { message: string; timestamp: number }
 
 type Props = UseHydrationData<HelloData>
 
-export const FetchUi = ({ data, loading, error, dehydrateJsx }: Props) => {
-  let children = null
+export const FetchUi = ({ data, loading, error }: Props) => {
   if (loading) {
-    children = <Span className='text-foreground transition'>loading..</Span>
-  } else if (error) {
-    children = <Span className='text-red-500 transition'>{String(error)}</Span>
-  } else {
-    children = (
-      <View className='gap-2'>
-        <Span className='text-foreground transition'>
-          message: {data?.message}
-        </Span>
-        <Span className='text-foreground transition'>
-          timestamp: {data?.timestamp}
-        </Span>
-      </View>
-    )
+    return <Span className='text-foreground transition'>loading..</Span>
+  }
+  if (error) {
+    return <Span className='text-red-500 transition'>{String(error)}</Span>
   }
   return (
-    <>
-      {children}
-      {dehydrateJsx}
-    </>
+    <View className='gap-2'>
+      <Span className='text-foreground transition'>
+        message: {data?.message}
+      </Span>
+      <Span className='text-foreground transition'>
+        timestamp: {data?.timestamp}
+      </Span>
+    </View>
   )
 }

@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useState } from 'react'
 
-import type { UseFetch } from '@/core/fetch/config'
-import { hk } from '@/core/fetch/config'
-import { getFetchData, setFetchData, useFetchData } from '@/core/fetch/store'
-import type { UseHydrationData } from '@/core/hydration/config'
-import { dehydrate } from '@/core/hydration/dehydrate'
+import type { UseFetch } from '#/core/fetch/config'
+import { hk } from '#/core/fetch/config'
+import { getFetchData, setFetchData, useFetchData } from '#/core/fetch/store'
+import type { UseHydrationData } from '#/core/hydration/config'
+import { dehydrate } from '#/core/hydration/dehydrate'
 
 const loadings = new Set<string>()
 

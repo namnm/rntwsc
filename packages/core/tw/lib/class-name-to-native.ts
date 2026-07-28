@@ -13,21 +13,21 @@ import type {
   ClassNameResponsiveSelector,
   ClassNameSelector,
   ClassNameWithVariable,
-} from '@/core/tw/class-name'
+} from '#/core/tw/class-name'
 import {
   classNameCalc,
   classNameCalcKeys,
   classNameCalcScreens,
-} from '@/core/tw/lib/class-name-calc'
+} from '#/core/tw/lib/class-name-calc'
 import {
   animationMap,
   transitionDurationDefault,
   transitionTimingFunctionDefault,
   transitionTimingFunctionMap,
-} from '@/core/tw/lib/normalize-style-config'
-import { jsonSafe } from '@/libs/json-safe'
-import { camelCase } from '@/libs/lodash'
-import type { Falsish, StrMap } from '@/libs/utility-types'
+} from '#/core/tw/lib/normalize-style-config'
+import { jsonSafe } from '#/libs/json-safe'
+import { camelCase } from '#/libs/lodash'
+import type { Falsish, StrMap } from '#/libs/utility-types'
 
 type Options = {
   platform: Platform['OS']

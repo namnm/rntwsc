@@ -1,13 +1,7 @@
 'use client'
 
-import { useTextStyle } from '@/core/components/text/text-style-context'
-import type { TextProps } from '@/core/tw/components/text'
-import { TextWithoutContext } from '@/core/tw/components/text'
-
-export const Text = ({ className, ...props }: TextProps) => {
-  const ctx = useTextStyle()
-  return <TextWithoutContext {...props} className={[ctx, className]} />
-}
+import type { TextProps } from '#/core/tw/components/text'
+import { Text } from '#/core/tw/components/text'
 
 export const H1 = ({ className, ...props }: TextProps) => (
   <Text

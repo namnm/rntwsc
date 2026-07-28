@@ -18,7 +18,7 @@ Image is aliased to react-native-fast-image on native and a plain img element on
 Import SVGs directly as React components (via the svgr loader). Rendered width equals the font size, rendered height equals the line height. Set currentColor in the SVG for color inheritance.
 
 ```tsx
-import StarIcon from '#/svg-icons/star.svg'
+import StarIcon from '@/svg-icons/star.svg'
 
 // className controls color (current text color becomes fill) and size (current text size becomes width and height)
 ;<StarIcon className='text-xl text-yellow-500' />

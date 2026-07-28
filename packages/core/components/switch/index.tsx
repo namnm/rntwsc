@@ -1,13 +1,14 @@
 'use client'
 
-import { InsetShadow } from '@/core/components/inset'
-import type { PressableProps } from '@/core/tw/components/pressable'
-import { Pressable } from '@/core/tw/components/pressable'
-import { View } from '@/core/tw/components/view'
-import type { Variant } from '@/core/tw/cva'
-import { cva } from '@/core/tw/cva'
-import { useControllableState } from '@/libs/hooks'
-import type { ValueProps } from '@/libs/utility-types'
+import { InsetShadow } from '#/core/components/inset'
+import { useIsRtl } from '#/core/i18n/use-is-rtl'
+import type { PressableProps } from '#/core/tw/components/pressable'
+import { Pressable } from '#/core/tw/components/pressable'
+import { View } from '#/core/tw/components/view'
+import type { Variant } from '#/core/tw/cva'
+import { cva } from '#/core/tw/cva'
+import { useControllableState } from '#/libs/hooks'
+import type { ValueProps } from '#/libs/utility-types'
 
 const switchCva = cva({
   classNames: {
@@ -105,7 +106,7 @@ export type SwitchProps = Omit<PressableProps, 'children' | 'onPress'> &
   Variant<typeof switchCva> &
   ValueProps<boolean>
 
-export const Switch = ({
+export const Switch = async ({
   type = 'primary',
   size = 'md',
   disabled,
@@ -115,6 +116,7 @@ export const Switch = ({
   className,
   ...props
 }: SwitchProps) => {
+  const rtl = await useIsRtl()
   const [checked, setChecked] = useControllableState({
     value,
     defaultValue,
@@ -127,6 +129,11 @@ export const Switch = ({
     disabled,
   })
 
+  // translate-x doesn't mirror under rtl the way flex-row does, so the thumb
+  // must move toward the reading-start side manually: "on" is the end side
+  // (right in ltr, left in rtl)
+  const thumbAtEnd = checked !== rtl
+
   return (
     <Pressable
       {...props}
@@ -138,7 +145,7 @@ export const Switch = ({
       shouldRasterizeIOS={disabled}
     >
       <InsetShadow className={cn.inset} enabled />
-      <View className={[cn.thumb, checked ? cn.thumbOn : cn.thumbOff]} />
+      <View className={[cn.thumb, thumbAtEnd ? cn.thumbOn : cn.thumbOff]} />
     </Pressable>
   )
 }

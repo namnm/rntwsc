@@ -1,11 +1,11 @@
 import { print } from 'graphql'
 
-import { serverCache } from '@/core/cache'
-import type { GraphQLResponse, UseApollo } from '@/core/graphql/config'
-import { hk, sck } from '@/core/graphql/config'
-import type { HydrationData, UseHydrationData } from '@/core/hydration/config'
-import { dehydrate } from '@/core/hydration/dehydrate'
-import { jsonSafe } from '@/libs/json-safe'
+import { serverCache } from '#/core/cache'
+import type { GraphQLResponse, UseApollo } from '#/core/graphql/config'
+import { hk, normalizeGraphQLResponse, sck } from '#/core/graphql/config'
+import type { HydrationData, UseHydrationData } from '#/core/hydration/config'
+import { dehydrate } from '#/core/hydration/dehydrate'
+import { jsonSafe } from '#/libs/json-safe'
 
 const getCache = <T>() =>
   serverCache(
@@ -13,7 +13,7 @@ const getCache = <T>() =>
     () => new Map<string, Promise<HydrationData<GraphQLResponse<T>>>>(),
   )
 
-export const useApollo = async <T>({
+export const useFetchGraphQL = async <T>({
   url,
   query,
   variables,
@@ -37,6 +37,7 @@ export const useApollo = async <T>({
     m.set(k, p)
   }
   const v = await p
+  v.data = normalizeGraphQLResponse(v.data)
   return dehydrate(k, v)
 }
 

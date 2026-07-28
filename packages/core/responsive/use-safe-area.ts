@@ -1,6 +1,6 @@
 import type { EdgeInsets } from 'react-native-safe-area-context'
 
-import type { ClassName } from '@/core/tw/class-name'
+import type { ClassName } from '#/core/tw/class-name'
 
 // this is only available in browser and native
 export const useSafeAreaInsets = (): EdgeInsets | undefined => undefined

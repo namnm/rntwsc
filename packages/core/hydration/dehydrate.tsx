@@ -1,8 +1,8 @@
-import { serverCache } from '@/core/cache'
-import type { HydrationData, UseHydrationData } from '@/core/hydration/config'
-import { sck } from '@/core/hydration/config'
-import { DehydrateTemplate } from '@/core/hydration/dehydrate-template'
-import { isServer, isWeb } from '@/core/platform'
+import { serverCache } from '#/core/cache'
+import type { HydrationData, UseHydrationData } from '#/core/hydration/config'
+import { sck } from '#/core/hydration/config'
+import { DehydrateTemplate } from '#/core/hydration/dehydrate-template'
+import { isServer, isWeb } from '#/core/platform'
 
 // to not dehydrate a key twice
 const browserDehydrated = new Set<string>()

@@ -2,8 +2,8 @@ import type { ConfigAPI, NodePath, PluginObj } from '@babel/core'
 import { parse, traverse, types as t } from '@babel/core'
 import { z } from 'zod'
 
-import { shouldTranspile } from '@/devtools/babel-config/should-transpile'
-import { fs } from '@/devtools/fs'
+import { shouldTranspile } from '#/devtools/babel-config/should-transpile'
+import { fs } from '#/devtools/fs'
 
 // ============================================================
 // Types

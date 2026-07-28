@@ -1,17 +1,17 @@
 // shortcut to run devtools scripts
 
-import { run as buildDist } from '@/cli/build-dist'
-import { run as buildDistCli } from '@/cli/build-dist-cli'
-import { syncCreateRntwscAppTemplates } from '@/cli/sync-create-rntwsc-app-templates'
-import { cssExtractVariables } from '@/devtools/css-extract-variables'
-import { doctoc } from '@/devtools/doctoc'
-import { eslint } from '@/devtools/eslint'
-import { log } from '@/devtools/log'
-import { normalize } from '@/devtools/normalize'
-import { prettier } from '@/devtools/prettier'
-import { stylelint } from '@/devtools/stylelint'
-import { tsc } from '@/devtools/tsc'
-import { typeCoverage } from '@/devtools/type-coverage'
+import { buildDistCli } from '#/cli/build-cli'
+import { buildDist } from '#/cli/build-dist'
+import { syncCreateRntwscAppTemplates } from '#/cli/sync-create-rntwsc-app-templates'
+import { cssExtractVariables } from '#/devtools/css-extract-variables'
+import { doctoc } from '#/devtools/doctoc'
+import { eslint } from '#/devtools/eslint'
+import { log } from '#/devtools/log'
+import { normalize } from '#/devtools/normalize'
+import { prettier } from '#/devtools/prettier'
+import { stylelint } from '#/devtools/stylelint'
+import { tsc } from '#/devtools/tsc'
+import { typeCoverage } from '#/devtools/type-coverage'
 
 const fns = {
   doctoc,
@@ -23,7 +23,7 @@ const fns = {
   'type-coverage': typeCoverage,
   'css-extract-variables': cssExtractVariables,
   'build-dist': buildDist,
-  'build-dist-cli': buildDistCli,
+  'build-cli': buildDistCli,
   'sync-create-rntwsc-app-templates': syncCreateRntwscAppTemplates,
 }
 type Pkg = keyof typeof fns
@@ -56,10 +56,6 @@ const checkAndPush = (promises: Promise<unknown>[], p: Pkg, o: Options) => {
 
 // need to run in this order to avoid conflicts between commands
 export const run = async (o: Options) => {
-  const syncPromises: Promise<unknown>[] = []
-  checkAndPush(syncPromises, 'sync-create-rntwsc-app-templates', o)
-  await Promise.all(syncPromises)
-
   let promises: Promise<unknown>[] = []
   checkAndPush(promises, 'normalize', o)
 
@@ -73,13 +69,16 @@ export const run = async (o: Options) => {
     await Promise.all(fmtPromises)
   }
 
-  checkAndPush(promises, 'css-extract-variables', o)
+  await r('prettier', o)
 
-  checkAndPush(promises, 'prettier', o)
   checkAndPush(promises, 'tsc', o)
   checkAndPush(promises, 'type-coverage', o)
+
+  checkAndPush(promises, 'css-extract-variables', o)
+
   checkAndPush(promises, 'build-dist', o)
-  checkAndPush(promises, 'build-dist-cli', o)
+  checkAndPush(promises, 'build-cli', o)
+  checkAndPush(promises, 'sync-create-rntwsc-app-templates', o)
 
   await Promise.all(promises).catch((err: Error) => log.stack(err, 'fatal'))
 }

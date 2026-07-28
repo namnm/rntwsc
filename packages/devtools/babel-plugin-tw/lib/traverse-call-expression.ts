@@ -1,12 +1,12 @@
 import type { NodePath } from '@babel/core'
 import { types as t } from '@babel/core'
 
-import { twFn } from '@/devtools/babel-plugin-tw/lib/config'
-import { context } from '@/devtools/babel-plugin-tw/lib/context'
-import { getExpressionName } from '@/devtools/babel-plugin-tw/lib/get-expression-name'
-import { transpileClsx } from '@/devtools/babel-plugin-tw/lib/transpile-clsx'
-import { transpileCva } from '@/devtools/babel-plugin-tw/lib/transpile-cva'
-import type { TraverseOptions } from '@/devtools/babel-plugin-tw/visitor'
+import { twFn } from '#/devtools/babel-plugin-tw/lib/config'
+import { context } from '#/devtools/babel-plugin-tw/lib/context'
+import { getExpressionName } from '#/devtools/babel-plugin-tw/lib/get-expression-name'
+import { transpileClsx } from '#/devtools/babel-plugin-tw/lib/transpile-clsx'
+import { transpileCva } from '#/devtools/babel-plugin-tw/lib/transpile-cva'
+import type { TraverseOptions } from '#/devtools/babel-plugin-tw/visitor'
 
 export const traverseCallExpression = (
   path: NodePath<t.CallExpression>,

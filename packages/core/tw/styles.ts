@@ -1,4 +1,4 @@
-import { tw } from '@/core/tw/tw'
+import { tw } from '#/core/tw/tw'
 
 // these class names should match with tailwind.css
 // use tw`` here to collect and map when class names are minified

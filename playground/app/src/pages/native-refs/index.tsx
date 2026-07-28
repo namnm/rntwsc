@@ -3,8 +3,8 @@ import { useSafeAreaPadding } from 'rntwsc/responsive/use-safe-area'
 import { ScrollView } from 'rntwsc/tw/components/scroll-view'
 import { View } from 'rntwsc/tw/components/view'
 
-import { NavLayout } from '#/components/nav-layout'
-import { useDemoRefs } from '#/pages/home/refs'
+import { NavLayout } from '@/components/nav-layout'
+import { useDemoRefs } from '@/pages/home/refs'
 
 export const NativeRefsPage = async () => {
   const padding = useSafeAreaPadding()

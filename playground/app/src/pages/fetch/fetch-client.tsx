@@ -5,9 +5,9 @@ import { Span } from 'rntwsc/components/text'
 import { useFetch } from 'rntwsc/fetch'
 import { View } from 'rntwsc/tw/components/view'
 
-import { playgroundFetchUrl } from '#/pages/fetch/config'
-import type { HelloData } from '#/pages/fetch/fetch-ui'
-import { FetchUi } from '#/pages/fetch/fetch-ui'
+import { playgroundFetchUrl } from '@/pages/fetch/config'
+import type { HelloData } from '@/pages/fetch/fetch-ui'
+import { FetchUi } from '@/pages/fetch/fetch-ui'
 
 type Props = {
   label: string

@@ -5,8 +5,8 @@ import {
   useWindowDimensions as useWindowDimensionsOriginal,
 } from 'react-native'
 
-import { isWeb } from '@/core/platform'
-import { useIsMounted } from '@/libs/hooks'
+import { isWeb } from '#/core/platform'
+import { useIsMounted } from '#/libs/hooks'
 
 export type DimensionsSize = {
   width: number

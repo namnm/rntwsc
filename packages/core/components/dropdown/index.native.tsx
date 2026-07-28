@@ -9,11 +9,11 @@ import {
 import type { PropsWithChildren } from 'react'
 import { useState } from 'react'
 
-import { Portal } from '@/core/components/portal'
-import type { ClassName } from '@/core/tw/class-name'
-import { Pressable } from '@/core/tw/components/pressable'
-import { ScrollView as ScrollViewOriginal } from '@/core/tw/components/scroll-view'
-import { View } from '@/core/tw/components/view'
+import { Portal } from '#/core/components/portal'
+import type { ClassName } from '#/core/tw/class-name'
+import { Pressable } from '#/core/tw/components/pressable'
+import { ScrollView as ScrollViewOriginal } from '#/core/tw/components/scroll-view'
+import { View } from '#/core/tw/components/view'
 
 export type DropdownProps = PropsWithChildren<{
   open: boolean

@@ -2,30 +2,30 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { Drawer } from '@/core/components/drawer'
-import { Dropdown } from '@/core/components/dropdown'
-import { inputCva } from '@/core/components/input/input-cva'
+import { Drawer } from '#/core/components/drawer'
+import { Dropdown } from '#/core/components/dropdown'
+import { inputCva } from '#/core/components/input/input-cva'
 import type {
   ItemsFn,
   SearchStrategy,
   SelectItem,
   SelectProps,
-} from '@/core/components/select/select-cva'
-import { selectCva } from '@/core/components/select/select-cva'
-import { Span } from '@/core/components/text'
-import { Check } from '@/core/icons/check'
-import { ChevronBottom } from '@/core/icons/chevron-bottom'
-import { useWindowDimensions } from '@/core/responsive/use-window-dimensions'
-import { Input } from '@/core/tw/components/input'
-import { Pressable } from '@/core/tw/components/pressable'
-import { View } from '@/core/tw/components/view'
-import { useControllableState } from '@/libs/hooks'
+} from '#/core/components/select/select-cva'
+import { selectCva } from '#/core/components/select/select-cva'
+import { Span } from '#/core/components/text'
+import { Check } from '#/core/icons/check'
+import { ChevronBottom } from '#/core/icons/chevron-bottom'
+import { useWindowDimensions } from '#/core/responsive/use-window-dimensions'
+import { Input } from '#/core/tw/components/input'
+import { Pressable } from '#/core/tw/components/pressable'
+import { View } from '#/core/tw/components/view'
+import { useControllableState } from '#/libs/hooks'
 
 export type {
   SelectItem,
   SelectItems,
   SelectProps,
-} from '@/core/components/select/select-cva'
+} from '#/core/components/select/select-cva'
 
 // --- pure helpers ---
 

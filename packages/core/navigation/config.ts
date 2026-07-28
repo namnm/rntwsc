@@ -1,4 +1,4 @@
-import { serverCacheKey } from '@/core/cache/key'
+import { serverCacheKey } from '#/core/cache/key'
 
 export const sck = serverCacheKey('rntwsc/navigation', ['route'] as const)
 

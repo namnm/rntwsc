@@ -1,7 +1,7 @@
-import { getAlias } from '@/devtools/babel-config/get-alias'
-import { asyncHookPlugin } from '@/devtools/babel-plugin-async-hook'
-import { browserValidationPlugin } from '@/devtools/babel-plugin-browser-validation'
-import { twPlugin } from '@/devtools/babel-plugin-tw'
+import { getAlias } from '#/devtools/babel-config/get-alias'
+import { asyncHookPlugin } from '#/devtools/babel-plugin-async-hook'
+import { browserValidationPlugin } from '#/devtools/babel-plugin-browser-validation'
+import { twPlugin } from '#/devtools/babel-plugin-tw'
 
 const reactnativeWorkletsPlugin =
   require.resolve('react-native-worklets/plugin')

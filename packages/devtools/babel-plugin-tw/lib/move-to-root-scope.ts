@@ -1,7 +1,7 @@
 import { types as t } from '@babel/core'
 
-import type { Ctx } from '@/devtools/babel-plugin-tw/lib/context'
-import { jsToNode } from '@/devtools/babel-plugin-tw/lib/js-to-node'
+import type { Ctx } from '#/devtools/babel-plugin-tw/lib/context'
+import { jsToNode } from '#/devtools/babel-plugin-tw/lib/js-to-node'
 
 export const moveToRootScope = (ctx: Ctx, value: any) => {
   const { programPath, isInFunction } = ctx

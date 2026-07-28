@@ -10,7 +10,7 @@ publish:
 	@mv ./dist ../ \
 	&& cd ../dist \
 	&& git init \
-	&& git checkout -b $(V) \
+	&& git checkout -b dist \
 	&& git add -A \
 	&& git commit -m "Release $(V)" \
 	&& git log -1 --format="%H" \

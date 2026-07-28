@@ -1,6 +1,6 @@
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils'
 
-import { shouldTranspileExtension } from '@/devtools/babel-config/should-transpile'
+import { shouldTranspileExtension } from '#/devtools/babel-config/should-transpile'
 
 type MessageId =
   'enforceUseClient' | 'wrongPosition' | 'missingNewlines' | 'disallowUseClient'

@@ -1,5 +1,5 @@
-import { fs } from '@/devtools/fs'
-import { path } from '@/devtools/path'
+import { fs } from '#/devtools/fs'
+import { path } from '#/devtools/path'
 
 const githubBlobUrl = 'https://github.com/namnm/rntwsc/blob/master/'
 const readmeLinkRegex = /(\]\()(?!\w+:|#)([^)]+)(\))/g

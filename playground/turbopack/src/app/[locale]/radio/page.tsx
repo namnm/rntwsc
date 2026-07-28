@@ -1,1 +1,1 @@
-export { RadioPage as default } from '#/pages/radio'
+export { RadioPage as default } from '@/pages/radio'

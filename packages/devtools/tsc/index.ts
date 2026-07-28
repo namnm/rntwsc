@@ -1,7 +1,7 @@
-import { bin, cmd, exec } from '@/devtools/exec'
-import { fs } from '@/devtools/fs'
-import { glob } from '@/devtools/glob'
-import { path } from '@/devtools/path'
+import { bin, cmd, exec } from '#/devtools/exec'
+import { fs } from '#/devtools/fs'
+import { glob } from '#/devtools/glob'
+import { path } from '#/devtools/path'
 
 export const tscCmd = async (repoRoot: string) => {
   const tsconfig = await getTsconfig(repoRoot)
@@ -43,7 +43,9 @@ const getTsconfigUncached = async (repoRoot: string) => {
     if (require(p).ignoreTsc) {
       return
     }
-    arr.push(t)
+    // prioritize .check.json
+    const check = path.join(path.dirname(t), 'tsconfig.check.json')
+    arr.push((await fs.exists(check)) ? check : t)
   })
   await Promise.all(promises)
 

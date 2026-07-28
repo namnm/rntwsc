@@ -2,22 +2,23 @@
 
 import { useCallback, useState } from 'react'
 
-import { getCalendarGrid } from '@/core/components/date-picker/get-calendar-grid'
-import { Drawer } from '@/core/components/drawer'
-import { Dropdown } from '@/core/components/dropdown'
-import type { InputCva } from '@/core/components/input/input-cva'
-import { inputCva } from '@/core/components/input/input-cva'
-import { Span } from '@/core/components/text'
-import { ChevronBottom } from '@/core/icons/chevron-bottom'
-import { ChevronLeft } from '@/core/icons/chevron-left'
-import { ChevronRight } from '@/core/icons/chevron-right'
-import { useWindowDimensions } from '@/core/responsive/use-window-dimensions'
-import type { ClassName } from '@/core/tw/class-name'
-import { Pressable } from '@/core/tw/components/pressable'
-import { View } from '@/core/tw/components/view'
-import { cva } from '@/core/tw/cva'
-import { useControllableState } from '@/libs/hooks'
-import type { ValueProps } from '@/libs/utility-types'
+import { getCalendarGrid } from '#/core/components/date-picker/get-calendar-grid'
+import { Drawer } from '#/core/components/drawer'
+import { Dropdown } from '#/core/components/dropdown'
+import type { InputCva } from '#/core/components/input/input-cva'
+import { inputCva } from '#/core/components/input/input-cva'
+import { Span } from '#/core/components/text'
+import { useIsRtl } from '#/core/i18n/use-is-rtl'
+import { ChevronBottom } from '#/core/icons/chevron-bottom'
+import { ChevronLeft } from '#/core/icons/chevron-left'
+import { ChevronRight } from '#/core/icons/chevron-right'
+import { useWindowDimensions } from '#/core/responsive/use-window-dimensions'
+import type { ClassName } from '#/core/tw/class-name'
+import { Pressable } from '#/core/tw/components/pressable'
+import { View } from '#/core/tw/components/view'
+import { cva } from '#/core/tw/cva'
+import { useControllableState } from '#/libs/hooks'
+import type { ValueProps } from '#/libs/utility-types'
 
 const MONTH_NAMES = [
   'January',
@@ -69,7 +70,9 @@ type CalendarProps = {
   onSelect: (date: Date) => void
 }
 
-const Calendar = ({ value, onSelect }: CalendarProps) => {
+const Calendar = async ({ value, onSelect }: CalendarProps) => {
+  const rtl = await useIsRtl()
+
   const today = new Date()
   const initial = value || today
   const [viewYear, setViewYear] = useState(initial.getFullYear())
@@ -108,7 +111,11 @@ const Calendar = ({ value, onSelect }: CalendarProps) => {
           onPress={prevMonth}
           className='h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800'
         >
-          <ChevronLeft className='text-gray-600 dark:text-gray-400' />
+          {rtl ? (
+            <ChevronRight className='text-gray-600 dark:text-gray-400' />
+          ) : (
+            <ChevronLeft className='text-gray-600 dark:text-gray-400' />
+          )}
         </Pressable>
 
         <Span className='text-foreground font-semibold transition'>
@@ -119,7 +126,11 @@ const Calendar = ({ value, onSelect }: CalendarProps) => {
           onPress={nextMonth}
           className='h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800'
         >
-          <ChevronRight className='text-gray-600 dark:text-gray-400' />
+          {rtl ? (
+            <ChevronLeft className='text-gray-600 dark:text-gray-400' />
+          ) : (
+            <ChevronRight className='text-gray-600 dark:text-gray-400' />
+          )}
         </Pressable>
       </View>
 

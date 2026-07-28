@@ -1,6 +1,6 @@
 import qs from 'qs'
 
-import type { Falsish } from '@/libs/utility-types'
+import type { Falsish } from '#/libs/utility-types'
 
 export type { ParsedQs } from 'qs'
 

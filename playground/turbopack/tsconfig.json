@@ -4,13 +4,8 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "paths": {
-      "#/*": ["../app/src/*"]
+      "@/*": ["../app/src/*"]
     }
   },
-  "include": [
-    "./*",
-    "./src/**/*",
-    "../app/src/**/*",
-    "../../packages/**/*.d.ts"
-  ]
+  "include": ["./*", "./src/**/*", "../app/src/**/*"]
 }

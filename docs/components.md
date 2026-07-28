@@ -11,8 +11,8 @@
 Built-in React Native components, styled with Tailwind class names (see tailwind.md), working across server, browser, and native. Import each one from its own path, for example:
 
 ```tsx
-import { Button } from '@/core/components/button'
-import { Switch } from '@/core/components/switch'
+import { Button } from '#/core/components/button'
+import { Switch } from '#/core/components/switch'
 
 const MyForm = () => (
   <>

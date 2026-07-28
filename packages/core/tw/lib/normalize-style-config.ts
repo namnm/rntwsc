@@ -1,6 +1,6 @@
-import type { StrMap } from '@/libs/utility-types'
+import type { StrMap } from '#/libs/utility-types'
 
-export * from '@/core/tw/lib/normalize-style-config-shared'
+export * from '#/core/tw/lib/normalize-style-config-shared'
 
 export const transitionTimingFunctionMap: StrMap = {
   // custom transtion timing function here

@@ -76,4 +76,4 @@ dist                  dist output, committed on the dist branch
 export { default } from './star.svg'
 ```
 
-4. Import and use it via the svg-icons alias, for example #/svg-icons/star.svg
+4. Import and use it via the svg-icons alias, for example @/svg-icons/star.svg

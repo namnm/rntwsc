@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState } from 'react'
 
-import type { ValueProps } from '@/libs/utility-types'
+import type { ValueProps } from '#/libs/utility-types'
 
 export const useControllableState = <T>({
   value,

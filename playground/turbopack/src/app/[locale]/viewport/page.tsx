@@ -1,1 +1,1 @@
-export { ViewportPage as default } from '#/pages/viewport'
+export { ViewportPage as default } from '@/pages/viewport'

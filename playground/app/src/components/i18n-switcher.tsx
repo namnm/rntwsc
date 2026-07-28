@@ -5,7 +5,7 @@ import { useI18nSwitcherProps } from 'rntwsc/i18n/use-i18n-switcher-props'
 import { Pressable } from 'rntwsc/tw/components/pressable'
 import { View } from 'rntwsc/tw/components/view'
 
-import { languages } from '#/i18n/config'
+import { languages } from '@/i18n/config'
 
 export const I18nSwitcher = async ({ onPress }: { onPress?: () => void }) => {
   const t = await useTranslationUntyped('sidebar')

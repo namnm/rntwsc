@@ -1,10 +1,9 @@
 import { generate, parse, walk } from 'css-tree'
 import { compileString } from 'sass'
 
-import { fs } from '@/devtools/fs'
-import { glob } from '@/devtools/glob'
-import { log } from '@/devtools/log'
-import type { StrMap } from '@/libs/utility-types'
+import { fs } from '#/devtools/fs'
+import { glob } from '#/devtools/glob'
+import type { StrMap } from '#/libs/utility-types'
 
 const extractVariablesRegex = /\.extract-variables\.(css|scss)$/
 
@@ -47,9 +46,5 @@ export const cssExtractVariables = async (dir: string, gitignore = true) => {
         spaces: 2,
       })
     }),
-  )
-
-  log.info(
-    `Generated ${files.length} *.local.json from *.extract-variables.{css,scss}`,
   )
 }

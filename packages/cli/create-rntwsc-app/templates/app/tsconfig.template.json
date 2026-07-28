@@ -1,9 +1,0 @@
-{
-  "extends": "__ROOT_RELATIVE__tsconfig.base.json",
-  "compilerOptions": {
-    "paths": {
-      "#/*": ["./src/*"]
-    }
-  },
-  "include": ["./*", "./src/**/*"]
-}

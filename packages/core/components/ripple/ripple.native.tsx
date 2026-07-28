@@ -7,8 +7,8 @@ import {
   withTiming,
 } from 'react-native-reanimated'
 
-import type { RippleProps } from '@/core/components/ripple/ripple'
-import { View } from '@/core/tw/components/view'
+import type { RippleProps } from '#/core/components/ripple/ripple'
+import { View } from '#/core/tw/components/view'
 
 type RippleNativeProps = RippleProps & {
   style: ViewStyle

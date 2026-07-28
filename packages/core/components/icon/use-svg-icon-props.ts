@@ -1,8 +1,8 @@
-import type { SvgIconProps } from '@/core/components/icon'
-import { useTextStyle } from '@/core/components/text/text-style-context'
-import type { ClassName } from '@/core/tw/class-name'
-import { clsx } from '@/core/tw/clsx'
-import { runtimeStyle } from '@/core/tw/runtime-style'
+import type { SvgIconProps } from '#/core/components/icon'
+import type { ClassName } from '#/core/tw/class-name'
+import { clsx } from '#/core/tw/clsx'
+import { useTextStyle } from '#/core/tw/components/text-style-context'
+import { runtimeStyle } from '#/core/tw/runtime-style'
 
 export const useSvgIconProps = ({
   size,

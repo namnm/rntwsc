@@ -1,6 +1,6 @@
-import { insetShadowClassName } from '@/core/components/inset/inset'
-import type { ClassName } from '@/core/tw/class-name'
-import { View } from '@/core/tw/components/view'
+import { insetShadowClassName } from '#/core/components/inset/inset'
+import type { ClassName } from '#/core/tw/class-name'
+import { View } from '#/core/tw/components/view'
 
 export type InsetShadowProps = {
   enabled?: boolean

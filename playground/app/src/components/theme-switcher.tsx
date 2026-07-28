@@ -8,12 +8,11 @@ import { Pressable } from 'rntwsc/tw/components/pressable'
 import { View } from 'rntwsc/tw/components/view'
 
 export const ThemeSwitcher = async ({ onPress }: { onPress?: () => void }) => {
-  const [t, tThemes] = await Promise.all([
-    useTranslationUntyped('sidebar'),
-    useTranslationUntyped('themes'),
-  ])
-  const themes = getAvailableThemes()
+  const t = await useTranslationUntyped('sidebar')
+  const tThemes = await useTranslationUntyped('themes')
   const theme = await useTheme()
+
+  const themes = getAvailableThemes()
   const setTheme = useSetTheme()
 
   return (

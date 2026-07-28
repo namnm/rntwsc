@@ -1,11 +1,11 @@
 /* eslint-disable custom/no-import-invalid-variant */
 
-import { useDarkModeState } from '@/core/dark-mode/use-dark-mode-state'
-import { useResponsiveState } from '@/core/responsive/use-responsive-state'
+import { useDarkModeState } from '#/core/dark-mode/use-dark-mode-state'
+import { useResponsiveState } from '#/core/responsive/use-responsive-state'
 import {
   useMarkerGroupState,
   useMarkerPeerState,
-} from '@/core/tw/lib/marker.native'
+} from '#/core/tw/lib/marker.native'
 
 export const useClassNameState = async () => {
   const responsiveState = useResponsiveState()

@@ -5,13 +5,13 @@ import { useLayoutEffect } from 'react'
 import {
   dehydrateDataKey,
   dehydrateDataValueKey,
-} from '@/core/hydration/config'
-import type { DehydrateProps } from '@/core/hydration/dehydrate'
-import { dehydrated, rehydrated } from '@/core/hydration/dehydrate'
-import { setHydration } from '@/core/hydration/store'
-import { isBrowser } from '@/core/platform'
-import { useIsMounted } from '@/libs/hooks'
-import { jsonSafe } from '@/libs/json-safe'
+} from '#/core/hydration/config'
+import type { DehydrateProps } from '#/core/hydration/dehydrate'
+import { dehydrated, rehydrated } from '#/core/hydration/dehydrate'
+import { setHydration } from '#/core/hydration/store'
+import { isBrowser } from '#/core/platform'
+import { useIsMounted } from '#/libs/hooks'
+import { jsonSafe } from '#/libs/json-safe'
 
 type Props = Required<DehydrateProps> & {
   // pass from the caller instead of module level

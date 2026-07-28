@@ -1,1 +1,1 @@
-export { AlertPage as default } from '#/pages/alert'
+export { AlertPage as default } from '@/pages/alert'

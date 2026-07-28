@@ -3,8 +3,8 @@
 import type { FlatListComponent, FlatListProps } from 'react-native'
 import { FlatList } from 'react-native'
 
-import type { CommonProps } from '@/core/tw/components/lib/common-props'
-import { normalizePropsRnw } from '@/core/tw/components/lib/normalize-props-rnw'
+import type { CommonProps } from '#/core/tw/components/lib/common-props'
+import { normalizePropsRnw } from '#/core/tw/components/lib/normalize-props-rnw'
 
 export type FlatListPropsWocn<T = any> = CommonProps<
   FlatListProps<T>,

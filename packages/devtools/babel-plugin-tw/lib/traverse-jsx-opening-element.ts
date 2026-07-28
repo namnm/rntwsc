@@ -1,10 +1,10 @@
 import type { NodePath } from '@babel/core'
 import { types as t } from '@babel/core'
 
-import { context } from '@/devtools/babel-plugin-tw/lib/context'
-import { jsToNode } from '@/devtools/babel-plugin-tw/lib/js-to-node'
-import { transpileClassNameJsx } from '@/devtools/babel-plugin-tw/lib/transpile-class-name-jsx'
-import type { TraverseOptions } from '@/devtools/babel-plugin-tw/visitor'
+import { context } from '#/devtools/babel-plugin-tw/lib/context'
+import { jsToNode } from '#/devtools/babel-plugin-tw/lib/js-to-node'
+import { transpileClassNameJsx } from '#/devtools/babel-plugin-tw/lib/transpile-class-name-jsx'
+import type { TraverseOptions } from '#/devtools/babel-plugin-tw/visitor'
 
 export const traverseJSXOpeningElement = (
   path: NodePath<t.JSXOpeningElement>,

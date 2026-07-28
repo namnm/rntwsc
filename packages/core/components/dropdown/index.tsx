@@ -14,9 +14,9 @@ import {
 } from '@floating-ui/react'
 import type { PropsWithChildren } from 'react'
 
-import { Portal } from '@/core/components/portal'
-import type { ClassName } from '@/core/tw/class-name'
-import { clsx } from '@/core/tw/clsx'
+import { Portal } from '#/core/components/portal'
+import type { ClassName } from '#/core/tw/class-name'
+import { clsx } from '#/core/tw/clsx'
 
 export type DropdownProps = PropsWithChildren<{
   open: boolean

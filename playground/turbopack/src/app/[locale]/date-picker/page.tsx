@@ -1,1 +1,1 @@
-export { DatePickerPage as default } from '#/pages/date-picker'
+export { DatePickerPage as default } from '@/pages/date-picker'

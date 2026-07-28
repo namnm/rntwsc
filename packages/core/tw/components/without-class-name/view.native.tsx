@@ -5,11 +5,11 @@ import type { LayoutChangeEvent, ViewStyle } from 'react-native'
 import { View } from 'react-native'
 import Animated from 'react-native-reanimated'
 
-import type { GridStyle, GridTrack } from '@/core/tw/class-name'
-import { isReanimated } from '@/core/tw/components/lib/is-reanimated'
-import { normalizePropsNative } from '@/core/tw/components/lib/normalize-props-native'
-import { renderReanimated } from '@/core/tw/components/lib/render-reanimated'
-import type { ViewPropsWocn } from '@/core/tw/components/without-class-name/view'
+import type { GridStyle, GridTrack } from '#/core/tw/class-name'
+import { isReanimated } from '#/core/tw/components/lib/is-reanimated'
+import { normalizePropsNative } from '#/core/tw/components/lib/normalize-props-native'
+import { renderReanimated } from '#/core/tw/components/lib/render-reanimated'
+import type { ViewPropsWocn } from '#/core/tw/components/without-class-name/view'
 
 export const ViewWocn = (props: ViewPropsWocn) => {
   props = normalizePropsNative(props)

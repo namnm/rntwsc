@@ -1,1 +1,1 @@
-export { RuntimePage as default } from '#/pages/runtime'
+export { RuntimePage as default } from '@/pages/runtime'

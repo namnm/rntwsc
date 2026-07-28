@@ -6,15 +6,18 @@ import { Portal } from 'rntwsc/components/portal'
 import { Separator } from 'rntwsc/components/separator'
 import { Span } from 'rntwsc/components/text'
 import { useTranslationUntyped } from 'rntwsc/i18n'
+import { useIsRtl } from 'rntwsc/i18n/use-is-rtl'
+import { ChevronLeft } from 'rntwsc/icons/chevron-left'
+import { ChevronRight } from 'rntwsc/icons/chevron-right'
 import { isWeb } from 'rntwsc/platform'
 import { Pressable } from 'rntwsc/tw/components/pressable'
 import { ScrollView } from 'rntwsc/tw/components/scroll-view'
 import { View } from 'rntwsc/tw/components/view'
 
-import { DarkModeSwitcher } from '#/components/dark-mode-switcher'
-import { I18nSwitcher } from '#/components/i18n-switcher'
-import { NavSidebarLink } from '#/components/nav-layout/nav-sidebar-link'
-import { ThemeSwitcher } from '#/components/theme-switcher'
+import { DarkModeSwitcher } from '@/components/dark-mode-switcher'
+import { I18nSwitcher } from '@/components/i18n-switcher'
+import { NavSidebarLink } from '@/components/nav-layout/nav-sidebar-link'
+import { ThemeSwitcher } from '@/components/theme-switcher'
 import {
   rAccordion,
   rAlert,
@@ -38,7 +41,7 @@ import {
   rSwitch,
   rTextInput,
   rViewport,
-} from '#/pages/route-paths'
+} from '@/pages/route-paths'
 
 type Props = PropsWithChildren<{
   sidebarOpen: boolean
@@ -51,21 +54,29 @@ const NavLayoutWithoutEffects = async ({
   sidebarOpen,
 }: Props) => {
   const t = await useTranslationUntyped('sidebar')
+  const rtl = await useIsRtl()
+
   const onPress = () => setSidebarOpen(false)
+  const BackIcon = rtl ? ChevronRight : ChevronLeft
 
   const sidebar = (
     <View
-      className={
+      className={[
         sidebarOpen
-          ? 'web:fixed absolute inset-0 z-50 flex flex-col border-r border-gray-200 bg-white transition sm:w-60 dark:border-gray-700 dark:bg-gray-800'
-          : 'web:fixed absolute inset-y-0 left-0 z-50 hidden w-60 flex-col border-r border-gray-200 bg-white transition sm:flex dark:border-gray-700 dark:bg-gray-800'
-      }
+          ? 'web:fixed absolute inset-0 z-50 flex flex-col bg-white transition sm:w-60 dark:bg-gray-800'
+          : 'web:fixed absolute inset-y-0 z-50 hidden w-60 flex-col bg-white transition sm:flex dark:bg-gray-800',
+        rtl
+          ? 'border-l border-gray-200 dark:border-gray-700'
+          : 'border-r border-gray-200 dark:border-gray-700',
+        !sidebarOpen && (rtl ? 'right-0' : 'left-0'),
+      ]}
     >
-      <View className='flex-row items-center border-b border-gray-200 px-4 py-5 transition dark:border-gray-700'>
+      <View className='flex-row items-center gap-3 border-b border-gray-200 px-4 py-5 transition dark:border-gray-700'>
         <Pressable
           onPress={() => setSidebarOpen(false)}
-          className='mr-3 sm:hidden'
+          className='flex-row items-center gap-1 sm:hidden'
         >
+          <BackIcon className='text-primary' size={16} />
           <Span className='text-primary font-semibold'>{t('back')}</Span>
         </Pressable>
         <Span className='font-semibold text-gray-800 transition dark:text-gray-100'>
@@ -206,7 +217,7 @@ const NavLayoutWithoutEffects = async ({
       {/* Native Modal blocks touches even when transparent; only mount when open */}
       {isWeb ? sidebar : sidebarOpen && <Portal>{sidebar}</Portal>}
 
-      <View className='flex-1 flex-col sm:ml-60'>
+      <View className={['flex-1 flex-col', rtl ? 'sm:mr-60' : 'sm:ml-60']}>
         <View className='flex-1'>{children}</View>
         <View className='web:sticky web:bottom-0 flex-row border-t border-gray-200 bg-white transition sm:hidden dark:border-gray-700 dark:bg-gray-800'>
           <Pressable

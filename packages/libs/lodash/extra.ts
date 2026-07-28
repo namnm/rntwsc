@@ -1,6 +1,6 @@
 import { mergeWith } from 'lodash-es'
 
-import type { Falsish } from '@/libs/utility-types'
+import type { Falsish } from '#/libs/utility-types'
 
 const splitWords = (v: string) =>
   v

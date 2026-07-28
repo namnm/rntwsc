@@ -3,11 +3,13 @@
 import type { ReactElement } from 'react'
 import { Children, cloneElement, createContext } from 'react'
 
-import type { ButtonProps } from '@/core/components/button'
-import { Button } from '@/core/components/button'
-import { View } from '@/core/tw/components/view'
-import { useControllableState, useSafeContext } from '@/libs/hooks'
-import type { SingleOrMultipleProps } from '@/libs/utility-types'
+import type { ButtonProps } from '#/core/components/button'
+import { Button } from '#/core/components/button'
+import { groupOverlapClassName } from '#/core/components/button/group-overlap-class-name'
+import { useIsRtl } from '#/core/i18n/use-is-rtl'
+import { View } from '#/core/tw/components/view'
+import { useControllableState, useSafeContext } from '#/libs/hooks'
+import type { SingleOrMultipleProps } from '#/libs/utility-types'
 
 // context
 
@@ -120,7 +122,7 @@ export type ToggleItemProps = Pick<
   __index?: number
 }
 
-export const ToggleItem = ({
+export const ToggleItem = async ({
   value,
   type,
   disabled,
@@ -128,6 +130,7 @@ export const ToggleItem = ({
   children,
   __index = 0,
 }: ToggleItemProps) => {
+  const rtl = await useIsRtl()
   const {
     type: ctxType,
     size,
@@ -150,6 +153,7 @@ export const ToggleItem = ({
 
   const thisAppearance = isActive ? activeAppearance : appearance
   const isOutline = appearance === 'outline' || activeAppearance === 'outline'
+  const overlapClassName = groupOverlapClassName(isOutline, isFirst, rtl)
 
   return (
     <Button
@@ -164,7 +168,7 @@ export const ToggleItem = ({
       insetEnabled={inset && isActive}
       ripple={ripple}
       disabled={disabled || ctxDisabled}
-      className={[isOutline && !isFirst && 'ml-[-1px]', className]}
+      className={[overlapClassName, className]}
       onPress={() => onToggle(value)}
     >
       {children}

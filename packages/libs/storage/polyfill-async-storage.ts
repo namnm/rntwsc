@@ -2,7 +2,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import { setAdapter } from '@/libs/storage'
+import { setAdapter } from '#/libs/storage'
 
 setAdapter({
   getItem: key => AsyncStorage.getItem(key),

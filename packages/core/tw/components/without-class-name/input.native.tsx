@@ -2,13 +2,13 @@
 
 import { TextInput } from 'react-native'
 
-import type { CSSTransitionProperties } from '@/core/tw/class-name'
-import { createAnimatedComponent } from '@/core/tw/components/lib/create-animated-component'
-import { isReanimated } from '@/core/tw/components/lib/is-reanimated'
-import { normalizePropsNative } from '@/core/tw/components/lib/normalize-props-native'
-import { renderReanimated } from '@/core/tw/components/lib/render-reanimated'
-import type { InputPropsWocn } from '@/core/tw/components/without-class-name/input'
-import { useAnimatedColor } from '@/libs/hooks'
+import type { CSSTransitionProperties } from '#/core/tw/class-name'
+import { createAnimatedComponent } from '#/core/tw/components/lib/create-animated-component'
+import { isReanimated } from '#/core/tw/components/lib/is-reanimated'
+import { normalizePropsNative } from '#/core/tw/components/lib/normalize-props-native'
+import { renderReanimated } from '#/core/tw/components/lib/render-reanimated'
+import type { InputPropsWocn } from '#/core/tw/components/without-class-name/input'
+import { useAnimatedColor } from '#/libs/hooks'
 
 const styleProps = ['placeholderTextColor', 'caretHidden']
 

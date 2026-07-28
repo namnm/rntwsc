@@ -4,11 +4,11 @@ import BezierEasing from 'bezier-easing'
 import parseColor from 'color-rgba'
 import { useEffect, useRef, useState } from 'react'
 
-import type { CSSTransitionProperties } from '@/core/tw/class-name'
+import type { CSSTransitionProperties } from '#/core/tw/class-name'
 import {
   transitionDurationDefault,
   transitionTimingFunctionDefault,
-} from '@/core/tw/lib/normalize-style-config'
+} from '#/core/tw/lib/normalize-style-config'
 
 export const useAnimatedColor = (
   color: string | undefined,

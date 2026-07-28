@@ -12,16 +12,16 @@ import globals from 'globals'
 import {
   enforceUseClientGlobal,
   enforceUseClientImports,
-} from '@/devtools/eslint/config-enforce-use-client'
-import { ignoreExtraneous } from '@/devtools/eslint/config-ignore-extraneous'
-import { restrictedImports } from '@/devtools/eslint/config-restricted-imports'
-import { customPlugin } from '@/devtools/eslint-plugin-custom'
-import { fs, readJson5Sync } from '@/devtools/fs'
-import { getGitignorePath } from '@/devtools/gitignore'
-import { globSync } from '@/devtools/glob'
-import { pnpmWorkspaceSync } from '@/devtools/normalize/pnpm-workspace'
-import { path } from '@/devtools/path'
-import type { StrMap } from '@/libs/utility-types'
+} from '#/devtools/eslint/config-enforce-use-client'
+import { ignoreExtraneous } from '#/devtools/eslint/config-ignore-extraneous'
+import { restrictedImports } from '#/devtools/eslint/config-restricted-imports'
+import { customPlugin } from '#/devtools/eslint-plugin-custom'
+import { fs, readJson5Sync } from '#/devtools/fs'
+import { getGitignorePath } from '#/devtools/gitignore'
+import { globSync } from '#/devtools/glob'
+import { pnpmWorkspaceSync } from '#/devtools/normalize/pnpm-workspace'
+import { path } from '#/devtools/path'
+import type { StrMap } from '#/libs/utility-types'
 
 const off = 0
 const warn = 1
@@ -48,8 +48,8 @@ type Alias = {
 type Options = {
   dir: string
   repoRoot: string
-  extraPlugins?: StrMap<string>
-  overriddenRules?: StrMap
+  plugins?: StrMap<string>
+  rules?: StrMap
   alias?: boolean
   ignoreShadowed?: boolean
   tsProjectService?: boolean
@@ -63,8 +63,8 @@ export const config = ({
   alias = false,
   ignoreShadowed = false,
   tsProjectService = false,
-  extraPlugins,
-  overriddenRules,
+  plugins: extraPlugins,
+  rules: overriddenRules,
 }: Options) => {
   const gitignore = includeIgnoreFile(getGitignorePath(repoRoot))
 
@@ -83,7 +83,10 @@ export const config = ({
   }
   const baseIgnores = [
     // match with prettier ignore and tsconfig exclude
-    '**/*.min.*',
+    ...ignores({
+      dirs: '{min,.templates}',
+      exts: '{min,template}',
+    }),
     ...jsShadowed,
   ]
 
@@ -96,7 +99,7 @@ export const config = ({
   const ignoreDefaultExport = [
     ...ignoresNonFixable,
     ...ignores({
-      dirs: '{app,.storybook}',
+      dirs: '{src/app,.storybook}',
       exts: '{config,stories}',
     }),
   ]
@@ -272,6 +275,7 @@ export const config = ({
       'custom/kebab-case-import-paths': warn,
       'custom/no-missing-export': warn,
       'custom/no-access-property': off,
+      'custom/no-forward-ref': warn,
       'custom/no-import-default': [warn, ['react']],
       'custom/no-import-invalid-variant': [
         warn,

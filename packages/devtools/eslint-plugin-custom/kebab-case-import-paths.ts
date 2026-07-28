@@ -75,8 +75,8 @@ const getSegmentsToCheck = (importPath: string): string[] => {
     raw = importPath
     return raw.split('/').filter(s => s !== '' && s !== '.' && s !== '..')
   }
-  if (importPath.startsWith('@/')) {
-    raw = importPath.slice('@/'.length)
+  if (importPath.startsWith('#/')) {
+    raw = importPath.slice('#/'.length)
     return raw.split('/').filter(Boolean)
   }
   if (importPath.startsWith('#')) {

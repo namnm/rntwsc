@@ -1,11 +1,11 @@
-import { fs } from '@/devtools/fs'
+import { fs } from '#/devtools/fs'
 import {
   endMarkerMsg,
   writeTsconfigExclude,
-} from '@/devtools/normalize/gitignore'
-import { path } from '@/devtools/path'
+} from '#/devtools/normalize/gitignore'
+import { path } from '#/devtools/path'
 
-const templateRoot = 'packages/cli/create-rntwsc-app/templates/root'
+const templateRoot = 'packages/cli/create-rntwsc-app/.templates/root'
 
 export const syncTemplateTsconfigBase = async (repoRoot: string) => {
   const dir = path.join(repoRoot, templateRoot)

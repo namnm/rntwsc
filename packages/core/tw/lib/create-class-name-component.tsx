@@ -1,6 +1,6 @@
-import { clsx } from '@/core/tw/clsx'
-import { createClassNameComponentOptions } from '@/core/tw/lib/create-class-name-component-options'
-import type { StrMap } from '@/libs/utility-types'
+import { clsx } from '#/core/tw/clsx'
+import { createClassNameComponentOptions } from '#/core/tw/lib/create-class-name-component-options'
+import type { StrMap } from '#/libs/utility-types'
 
 export type CreateClassNameComponentOptions = {
   extraClassNameKeys?: string[]

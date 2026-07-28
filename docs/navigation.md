@@ -19,8 +19,8 @@ Works across server, browser, and native with a unified API.
 export const rProfile = '/profile'
 
 // 2. playground/app/src/pages/routes.native.ts - register page for RN
-import { ProfilePage } from '#/pages/profile'
-import { rProfile } from '#/pages/route-paths'
+import { ProfilePage } from '@/pages/profile'
+import { rProfile } from '@/pages/route-paths'
 export const routesNative = {
   ...,
   [rProfile]: ProfilePage,
@@ -33,7 +33,7 @@ export type RoutesData = {
 }
 
 // 4. playground/turbopack/src/app/locale/profile/page.tsx - web page
-export { ProfilePage as default } from '#/pages/profile'
+export { ProfilePage as default } from '@/pages/profile'
 
 // 5. playground/app/src/components/nav-layout/index.tsx - sidebar link
 <NavSidebarLink href={rProfile} label='Profile' />
@@ -46,7 +46,7 @@ Web only route: skip steps 2 and 3, add step 4 only.
 ## Link
 
 ```tsx
-import { Link } from '#/components/link'
+import { Link } from '@/components/link'
 
 // no params
 <Link pathname={rHome}>Home</Link>
@@ -58,7 +58,7 @@ import { Link } from '#/components/link'
 ## Read the current route
 
 ```tsx
-import { useRoute, useIsRouteFocused } from '@/core/navigation'
+import { useRoute, useIsRouteFocused } from '#/core/navigation'
 
 const { pathname, query } = await useRoute()
 const focused = useIsRouteFocused() // always true on web, useIsFocused() on native

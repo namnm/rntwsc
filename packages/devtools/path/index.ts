@@ -1,7 +1,7 @@
 import path from 'node:path'
 
-import { fs } from '@/devtools/fs'
-import type { Falsish, NonFalsish } from '@/libs/utility-types'
+import { fs } from '#/devtools/fs'
+import type { Falsish, NonFalsish } from '#/libs/utility-types'
 
 export { path }
 
@@ -31,7 +31,7 @@ export const isSameDir = (abs1: string, abs2: string | Falsish) =>
   !!abs2 && !path.relative(abs1, abs2)
 
 export const isRelative = (abs: string) =>
-  abs.startsWith('@/') || abs.startsWith('#') || abs.startsWith('.')
+  abs.startsWith('#/') || abs.startsWith('#') || abs.startsWith('.')
 
 export const resolvePath = async (...paths: string[]) => {
   const f = path.join(...paths)

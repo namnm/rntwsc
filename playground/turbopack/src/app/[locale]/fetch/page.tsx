@@ -1,1 +1,1 @@
-export { FetchPage as default } from '#/pages/fetch'
+export { FetchPage as default } from '@/pages/fetch'

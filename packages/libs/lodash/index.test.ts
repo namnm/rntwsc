@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { camelCase, kebabCase, pascalCase, snakeCase } from '@/libs/lodash'
+import { camelCase, kebabCase, pascalCase, snakeCase } from '#/libs/lodash'
 
 describe('kebabCase', () => {
   const e = (v: string, expected: string) => expect(kebabCase(v)).toBe(expected)

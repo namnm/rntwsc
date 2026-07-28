@@ -1,6 +1,6 @@
-import { fs } from '@/devtools/fs'
-import { path } from '@/devtools/path'
-import type { StrMap } from '@/libs/utility-types'
+import { fs } from '#/devtools/fs'
+import { path } from '#/devtools/path'
+import type { StrMap } from '#/libs/utility-types'
 
 type PackageJson = {
   scripts?: StrMap<string>
@@ -9,7 +9,7 @@ type PackageJson = {
 }
 
 const cliRoot = 'packages/cli/create-rntwsc-app'
-const templatePath = `${cliRoot}/templates/root/package.template.json`
+const templatePath = `${cliRoot}/.templates/root/package.template.json`
 
 export const syncTemplateRootPackageJson = async (repoRoot: string) => {
   const absTemplatePath = path.join(repoRoot, templatePath)

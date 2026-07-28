@@ -1,8 +1,8 @@
-import { serverCache } from '@/core/cache'
-import type { UseFetch } from '@/core/fetch/config'
-import { hk, sck } from '@/core/fetch/config'
-import type { HydrationData, UseHydrationData } from '@/core/hydration/config'
-import { dehydrate } from '@/core/hydration/dehydrate'
+import { serverCache } from '#/core/cache'
+import type { UseFetch } from '#/core/fetch/config'
+import { hk, sck } from '#/core/fetch/config'
+import type { HydrationData, UseHydrationData } from '#/core/hydration/config'
+import { dehydrate } from '#/core/hydration/dehydrate'
 
 const getCache = <T>() =>
   serverCache(sck.fetch, () => new Map<string, Promise<HydrationData<T>>>())
