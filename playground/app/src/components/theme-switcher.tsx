@@ -34,7 +34,9 @@ export const ThemeSwitcher = async ({ onPress }: { onPress?: () => void }) => {
             <View
               className={[
                 'h-2 w-2 rounded-full transition',
-                active ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600',
+                active
+                  ? 'bg-primary dark:bg-primary'
+                  : 'bg-gray-300 dark:bg-gray-600',
               ]}
             />
             <Span

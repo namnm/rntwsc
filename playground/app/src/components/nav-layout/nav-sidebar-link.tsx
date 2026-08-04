@@ -36,7 +36,7 @@ export const NavSidebarLink = async ({
           className={[
             'text-sm transition',
             active
-              ? 'text-primary font-medium'
+              ? 'text-primary dark:text-primary font-medium'
               : 'text-gray-700 dark:text-gray-300',
           ]}
         >

@@ -19,7 +19,6 @@ import { composeProviders } from 'rntwsc/utils/compose-providers'
 
 import { rHome } from '@/pages/route-paths'
 import { routesNative } from '@/pages/routes.native'
-
 import { name as appName } from '../app.json'
 
 const RootStack = createNativeStackNavigator({
