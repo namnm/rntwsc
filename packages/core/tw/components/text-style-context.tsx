@@ -9,11 +9,10 @@ import { tw } from '#/core/tw/tw'
 const TextStyleContext = createContext<ClassName | null>(null)
 
 export const useTextStyle = (): ClassName => {
-  // should not use useSafeContext here, it will require us to put the provider on the highest level tree
-  // it will destroy the purpose of nextjs rsc ssr streaming app router best practices
+  // Not useSafeContext: that would force the provider to the tree root,
+  // breaking RSC/SSR streaming.
   const ctx = useContext(TextStyleContext)
-  // the default value we set here is the same as the default text style in web
-  // it will be consistent with web and we don't need to set it on every text component
+  // Matches web's default text style, so text components don't need to set it.
   // use tw`` here to collect and map when class names are minified
   const v = tw`text-sm text-gray-800`
   return ctx ? [v, ctx] : v

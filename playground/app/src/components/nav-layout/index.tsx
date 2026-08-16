@@ -21,11 +21,13 @@ import { ThemeSwitcher } from '@/components/theme-switcher'
 import {
   rAccordion,
   rAlert,
+  rAvatar,
   rBadge,
   rButton,
   rButtonGroup,
   rButtonToggleGroup,
   rCheckbox,
+  rCombobox,
   rDatePicker,
   rDrawer,
   rFetch,
@@ -35,11 +37,16 @@ import {
   rHome,
   rModal,
   rNativeRefs,
+  rProgress,
   rRadio,
   rRuntime,
   rSelect,
+  rSlider,
   rSwitch,
+  rTabs,
   rTextInput,
+  rToast,
+  rTooltip,
   rViewport,
 } from '@/pages/route-paths'
 
@@ -119,6 +126,17 @@ const NavLayoutWithoutEffects = async ({
           pathname={rButtonToggleGroup}
           label={t('button_toggle_group')}
         />
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rAvatar}
+          label={t('avatar')}
+        />
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rProgress}
+          label={t('progress')}
+        />
+        <NavSidebarLink onPress={onPress} pathname={rTabs} label={t('tabs')} />
         <Separator />
         <Span className='mb-1 px-2 text-xs font-semibold text-gray-400 transition dark:text-gray-500'>
           {t('section_overlay')}
@@ -132,6 +150,16 @@ const NavLayoutWithoutEffects = async ({
           onPress={onPress}
           pathname={rModal}
           label={t('modal')}
+        />
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rTooltip}
+          label={t('tooltip')}
+        />
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rToast}
+          label={t('toast')}
         />
         <Separator />
         <Span className='mb-1 px-2 text-xs font-semibold text-gray-400 transition dark:text-gray-500'>
@@ -166,6 +194,16 @@ const NavLayoutWithoutEffects = async ({
           onPress={onPress}
           pathname={rSwitch}
           label={t('switch')}
+        />
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rSlider}
+          label={t('slider')}
+        />
+        <NavSidebarLink
+          onPress={onPress}
+          pathname={rCombobox}
+          label={t('combobox')}
         />
         <NavSidebarLink onPress={onPress} pathname={rForm} label={t('form')} />
         <Separator />

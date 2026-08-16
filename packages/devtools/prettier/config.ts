@@ -14,6 +14,7 @@ export const config: Config = {
   trailingComma: 'all',
   bracketSpacing: true,
   bracketSameLine: false,
+  objectWrap: 'preserve',
   arrowParens: 'avoid',
   requirePragma: false,
   insertPragma: false,

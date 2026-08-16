@@ -3,5 +3,13 @@
   "tagline": "__APP_NAME_PASCAL__",
   "hero_description": "Write once, run everywhere. Use Tailwind CSS class names in React Native with full support for Next.js App Router RSC and SSR streaming. Class names are transpiled at build time on native and kept as-is on web.",
   "get_started": "Get Started",
-  "view_github": "View on GitHub"
+  "view_github": "View on GitHub",
+  "settings": "Settings",
+  "close": "Close",
+  "section_theme": "Theme",
+  "section_dark_mode": "Appearance",
+  "section_language": "Language",
+  "dark": "Dark",
+  "light": "Light",
+  "system": "System"
 }

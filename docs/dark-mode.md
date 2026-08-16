@@ -11,7 +11,7 @@
 
 # Dark mode
 
-Three states: dark, light, or system (follow the OS color scheme). Independent from theme - dark mode toggles the dark variant of whichever theme is active, via the dark: selector prefix (see tailwind.md). Works across server, browser, and native.
+Three states: dark, light, or system (follow the OS color scheme). Independent from theme - dark mode toggles the dark variant of whichever theme is active, via the dark: selector prefix (see tailwind.md). Works across server, browser, native, and web (Vite SPA).
 
 ## Reading and setting dark mode
 
@@ -65,3 +65,5 @@ Platform entry points in packages/core/dark-mode/:
 | index.tsx         | Server components  | Reads the dark-mode cookie via next-unchecked headers; setter is a server no-op polyfill                                 |
 | index.browser.tsx | Browser components | Reads and writes the dark-mode cookie via js-cookie; setter also toggles the dark or light class on the document element |
 | index.native.tsx  | React Native       | Reads and writes the same key through storage; exports initDarkModeNative() to preload the value at startup              |
+
+There is no index.web.tsx - a Vite SPA resolves `#/core/dark-mode` straight to index.browser.tsx instead (see web-variant.md), since a cookie works the same way in any real browser.

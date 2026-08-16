@@ -307,6 +307,10 @@
     "**/target/",
     "**/.terraform/",
     "**/playground/webpack/src/",
+    "**/test-results/",
+    "**/playwright-report/",
+    "**/blob-report/",
+    "**/playwright/.cache/",
     // match with eslint
     "**/min/**/*",
     "**/.templates/**/*",

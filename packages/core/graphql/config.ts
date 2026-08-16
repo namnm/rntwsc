@@ -11,6 +11,9 @@ export type UseApollo<T = unknown> = {
   query: TypedDocumentNode<T>
   variables?: OperationVariables
   headers?: StrMap<string>
+  // Folded into the hydration key only, never sent in the request.
+  // See contribution/hydration.md#dehydration-key-collisions-and-keysalt.
+  keySalt?: string
 }
 export const hk = hydrationKey<UseApollo<any>>('graphql')
 

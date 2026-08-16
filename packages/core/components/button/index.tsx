@@ -675,9 +675,8 @@ export const Button = async ({
     shape,
     elevation,
     disabled,
-    // in a button group, corner rounding follows visual (reading-direction) order;
-    // flex-row already mirrors the DOM order under rtl, so the rounding flag must
-    // mirror too, or the wrong corner gets rounded
+    // Corner rounding follows visual order; flip under rtl since flex-row
+    // mirrors DOM order but rounding doesn't. See i18n.md#direction-rtl.
     groupFirst: rtl ? groupLast : groupFirst,
     groupLast: rtl ? groupFirst : groupLast,
   })

@@ -13,7 +13,7 @@ export type StyleSingle = Partial<
     CSSAnimationProperties &
     GridStyle
 >
-export type Style = StyleSingle | Style[]
+export type Style = StyleSingle | Falsish | Style[]
 
 export type CSSAnimationProperties = {
   animationName?: string

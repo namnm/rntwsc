@@ -120,3 +120,9 @@
 
 # mirror copy from playground/turbopack/src
 **/playground/webpack/src/
+
+# playwright
+**/test-results/
+**/playwright-report/
+**/blob-report/
+**/playwright/.cache/

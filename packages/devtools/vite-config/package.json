@@ -1,0 +1,19 @@
+{
+  "name": "@rntwsc/devtools-vite-config",
+  "version": "0.0.0-locked",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=24.11",
+    "pnpm": ">=11"
+  },
+  "dependencies": {
+    "vite-plugin-svgr": "5.2.0"
+  },
+  "peerDependencies": {
+    "vite": "*"
+  },
+  "devDependencies": {
+    "rolldown": "1.2.0"
+  }
+}

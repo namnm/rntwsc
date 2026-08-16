@@ -1,8 +1,7 @@
 import { tw } from '#/core/tw/tw'
 
-// overlaps the shared border between adjacent outline buttons in a group so it
-// doesn't double up; flex-row mirrors visual order under rtl, so the negative
-// margin must move to the other side or it pulls siblings apart instead
+// Negative margin must flip side under rtl since flex-row mirrors visual
+// order but the margin doesn't. See i18n.md#direction-rtl.
 export const groupOverlapClassName = (
   isOutline: boolean,
   isFirst: boolean,

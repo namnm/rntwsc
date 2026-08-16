@@ -129,9 +129,8 @@ export const Switch = async ({
     disabled,
   })
 
-  // translate-x doesn't mirror under rtl the way flex-row does, so the thumb
-  // must move toward the reading-start side manually: "on" is the end side
-  // (right in ltr, left in rtl)
+  // translate-x doesn't mirror under rtl; move the thumb toward the end side
+  // manually. See i18n.md#direction-rtl.
   const thumbAtEnd = checked !== rtl
 
   return (

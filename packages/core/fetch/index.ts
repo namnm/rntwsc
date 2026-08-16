@@ -10,10 +10,12 @@ const getCache = <T>() =>
 export const useFetch = async <T>({
   url,
   headers,
+  keySalt,
 }: UseFetch): Promise<UseHydrationData<T>> => {
   const k = hk.key({
     url,
     headers,
+    keySalt,
   })
   const m = getCache<T>()
   let p = m.get(k)
@@ -35,6 +37,7 @@ const fetchWithoutCache = async <T>({
   try {
     const r = await fetch(url, {
       headers,
+      cache: 'no-cache',
     })
     if (!r.ok) {
       throw new Error(`${r.status} ${r.statusText}`)

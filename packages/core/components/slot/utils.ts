@@ -38,17 +38,16 @@ export const mergeProps = (
       continue
     }
 
-    // className - space-join (web)
+    // className - space-join
     if (key === 'className') {
-      // merged[key] = [slotVal, childVal].filter(Boolean).join(' ') || undefined
       merged[key] = clsx(slotVal as ClassName, childVal as ClassName)
       continue
     }
 
-    // style - merge objects (works for both CSSProperties and RN StyleSheet)
+    // style - merge objects, works for both CSSProperties and RN StyleSheet
     if (key === 'style') {
       if (slotVal || childVal) {
-        // Flatten arrays (React Native allows style arrays)
+        // React Native allows style arrays, so flatten before merging
         const flatSlot = flattenStyle(slotVal)
         const flatChild = flattenStyle(childVal)
         merged[key] = {

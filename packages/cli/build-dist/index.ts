@@ -4,6 +4,7 @@ import { fs } from '#/devtools/fs'
 import { glob, globby } from '#/devtools/glob'
 import { log } from '#/devtools/log'
 import { path } from '#/devtools/path'
+import { variantRegexes } from '#/devtools/variant-resolve-alias'
 import type { StrMap } from '#/libs/utility-types'
 
 type Config = {
@@ -19,6 +20,7 @@ type ParsedConfig = Omit<Required<Config>, 'packages' | 'dist'> & {
   repoRoot: string
   packagesRoot: string
   distRoot: string
+  author: string
 }
 
 // ---------------------------------------------------------------------------
@@ -37,6 +39,7 @@ export const buildDist = async (repoRoot: string) => {
   if (!version) {
     log.fatal('Missing "dist.version" in root package.json')
   }
+  const author = packageJsonRoot.author || 'Nam Nguyen <nam@namnm.com>'
 
   const packagesRoot = path.join(repoRoot, config.packages || 'packages')
   const distRoot = path.join(repoRoot, config.dist || 'dist')
@@ -58,6 +61,7 @@ export const buildDist = async (repoRoot: string) => {
     modules,
     flatten,
     extraCopy,
+    author,
   }
 
   await fs.remove(c.distRoot)
@@ -65,11 +69,21 @@ export const buildDist = async (repoRoot: string) => {
   await Promise.all([
     ...modules.map(m => copy(c, m)),
     writeReadmeWithGithubLinks(c.repoRoot, c.distRoot),
+    copyDocs(c),
   ])
   // generate css extract variables jsons
   await cssExtractVariables(c.distRoot, false)
-  // generate css browser variants json
-  await buildBrowserVariantsJson(c)
+  // Precompute the browser/native/web resolve-alias maps for next-config /
+  // vite-config, since consumers can't glob the published package at request time.
+  await Promise.all([
+    buildVariantsJson(
+      c,
+      'browser',
+      'devtools/next-config/browser-variants.json',
+    ),
+    buildVariantsJson(c, 'native', 'devtools/vite-config/native-variants.json'),
+    buildVariantsJson(c, 'web', 'devtools/vite-config/web-variants.json'),
+  ])
   // generate the aggregated ambient declarations entrypoint
   await writeTypesIndex(c)
   // build the merged package.json's dependencies and exports map
@@ -83,9 +97,8 @@ export const buildDist = async (repoRoot: string) => {
 // Module destination prefix
 // ---------------------------------------------------------------------------
 
-// Resolve the dist-relative folder a module's files are copied into. Flattened
-// modules (e.g. "core") land directly at the dist root; others keep their name
-// as a subfolder (e.g. "libs" -> dist/libs, "devtools" -> dist/devtools).
+// Resolve the dist-relative folder a module's files are copied into.
+// Flattened modules land at the dist root; others keep their name as a subfolder.
 const destPrefix = (c: ParsedConfig, mod: string): string =>
   c.flatten.includes(mod) ? '' : mod
 
@@ -115,38 +128,53 @@ const copy = async (c: ParsedConfig, mod: string) => {
   await Promise.all([...promises, ...(extraCopyPromisees || [])])
 }
 
+// Bundle the consumer-facing docs (top-level docs/*.md, not
+// docs/contribution/ or docs/todo.md, which are maintainer-only) so an
+// installed package carries its own docs for local/offline reference.
+const copyDocs = async (c: ParsedConfig) => {
+  const docsSrc = path.join(c.repoRoot, 'docs')
+  const docsDst = path.join(c.distRoot, 'docs')
+  const files = await glob('*.md', {
+    cwd: docsSrc,
+  })
+  await Promise.all(
+    files
+      .filter(f => path.basename(f) !== 'todo.md')
+      .map(f => fs.copy(f, path.join(docsDst, path.basename(f)))),
+  )
+}
+
 // ---------------------------------------------------------------------------
-// Browser resolve alias map
+// Variant (browser/web) resolve alias map
 // ---------------------------------------------------------------------------
 
-const indexBrowserRegex = /(^|\/)index\.browser\.[jt]sx?$/
-const browserRegex = /\.browser\.[jt]sx?$/
-
-const buildBrowserVariantsJson = async (c: ParsedConfig) => {
+const buildVariantsJson = async (
+  c: ParsedConfig,
+  variant: string,
+  outPath: string,
+) => {
+  const { index: indexRegex, plain: plainRegex } = variantRegexes(variant)
   const map: StrMap<string> = {}
 
   await Promise.all(
     c.modules.map(async m => {
       const prefix = destPrefix(c, m)
-      const files = await glob('**/*.browser.{ts,tsx}', {
+      const files = await glob(`**/*.${variant}.{ts,tsx}`, {
         cwd: path.join(c.distRoot, prefix),
         relative: true,
         gitignore: false,
       })
       for (const f of files) {
-        const isIndex = indexBrowserRegex.test(f)
-        const base = f.replace(isIndex ? indexBrowserRegex : browserRegex, '')
+        const isIndex = indexRegex.test(f)
+        const base = f.replace(isIndex ? indexRegex : plainRegex, '')
         const rel = [prefix, base].filter(Boolean).join('/')
         const key = `${c.name}${rel ? `/${rel}` : ''}`
-        map[key] = isIndex ? `${key}/index.browser` : `${key}.browser`
+        map[key] = isIndex ? `${key}/index.${variant}` : `${key}.${variant}`
       }
     }),
   )
 
-  await fs.outputJson(
-    path.join(c.distRoot, 'devtools/next-config/browser-variants.json'),
-    map,
-  )
+  await fs.outputJson(path.join(c.distRoot, outPath), map)
 }
 
 // ---------------------------------------------------------------------------
@@ -154,9 +182,7 @@ const buildBrowserVariantsJson = async (c: ParsedConfig) => {
 // ---------------------------------------------------------------------------
 
 // Collect every ambient "declaration.d.ts" copied into dist and reference them
-// all from a single dist-root "index.d.ts", with paths relative to dist root
-// (they can't be authored in the source tree since "core" flattens to dist
-// root while other modules keep their subfolder, changing the paths).
+// from a single dist-root "index.d.ts", relative to dist root.
 const writeTypesIndex = async (c: ParsedConfig) => {
   const files = await glob('**/declaration.d.ts', {
     cwd: c.distRoot,
@@ -173,11 +199,35 @@ const writeTypesIndex = async (c: ParsedConfig) => {
 // Merge package.json
 // ---------------------------------------------------------------------------
 
+// Static npm metadata for the published package - repo-wide facts, not
+// something a caller configures per build, so they live here rather than in
+// Config.
+const description =
+  'React Native with Tailwind CSS class names, compatible with Next.js App Router RSC and SSR streaming, plus a plain Vite SPA target.'
+const keywords = [
+  'react-native',
+  'tailwindcss',
+  'nextjs',
+  'react',
+  'cross-platform',
+  'ssr',
+  'rsc',
+  'vite',
+  'spa',
+]
+const repository: Repository = {
+  type: 'git',
+  url: 'git+https://github.com/namnm/rntwsc.git',
+}
+const homepage = 'https://github.com/namnm/rntwsc#readme'
+const bugs: Bugs = {
+  url: 'https://github.com/namnm/rntwsc/issues',
+}
+
 // Write the single dist package.json with merged deps and exports map.
 const writePackageJson = async (c: ParsedConfig) => {
   const [deps, exports] = await Promise.all([mergeDeps(c), buildExports(c)])
-  // "." isn't emitted by buildExports (it only scans code/asset files, not
-  // ".d.ts"), so consumers get it via "types" and "/// <reference types=".."
+  // buildExports only scans code/asset files, not ".d.ts", so "." is added here.
   exports['.'] = {
     types: './index.d.ts',
   }
@@ -185,6 +235,13 @@ const writePackageJson = async (c: ParsedConfig) => {
   const pkg: PkgJson = {
     name: c.name,
     version: c.version,
+    description,
+    keywords,
+    license: 'MIT',
+    author: c.author,
+    repository,
+    homepage,
+    bugs,
     type: 'commonjs',
     types: './index.d.ts',
     exports,
@@ -216,9 +273,23 @@ const depKeys: (keyof Deps)[] = [
   'peerDependencies',
   'devDependencies',
 ]
+type Repository = {
+  type: string
+  url: string
+}
+type Bugs = {
+  url: string
+}
 type PkgJson = Partial<Deps> & {
   name: string
   version: string
+  description: string
+  keywords: string[]
+  license: string
+  author: string
+  repository: Repository
+  homepage: string
+  bugs: Bugs
   type: string
   types: string
   exports: StrMap<ExportsValue>
@@ -293,6 +364,8 @@ const buildExports = async (c: ParsedConfig): Promise<StrMap<ExportsValue>> => {
     m[condition] = `./${file}`
   }
 
+  const jsFiles = new Set(assetFiles.filter(f => f.endsWith('.js')))
+
   for (const f of codeFiles) {
     const noExt = f.replace(codeExt, '')
     let base = noExt
@@ -307,16 +380,20 @@ const buildExports = async (c: ParsedConfig): Promise<StrMap<ExportsValue>> => {
     if (!platform) {
       platform = 'default'
     }
+    // Prefer a sibling .js file over .ts/.tsx when both exist
+    const jsCounterpart = `${noExt}.js`
+    const target = jsFiles.has(jsCounterpart) ? jsCounterpart : f
+
     // Exact file entry - never platform-conditional
     exports[`./${f}`] = `./${f}`
     // Explicit platform path without extension (e.g. ./foo.native)
-    exports[`./${noExt}`] = `./${f}`
+    exports[`./${noExt}`] = `./${target}`
     // Base path entry with condition (./foo -> react-native or default)
-    addCondition(`./${base}`, f, platform)
+    addCondition(`./${base}`, target, platform)
     // Directory entry when the base filename is 'index'
     if (path.basename(base) === 'index') {
       const dir = path.dirname(base)
-      addCondition(dir === '.' ? '.' : `./${dir}`, f, platform)
+      addCondition(dir === '.' ? '.' : `./${dir}`, target, platform)
     }
   }
 
@@ -376,9 +453,8 @@ const rewriteAlias = async (c: ParsedConfig): Promise<void> => {
   log.fatal(`${errs.length} unresolvable import(s)`)
 }
 
-// Rewrite aliases in a single file. Every module now lives under the same
-// published package, so any #/<module>/... import simply maps to the dist
-// path that module was copied to (empty prefix for flattened modules).
+// Rewrite aliases in a single file. Every module lives under the same
+// published package, so #/<module>/... maps to the dist path it was copied to.
 const rewriteAliasInFile = async (
   c: ParsedConfig,
   f: string,

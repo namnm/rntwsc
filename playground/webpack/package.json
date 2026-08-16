@@ -15,11 +15,10 @@
     "pnpm": ">=11"
   },
   "dependencies": {
-    "next": "16.2.10",
+    "next": "16.2.12",
     "react-dom": "19.2.3",
     "react-native-svg-web": "1.0.9",
-    "react-native-web": "0.21.2",
-    "rntwsc": "github:namnm/rntwsc#d903c25701062e5f393d5d8e3c4a1e56e2b418b9"
+    "react-native-web": "0.21.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.3",

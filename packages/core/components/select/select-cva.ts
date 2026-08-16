@@ -1,5 +1,6 @@
 import type { InputCva } from '#/core/components/input/input-cva'
 import type { ClassName } from '#/core/tw/class-name'
+import type { PressableProps } from '#/core/tw/components/pressable'
 import { cva } from '#/core/tw/cva'
 import type { MultipleProps, SingleProps } from '#/libs/utility-types'
 
@@ -51,19 +52,20 @@ export type SelectItem = {
 export type ItemsFn = () => SelectItem[] | Promise<SelectItem[]>
 export type SelectItems = SelectItem[] | ItemsFn
 
-type BaseProps = Omit<InputCva, 'active'> & {
-  items: SelectItems
-  placeholder?: string
-  title?: string
-  doneLabel?: string
-  loadingLabel?: string
-  emptyLabel?: string
-  searchable?: boolean
-  searchPlaceholder?: string
-  searchStrategies?: SearchStrategy[]
-  onSearch?: (query: string) => void
-  defaultHighlightSearch?: boolean
-  className?: ClassName
-}
+type BaseProps = Omit<InputCva, 'active'> &
+  Omit<PressableProps, 'className' | 'disabled' | 'onPress' | 'children'> & {
+    items: SelectItems
+    placeholder?: string
+    title?: string
+    doneLabel?: string
+    loadingLabel?: string
+    emptyLabel?: string
+    searchable?: boolean
+    searchPlaceholder?: string
+    searchStrategies?: SearchStrategy[]
+    onSearch?: (query: string) => void
+    defaultHighlightSearch?: boolean
+    className?: ClassName
+  }
 
 export type SelectProps = (SingleProps | MultipleProps) & BaseProps

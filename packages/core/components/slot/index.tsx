@@ -86,7 +86,7 @@ type SlotCloneProps = {
 
 const SlotClone = ({ ref, children, ...slotProps }: SlotCloneProps) => {
   if (!isValidElement(children)) {
-    // Guard: if no valid child, render nothing (dev warning would go here)
+    // Guard: no valid child means render nothing
     if (process.env.NODE_ENV !== 'production' && Children.count(children) > 1) {
       throw new Error('Slot expects a single React element as its child.')
     }

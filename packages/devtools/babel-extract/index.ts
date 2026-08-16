@@ -10,13 +10,22 @@ import { globSync } from '#/devtools/glob'
 type Options = {
   extractClassNameOutputPath: string
   repoRoot: string
+  reactNativeVersion: string
+  twrncConfig: object
+  ignore?: string[]
 }
 type Extractor = {
   visitor: Visitor<any>
   done: () => void
 }
 
-export const extract = ({ extractClassNameOutputPath, repoRoot }: Options) => {
+export const extract = ({
+  extractClassNameOutputPath,
+  repoRoot,
+  reactNativeVersion,
+  twrncConfig,
+  ignore = [],
+}: Options) => {
   let currentCode = ''
   const err = (npath: NodePath, msg: string) => {
     const loc = npath.node?.loc
@@ -46,8 +55,11 @@ export const extract = ({ extractClassNameOutputPath, repoRoot }: Options) => {
     )
   }
 
+  // Test files use shapes the tw plugin can't statically transpile, so
+  // they're excluded from the scan.
   const paths = globSync('**/*.{ts,tsx}', {
     cwd: repoRoot,
+    ignore: ['**/*.test.{ts,tsx}', ...ignore],
   })
 
   const parserOption = {
@@ -56,9 +68,15 @@ export const extract = ({ extractClassNameOutputPath, repoRoot }: Options) => {
   }
   for (const p of paths) {
     currentCode = fs.readFileSync(p, 'utf-8')
+    // pluginPassOptsSchema requires this full shape or validation throws.
+    // platform is omitted since extraction only needs the web class-name shape.
     const pluginPass = {
       filename: p,
-      opts: {},
+      opts: {
+        reactNativeVersion,
+        twrncConfig,
+        extractClassNameOutputPath,
+      },
     }
     const ast = parse(currentCode, parserOption)
     for (const { visitor } of extractors) {

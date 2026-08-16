@@ -64,7 +64,7 @@ export const run = async (o: Options) => {
     await Promise.all(fmtPromises)
   }
 
-  await r('prettier', o)
+  checkAndPush(promises, 'prettier', o)
 
   checkAndPush(promises, 'tsc', o)
   checkAndPush(promises, 'type-coverage', o)

@@ -7,10 +7,8 @@ import { get } from '#/libs/lodash'
 
 const hookRegex = /^use[A-Z]/
 
-// Generates the identifier for the split-out inner component and its props -
-// overridable via the `createUniqIdent` plugin option so tests can get stable,
-// human-writable output instead of babel's own (collision-avoiding, but not
-// predictable) scope.generateUidIdentifier suffixes.
+// Identifier factory for the split-out inner component and its props.
+// See "createUniqIdent" in contribution/async-components.md.
 export type CreateUniqIdent = (
   scope: NodePath<t.Function>['scope'],
   name: string,
@@ -45,9 +43,8 @@ export const asyncHookPlugin: PluginObj = {
       candidates.forEach(parentFn => {
         injectDehydrateJsx(parentFn, createUniqIdent)
         if (isServer) {
-          // rsc/ssr: real `await` is valid here, but a component that also
-          // calls a real hook (useState, useEffect, ...) directly is not -
-          // split the data-await part out into its own async wrapper
+          // rsc/ssr: keep await, split out real-hook usage if needed - see
+          // contribution/async-components.md
           trySplitServerComponent(parentFn, createUniqIdent)
         } else {
           // browser/rn: no real async component support, strip to sync
@@ -78,9 +75,8 @@ const isMethod = (
 ): p is NodePath<t.ObjectMethod | t.ClassMethod> =>
   p.isObjectMethod() || p.isClassMethod()
 
-// Name of the variable/function/method a function is bound to, e.g. `Xxx` for
-// both `function Xxx(){}` and `const Xxx = async () => {}` - undefined for
-// anonymous functions (e.g. `export default async function (props) {}`).
+// Name of the variable/function/method a function is bound to.
+// undefined for an anonymous function.
 const resolveFnName = (p: NodePath<t.Function>): string | undefined => {
   if (p.isFunctionDeclaration()) {
     return p.node.id?.name
@@ -102,12 +98,9 @@ const resolveFnName = (p: NodePath<t.Function>): string | undefined => {
   return undefined
 }
 
-// The only two places `await use...()` is ever valid: a properly named React
-// component (PascalCase - React/JSX only ever treats a capitalized reference
-// as a component, never a lowercase or anonymous one) or a custom hook
-// composing other hooks (`use` + PascalCase). Anything else - an anonymous
-// function, or a named-but-lowercase-non-hook one - is not something this
-// framework's own naming conventions would ever resolve as either.
+// `await use...()` is only ever valid in a PascalCase component or a
+// use-prefixed hook - see "babel-plugin-async-hook" in
+// contribution/async-components.md.
 const isValidHostName = (name: string | undefined): boolean =>
   !!name && (/^[A-Z]/.test(name) || hookRegex.test(name))
 
@@ -143,7 +136,7 @@ const getHookOwnerFn = (
   return parentFn
 }
 
-// True for `Promise.all(...)` specifically (not any other member call).
+// True only for `Promise.all(...)`, not any other member call.
 const isPromiseAllCall = (expr: t.Expression): boolean => {
   if (!t.isCallExpression(expr) || !t.isMemberExpression(expr.callee)) {
     return false
@@ -160,12 +153,8 @@ const isPromiseAllCall = (expr: t.Expression): boolean => {
   )
 }
 
-// The compiler groups independent `await use...()` calls into `Promise.all`
-// automatically on the server (see mergeAdjacentIndependentAwaits) - there is
-// never a reason to write it by hand: on the server it is redundant (the
-// compiler does it for you, or throws if it can't be done safely), and on
-// the client every await is stripped identically regardless of grouping.
-// Fail the build and point at plain sequential `await use...()` instead.
+// Hand-written `await Promise.all(...)` is always redundant - see
+// "Independent awaits are combined automatically" in async-components.md.
 const checkNoExplicitPromiseAll = (parentFn: NodePath<t.Function>) => {
   parentFn.traverse({
     Function: inner => {
@@ -185,18 +174,14 @@ const checkNoExplicitPromiseAll = (parentFn: NodePath<t.Function>) => {
 }
 
 // ---------------------------------------------------------------------------
-// useFetch...: inject `.dehydrateJsx` into every return, so the client can
-// pick the same fetch result back up during hydration instead of re-fetching
-// (see hydration.md). Runs once per candidate, before the isServer-specific
-// strip/split passes below, on both boundaries - only the shape of what gets
-// returned changes here, not whether the await itself ends up sync or split.
+// useFetch...: inject `.dehydrateJsx` into every return for hydration.
+// See "injectDehydrateJsx" in contribution/async-components.md.
 // ---------------------------------------------------------------------------
 
 const fetchHookRegex = /^useFetch/
 
-// TODO: only components are supported for now - a hook host has no JSX tree
-// of its own to inject a `.dehydrateJsx` marker into, so `await useFetch...()`
-// inside a hook is left completely untouched until that is designed.
+// TODO: components only for now - see "injectDehydrateJsx" in
+// contribution/async-components.md.
 const injectDehydrateJsx = (
   parentFn: NodePath<t.Function>,
   createUniqIdent: CreateUniqIdent,
@@ -234,10 +219,8 @@ const injectDehydrateJsx = (
       continue
     }
 
-    // destructured (or other pattern) LHS - swap it for a plain temp
-    // identifier holding the full result, then recover the original
-    // bindings from it as a separate statement right after, so there is
-    // still something to call `.dehydrateJsx` on
+    // destructured LHS - swap for a temp identifier, then re-destructure
+    // it right after, so there is something to call `.dehydrateJsx` on
     const base = calleeName.charAt(3).toLowerCase() + calleeName.slice(4)
     const resultId = createUniqIdent(parentFn.scope, base)
     const originalPattern = decl.id
@@ -337,10 +320,8 @@ const stripAwaitOrYield = (
 // rsc/ssr: split a component that mixes `await use...()` with a real hook
 // ---------------------------------------------------------------------------
 
-// `await use...()`, or `await Promise.all([use...(), ...])` - the latter
-// only ever appears as this transform's own generated output now that
-// checkNoExplicitPromiseAll bans writing it by hand, but is still recognized
-// here read-only, since the merged output needs to keep working correctly.
+// Matches `await use...()` or an already-merged `await Promise.all([...])`.
+// See "babel-plugin-async-hook" in contribution/async-components.md.
 const isAwaitedHookCall = (expr: t.AwaitExpression): boolean => {
   const arg = expr.argument
   if (t.isCallExpression(arg) && t.isExpression(arg.callee)) {
@@ -352,13 +333,9 @@ const isAwaitedHookCall = (expr: t.AwaitExpression): boolean => {
   return isPromiseAllCall(arg)
 }
 
-// A real hook call is any `use...()` not wrapped in one of the shapes above -
-// this framework always awaits its own async hooks, so an un-awaited one is
-// necessarily a real React/DOM hook (useState, useEffect, ...). A statement
-// can still legitimately contain further `await use...()`s of its own (e.g.
-// once the leading run has already stopped for an unrelated reason, below) -
-// skip those instead of miscounting them as real. Returns the offending
-// CallExpression path (for a code-frame error) if found.
+// An un-awaited use...() is necessarily a real hook - see
+// "Implementation notes" in contribution/async-components.md.
+// Returns the offending call path, if found.
 const findOwnHookCall = (
   stmt: NodePath<t.Statement>,
 ): NodePath<t.CallExpression> | undefined => {
@@ -387,10 +364,8 @@ const findOwnHookCall = (
   return found
 }
 
-// A further `await use...()` that didn't make it into the leading run (e.g.
-// a plain statement, or a real hook, sits before it) can't be moved into the
-// inner component either - it would stay non-async but still await. Returns
-// the offending AwaitExpression path (for a code-frame error) if found.
+// A further awaited hook outside the leading run can't be moved into the
+// (non-async) inner component - see contribution/async-components.md.
 const findOwnAwaitedHookCall = (
   stmt: NodePath<t.Statement>,
 ): NodePath<t.AwaitExpression> | undefined => {
@@ -406,14 +381,8 @@ const findOwnAwaitedHookCall = (
   return found
 }
 
-// Extracts { lhs, init, names } from a top-level `const <pattern> = await
-// use...()` (or `await Promise.all([...])`) statement - `init` is the value
-// unwrapped from its own `await`, ready to become one element of a bigger
-// `Promise.all([...])` array (nesting an existing Promise.all rather than
-// flattening it is fine - still fully parallel, just one array level deeper).
-// PatternLike (not the wider LVal) - all t.arrayPattern needs, and all a
-// `const` declarator's id ever practically is (never a TSParameterProperty,
-// which only occurs in function params)
+// Extracts { lhs, init, names } from a top-level await-hook declaration.
+// See "Implementation notes" in contribution/async-components.md.
 type AwaitHookDecl = { lhs: t.PatternLike; init: t.Expression; names: string[] }
 const getAwaitHookDecl = (
   s: NodePath<t.Statement>,
@@ -439,9 +408,7 @@ const getAwaitHookDecl = (
   }
 }
 
-// True if `s` doesn't reference any name in `declaredSoFar` - i.e. it did not
-// need anything resolved by an earlier `await use...()` decl, so it could
-// have started resolving at the same time as any other such "root".
+// True if `s` references no name resolved by an earlier decl in the run.
 const isIndependentDecl = (
   s: NodePath<t.Statement>,
   declaredSoFar: Set<string>,
@@ -458,14 +425,8 @@ const isIndependentDecl = (
   return !referencesEarlier
 }
 
-// A plain `const <pattern> = <name>` where `<name>` is already something an
-// earlier await-hook decl resolved - e.g. the temp var injectDehydrateJsx
-// introduces for a destructured `useFetch...()` result, re-destructured right
-// after it. Not a new async dependency, so it doesn't break adjacency for
-// merge/waterfall purposes below - but the names it binds are still derived
-// from that earlier decl, and must count as resolved for anything checked
-// after it (otherwise a real dependency on one of those names would go
-// undetected, and could get merged into a parallel Promise.all incorrectly).
+// A re-destructure of an earlier decl's temp var (see injectDehydrateJsx) -
+// see "injectDehydrateJsx" in contribution/async-components.md.
 const getTransparentAliasNames = (
   s: NodePath<t.Statement>,
   declaredSoFar: Set<string>,
@@ -483,10 +444,8 @@ const getTransparentAliasNames = (
   return Object.keys(t.getBindingIdentifiers(decl.id))
 }
 
-// Combines a run of statements (each already confirmed to be an independent
-// `AwaitHookDecl`) into one `const [pat1, pat2, ...] = await Promise.all([
-// init1, init2, ...])` - each original LHS pattern (identifier, object, or
-// array) just becomes one element of the merged array pattern.
+// Combines a run of independent AwaitHookDecls into one
+// `const [pat1, pat2, ...] = await Promise.all([init1, init2, ...])`.
 const mergeIntoPromiseAll = (group: NodePath<t.Statement>[]) => {
   const decls = group.map(s => getAwaitHookDecl(s)!)
   const merged = t.variableDeclaration('const', [
@@ -506,21 +465,16 @@ const mergeIntoPromiseAll = (group: NodePath<t.Statement>[]) => {
   group[0].replaceWith(merged)
 }
 
-// Auto-combines 2+ *adjacent* independent `await use...()` decls into a
-// single `await Promise.all([...])` - always safe, since nothing changes
-// position: there is no statement between them whose ordering could matter.
-// Re-scans from scratch after each merge (indices shift), so this is O(n^2)
-// in the pathological case, but function bodies are small.
+// Auto-combines adjacent independent await-hook decls into Promise.all.
+// See "babel-plugin-async-hook" in contribution/async-components.md.
 const mergeAdjacentIndependentAwaits = (
   bodyPath: NodePath<t.BlockStatement>,
 ) => {
   for (;;) {
     const stmts = bodyPath.get('body')
     const declaredSoFar = new Set<string>()
-    // the run of statement paths merged so far - built from actual decls
-    // only, so a transparent alias sitting between two decls (see
-    // getTransparentAliasNames) never becomes part of the merged group,
-    // even though it doesn't break adjacency either
+    // the run of statement paths merged so far - decls only, a transparent
+    // alias never joins the group (see getTransparentAliasNames)
     let run: NodePath<t.Statement>[] = []
     let merged = false
 
@@ -565,14 +519,9 @@ const mergeAdjacentIndependentAwaits = (
   }
 }
 
-// Scans every top-level `const <pattern> = await use...()` statement left
-// after merging, in order (regardless of what other statements sit between
-// them) - each one that does not reference a name bound by an *earlier* one
-// of these is a "root". Two or more roots at this point means fixing them
-// would require actually moving code across something in between (a plain
-// statement, or a real dependency) - not safe to do automatically, so fail
-// the build and point at the first avoidable one instead of silently
-// accepting a slower-than-necessary waterfall.
+// A second independent "root" after merging means an actual reorder is
+// needed - see "Independent awaits are combined automatically" in
+// async-components.md.
 const checkForWaterfall = (stmts: NodePath<t.Statement>[]) => {
   const declaredSoFar = new Set<string>()
   let hasRoot = false
@@ -615,23 +564,13 @@ const trySplitServerComponent = (
 
   const bodyPath = parentFn.get('body') as NodePath<t.BlockStatement>
 
-  // auto-combine trivially safe waterfalls first (adjacent + independent),
-  // so the leading-run scan below sees the merged shape - e.g. two adjacent
-  // independent awaits that just got combined are now one leading decl, not
-  // two - then fail the build for anything left that would need an actual
-  // reorder to fix (see mergeAdjacentIndependentAwaits / checkForWaterfall)
+  // merge safe waterfalls first so the leading-run scan below sees the
+  // merged shape, then fail the build for anything left needing a reorder
   mergeAdjacentIndependentAwaits(bodyPath)
   const stmts = bodyPath.get('body')
   checkForWaterfall(stmts)
 
-  // Real hook calls before this function's own first await are always safe -
-  // nothing has suspended yet, so React's hook dispatcher (assuming this
-  // function, or an unbroken synchronous call chain leading to it, is what
-  // React is actually calling) is still valid at that point. A real hook
-  // *after* the first await is unconditionally broken - confirmed
-  // empirically (react-dom/server + renderToPipeableStream): the dispatcher
-  // does not survive crossing an await, no matter what the await depends on
-  // or how deeply the real hook call is nested in helper calls. See
+  // A real hook is safe only before this function's own first await - see
   // "Splitting a component" in docs/async-components.md.
   const firstAwaitIdx = stmts.findIndex(s => !!findOwnAwaitedHookCall(s))
   if (firstAwaitIdx === -1) {
@@ -645,9 +584,7 @@ const trySplitServerComponent = (
     return // no real hook after the first await - safe as originally written
   }
 
-  // splitting renders the inner half as JSX, which only makes sense for a
-  // component - a hook has no tree to split into, and there is no other way
-  // to make this safe, so fail the build instead of leaving it broken.
+  // a hook has no JSX tree to split into, so this can't be made safe
   if (isHookHost) {
     throw unsafeRealHook.buildCodeFrameError(
       "This hook calls a real hook (useState, useEffect, ...) after its own `await use...()` - once an async function crosses an await, React's hook dispatcher is no longer valid there, so this throws at runtime. Move this call before the first `await use...()` in this hook instead, or move the real-hook logic into a separate component.",
@@ -655,10 +592,8 @@ const trySplitServerComponent = (
   }
 
   // leading run of `const <pattern> = await use...()` becomes the wrapper's
-  // body - the LHS can be any pattern (plain identifier, or a destructured
-  // object/array, e.g. `const { a, b } = await useSomething()`), since the
-  // statement itself is kept verbatim in the wrapper either way; all of it
-  // just needs a name to forward each bound value to the inner component by
+  // body, kept verbatim - see "babel-plugin-async-hook" in
+  // contribution/async-components.md.
   const dataDecls: { names: string[]; node: t.VariableDeclaration }[] = []
   let idx = 0
   for (; idx < stmts.length; idx++) {
@@ -683,10 +618,8 @@ const trySplitServerComponent = (
     })
   }
 
-  // a real hook after the first await means a split is unavoidable - but any
-  // further `await use...()` outside the leading run can't be moved into the
-  // (non-async) inner component either. Fail the build instead of silently
-  // emitting that - see "Splitting a component" in docs/async-components.md.
+  // a further awaited hook outside the leading run can't be moved into the
+  // inner component either - see "Splitting a component" in async-components.md.
   const restPaths = stmts.slice(idx)
   for (const stmt of restPaths) {
     const strayAwait = findOwnAwaitedHookCall(stmt)
@@ -704,8 +637,8 @@ const trySplitServerComponent = (
     )
   }
 
-  // a component only ever receives a single props argument - this doesn't
-  // apply to a hook host (already returned above), which can take anything
+  // a component only ever receives a single props argument - not enforced
+  // for a hook host, which already returned above
   const params = parentFn.node.params
   if (params.length > 1) {
     throw parentFn.buildCodeFrameError(
@@ -736,10 +669,9 @@ const trySplitServerComponent = (
   const dataNames = dataDecls.flatMap(d => d.names)
   const propIds = dataNames.map(name => createUniqIdent(parentFn.scope, name))
 
-  // wrapper: swap the destructured param for the fresh plain identifier, then
-  // recover the original bindings from it, then keep the data declarations,
-  // then render the inner component with the resolved data (renamed to avoid
-  // clashing with the original props)
+  // wrapper: recover original param bindings, keep the data decls, then
+  // render the inner component with the resolved data - see the Button
+  // example in docs/async-components.md.
   const wrapperPrefix: t.Statement[] = []
   if (originalPattern && paramId) {
     parentFn.node.params[0] = paramId
@@ -781,9 +713,8 @@ const trySplitServerComponent = (
   )
   let innerParam: t.ObjectPattern
   if (originalPattern) {
-    // merge the resolved data props into a clone of the original pattern
-    // (cloned since the wrapper's own injected statement keeps the original),
-    // inserted before any trailing rest element, which must stay last
+    // merge resolved data props into a clone of the original pattern,
+    // before any trailing rest element - the wrapper keeps the original
     const cloned = t.cloneNode(originalPattern, true)
     const restIdx = cloned.properties.findIndex(p => t.isRestElement(p))
     if (restIdx === -1) {
@@ -827,10 +758,9 @@ type Wrapper =
       insertAfterPath: NodePath<t.Statement>
     }
 
-// Resolve the statement to insert the split-out inner component after, and
-// the name to base its generated identifier on - only plain `function Xxx(){}`
-// and `const Xxx = async () => {}` / `const Xxx = async function () {}` are
-// supported, so the original binding keeps pointing at the wrapper untouched.
+// Resolve where to insert the split-out inner component, and its base name.
+// Only two wrapper shapes are supported - see "Implementation notes" in
+// contribution/async-components.md.
 const resolveWrapper = (
   parentFn: NodePath<t.Function>,
 ): Wrapper | undefined => {

@@ -8,6 +8,6 @@
     "pnpm": ">=11"
   },
   "dependencies": {
-    "type-coverage": "2.29.7"
+    "type-coverage": "2.30.1"
   }
 }

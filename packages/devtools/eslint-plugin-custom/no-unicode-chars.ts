@@ -45,11 +45,8 @@ const FIXABLE_RE = new RegExp(
   'gu',
 )
 
-// Characters with no ASCII counterpart - report only, no auto-fix
-// Covers: arrows (2190-21FF), supplemental arrows A (27F0-27FF),
-// supplemental arrows B (2900-297F), geometric shapes (25B2-25BF, 25C6-25C8, 25CA, 2666),
-// check marks (2713, 2714), emoji (1F300-1F9FF, 1FA00-1FAFF),
-// misc symbols (2600-26FF), dingbats (2700-27BF)
+// Characters with no ASCII counterpart - report only, no auto-fix.
+// Range coverage documented in contribution/internals.md.
 const NON_FIXABLE_RE =
   /[\u2190-\u21FF\u27F0-\u27FF\u2900-\u297F\u25B2-\u25BF\u25C6-\u25C8\u25CA\u2666\u2713\u2714\u{1F300}-\u{1F9FF}\u{1FA00}-\u{1FAFF}\u2600-\u26FF\u2700-\u27BF]/gu
 

@@ -2,17 +2,35 @@
 
 import '@/polyfill/server'
 
-import type { PropsWithChildren } from 'react'
-import { useDarkModeUser } from 'rntwsc/dark-mode'
-import { useCurrentDirection, useCurrentLangUntyped } from 'rntwsc/i18n'
-import { useTheme } from 'rntwsc/theme'
-import { getThemeClassName } from 'rntwsc/theme/config'
-import { clsx } from 'rntwsc/tw/clsx'
-import { darkClassName, lightClassName, webClassName } from 'rntwsc/tw/styles'
+import type {
+ PropsWithChildren 
+} from 'react'
+import {
+ useDarkModeUser 
+} from 'rntwsc/dark-mode'
+import {
+ useCurrentDirection, useCurrentLangUntyped 
+} from 'rntwsc/i18n'
+import {
+ useTheme 
+} from 'rntwsc/theme'
+import {
+ getThemeClassName 
+} from 'rntwsc/theme/config'
+import {
+ clsx 
+} from 'rntwsc/tw/clsx'
+import {
+ darkClassName, lightClassName, webClassName 
+} from 'rntwsc/tw/styles'
 
-import { BrowserEnhancers } from '@/polyfill/browser'
+import {
+ BrowserEnhancers 
+} from '@/polyfill/browser'
 
-export const App = async ({ children }: PropsWithChildren) => {
+export const App = async ({
+ children 
+}: PropsWithChildren) => {
   const lang = await useCurrentLangUntyped()
   const dir = await useCurrentDirection()
   const theme = await useTheme()

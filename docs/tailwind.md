@@ -66,6 +66,8 @@ const composed = clsx(
 const style = runtimeStyle('flex flex-col')
 ```
 
+The `tw` tagged template itself (packages/core/tw/tw.ts) only runs when babel-plugin-tw's build-time transform is skipped, such as in unit tests - in a real build every `` tw`...` `` call is replaced with its extracted class-name string instead. The fallback implementation just joins the template's static parts, since the type signature already forbids any interpolation.
+
 ## Extras: transitions (Reanimated)
 
 ```

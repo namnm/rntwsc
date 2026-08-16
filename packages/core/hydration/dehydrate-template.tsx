@@ -2,6 +2,7 @@
 
 import { useLayoutEffect } from 'react'
 
+import { getEnableDedupe } from '#/core/cache/config'
 import {
   dehydrateDataKey,
   dehydrateDataValueKey,
@@ -12,6 +13,35 @@ import { setHydration } from '#/core/hydration/store'
 import { isBrowser } from '#/core/platform'
 import { useIsMounted } from '#/libs/hooks'
 import { jsonSafe } from '#/libs/json-safe'
+
+// Pure so the SSR-vs-hydrate mismatch this guards against (see
+// contribution/hydration.md#dehydration-key-collisions-and-keysalt) is unit
+// testable without rendering through React/Next.
+export const shouldEmbedTemplate = ({
+  k,
+  dedupeSet,
+  enableDedupe,
+  isBrowser: isBrowserArg,
+  rehydratedSet,
+}: {
+  k: string
+  dedupeSet: Set<string>
+  enableDedupe: boolean
+  isBrowser: boolean
+  rehydratedSet: Set<string>
+}): boolean => {
+  if (enableDedupe) {
+    if (dedupeSet.has(k)) {
+      return false
+    }
+    dedupeSet.add(k)
+  }
+  // to not dehydrate on browser if this key has no server counterpart
+  if (isBrowserArg && !rehydratedSet.has(k)) {
+    return false
+  }
+  return true
+}
 
 type Props = Required<DehydrateProps> & {
   // pass from the caller instead of module level
@@ -31,15 +61,14 @@ export const DehydrateTemplate = ({ k, v, isServer }: Props) => {
     return null
   }
 
-  // to not dehydrate a key twice
-  const s = dehydrated()
-  if (s.has(k)) {
-    return null
-  }
-  s.add(k)
-
-  // to not dehydrate on browser if this key has no server counterpart
-  if (isBrowser && !rehydrated.has(k)) {
+  const embed = shouldEmbedTemplate({
+    k,
+    dedupeSet: dehydrated(),
+    enableDedupe: getEnableDedupe(),
+    isBrowser,
+    rehydratedSet: rehydrated,
+  })
+  if (!embed) {
     return null
   }
 

@@ -108,6 +108,10 @@ export const playgroundSafeManifest: ManifestEntry[] = [
     dest: 'app/src/app.native.tsx',
   },
   {
+    src: 'app/src/root-navigation.tsx',
+    dest: 'app/src/root-navigation.tsx',
+  },
+  {
     src: 'app/src/tailwind-config.ts',
     dest: 'app/src/tailwind-config.ts',
   },
@@ -185,6 +189,26 @@ export const newProjectOnlyManifest: ManifestEntry[] = [
   {
     src: 'app/src/i18n/labels',
     dest: 'app/src/i18n/labels',
+  },
+  {
+    src: 'app/src/components/dark-mode-switcher.tsx',
+    dest: 'app/src/components/dark-mode-switcher.tsx',
+  },
+  {
+    src: 'app/src/components/theme-switcher.tsx',
+    dest: 'app/src/components/theme-switcher.tsx',
+  },
+  {
+    src: 'app/src/components/i18n-switcher.tsx',
+    dest: 'app/src/components/i18n-switcher.tsx',
+  },
+  {
+    src: 'app/src/components/settings-modal.tsx',
+    dest: 'app/src/components/settings-modal.tsx',
+  },
+  {
+    src: 'app/src/components/settings-button.tsx',
+    dest: 'app/src/components/settings-button.tsx',
   },
   {
     src: 'app/src/pages/route-paths.ts',

@@ -3,22 +3,27 @@
 import type { ReactNode } from 'react'
 import { useSyncExternalStore } from 'react'
 
+import { globalStore } from '#/core/utils/global-store'
+
 export type PortalItem = {
   id: string
   node: ReactNode
   disableBodyScroll?: boolean
 }
 
-let items: PortalItem[] = []
-const listeners = new Set<() => void>()
-const notify = () => listeners.forEach(cb => cb())
+const itemsStore = globalStore<PortalItem[]>('__rntwscPortalItems', () => [])
+const listenersStore = globalStore<Set<() => void>>(
+  '__rntwscPortalListeners',
+  () => new Set(),
+)
+const notify = () => listenersStore.get().forEach(cb => cb())
 
 const subscribe = (cb: () => void) => {
-  listeners.add(cb)
-  return () => listeners.delete(cb)
+  listenersStore.get().add(cb)
+  return () => listenersStore.get().delete(cb)
 }
 
-const getSnapshot = () => items
+const getSnapshot = () => itemsStore.get()
 // the value is empty on initial hydrate
 const getSnapshotServer = getSnapshot
 
@@ -30,8 +35,9 @@ export const addPortal = (
   node: ReactNode,
   disableBodyScroll?: boolean,
 ) => {
+  const items = itemsStore.get()
   const idx = items.findIndex(e => e.id === id)
-  items =
+  itemsStore.set(
     idx >= 0
       ? items.map((e, i) =>
           i === idx
@@ -49,14 +55,16 @@ export const addPortal = (
             node,
             disableBodyScroll,
           },
-        ]
+        ],
+  )
   notify()
 }
 
 export const removePortal = (id: string) => {
+  const items = itemsStore.get()
   const next = items.filter(e => e.id !== id)
   if (next.length < items.length) {
-    items = next
+    itemsStore.set(next)
     notify()
   }
 }

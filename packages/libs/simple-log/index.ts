@@ -7,16 +7,18 @@ const createSimpleLog =
     if (!condition) {
       return
     }
-    if (typeof condition !== 'boolean') {
-      condition = jsonSafe(condition)
-    }
+    // must check before reassigning condition to its jsonSafe string below,
+    // or both checks would always read false
+    const isErrInstance = condition instanceof Error
     if (typeof condition === 'string') {
       msg = msg + '\n' + condition.trim()
+    } else if (typeof condition !== 'boolean') {
+      msg = msg + '\n' + jsonSafe(condition)
     }
 
     const fn = console[l].bind(console)
     fn(msg)
-    if (condition instanceof Error) {
+    if (isErrInstance) {
       fn(condition)
     }
   }
@@ -28,7 +30,7 @@ export type SimpleLog = {
   warn: SimpleLogFn
   error: SimpleLogFn
 }
-export type SimpleLogFn = (msg: string, condition: unknown) => void
+export type SimpleLogFn = (msg: string, condition?: unknown) => void
 
 export const simpleLog: SimpleLog = {
   debug: createSimpleLog('debug'),

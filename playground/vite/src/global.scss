@@ -1,0 +1,5 @@
+@use 'tailwindcss';
+@use 'rntwsc/tw/styles.scss' as tw;
+@use 'rntwsc/components/styles.scss' as components;
+@use 'rntwsc/themes/all.scss' as themes;
+@config './tailwind.config.cjs';

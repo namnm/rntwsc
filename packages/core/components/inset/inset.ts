@@ -1,6 +1,5 @@
 import { tw } from '#/core/tw/tw'
 
-// it is difficult to write tailwind class name for complex css
-// we will write css and put it here to get transpile reference
-// use tw`` here to collect and map when class names are minified
+// Complex CSS is hard to express as a tailwind class name, so plain CSS is
+// written here and referenced via tw`` for minification mapping.
 export const insetShadowClassName = tw`inset`

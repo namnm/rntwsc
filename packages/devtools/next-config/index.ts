@@ -3,9 +3,9 @@ import type { NextConfig } from 'next'
 import { getAlias } from '#/devtools/babel-config/get-alias'
 import type { BabelLoaderOptions } from '#/devtools/babel-loader'
 import { glob } from '#/devtools/glob'
-import { browserResolveAlias } from '#/devtools/next-config/browser-resolve-alias'
 // @ts-ignore: will be generated
 import publishedBrowserAlias from '#/devtools/next-config/browser-variants.json'
+import { variantResolveAlias } from '#/devtools/variant-resolve-alias'
 import { mapKeys, mapValues } from '#/libs/lodash'
 import type { StrMap } from '#/libs/utility-types'
 
@@ -25,6 +25,9 @@ const serverExternalPackages: string[] = []
 
 type Options = Omit<BabelLoaderOptions, 'isServer'> & {
   repoRoot: string
+  // Lets a second dev instance use its own build output instead of sharing
+  // .next/, which deadlocks on Turbopack's persistent cache otherwise.
+  distDir?: string
 }
 
 export const config = async (o: Options): Promise<NextConfig> => {
@@ -33,7 +36,7 @@ export const config = async (o: Options): Promise<NextConfig> => {
     cwd: o.repoRoot,
   })
   const browserAlias = {
-    ...browserResolveAlias(alias, browsers),
+    ...variantResolveAlias(alias, 'browser', browsers),
     ...publishedBrowserAlias,
   }
 
@@ -49,6 +52,11 @@ export const config = async (o: Options): Promise<NextConfig> => {
     reactStrictMode: false,
     output: 'standalone',
     outputFileTracingRoot: o.repoRoot,
+    ...(o.distDir
+      ? {
+          distDir: o.distDir,
+        }
+      : {}),
   }
 }
 
@@ -59,8 +67,8 @@ const buildWebpack =
       ...c.resolve.alias,
       ...resolveAlias,
       // $ forces an exact match, fix:
-      // @rntwsc/core/dark-mode/config ->
-      // @rntwsc/core/dark-mode/index.browser/config
+      // rntwsc/dark-mode/config ->
+      // rntwsc/dark-mode/index.browser/config
       ...mapKeys(isServer ? {} : browserAlias, (v, k) => `${k}$`),
     }
 

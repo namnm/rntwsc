@@ -114,7 +114,7 @@ const Header = async () => {
 
 This is why writing `await Promise.all(...)` by hand is a build error (see above) - the compiler needs to own that shape to keep generating it correctly, and on `browser`/`rn` it would make no observable difference anyway, since every await is stripped identically regardless of grouping.
 
-If two independent awaits are _not_ adjacent - something else sits between them, even a statement that depends on neither - the build fails instead of silently leaving a slower sequential waterfall in place:
+If two independent awaits are not adjacent - something else sits between them, even a statement that depends on neither - the build fails instead of silently leaving a slower sequential waterfall in place:
 
 ```tsx
 // throws - `banner` doesn't depend on `category` or `products`, but `products`
@@ -149,18 +149,18 @@ const ProductPage = async () => {
 }
 ```
 
-"Independent" is judged only against names an _earlier hook decl in the same run_ produced - reading a prop or an outer-scope variable doesn't disqualify a decl from counting as independent. See the waterfall tests (and the `describe.each` "shared checks" tests) in packages/devtools/babel-plugin-async-hook/index.test.ts for the exact adjacency/independence rules, including that case.
+"Independent" is judged only against names an earlier hook decl in the same run produced - reading a prop or an outer-scope variable doesn't disqualify a decl from counting as independent. See the waterfall tests (and the `describe.each` "shared checks" tests) in packages/devtools/babel-plugin-async-hook/index.test.ts for the exact adjacency/independence rules, including that case.
 
 ## Async hooks vs client hooks
 
 There are two different kinds of hooks in play here, and mixing them in the same component is a common source of confusion:
 
-- **Async framework hooks** (`useTranslation`, `useCurrentDirection`, `useIsRtl`, `useFetch`, ...) - always named `use...`, always called as `await use...()`. Which implementation runs depends on the _file_, not the current pass: an `rsc`-only file (no `'use client'`) uses the header-reading, cache-backed implementation; a `'use client'` file always uses the URL-parsing browser implementation, in both its `ssr` and `browser` compiles; an `rn` file uses the i18next/storage one. The call site looks identical everywhere. A component that _only_ calls these can stay in the `rsc` boundary - no `'use client'` needed.
-- **Real React/DOM hooks** (`useState`, `useEffect`, `useRef`, `useContext`, ...) - these are never touched by the async-hook transform, and only work in a Client Component (`ssr`, `browser`, `rn`) - never in `rsc`. React itself enforces this, not this framework.
+- Async framework hooks (`useTranslation`, `useCurrentDirection`, `useIsRtl`, `useFetch`, ...) - always named `use...`, always called as `await use...()`. Which implementation runs depends on the file, not the current pass: an `rsc`-only file (no `'use client'`) uses the header-reading, cache-backed implementation; a `'use client'` file always uses the URL-parsing browser implementation, in both its `ssr` and `browser` compiles; an `rn` file uses the i18next/storage one. The call site looks identical everywhere. A component that only calls these can stay in the `rsc` boundary - no `'use client'` needed.
+- Real React/DOM hooks (`useState`, `useEffect`, `useRef`, `useContext`, ...) - these are never touched by the async-hook transform, and only work in a Client Component (`ssr`, `browser`, `rn`) - never in `rsc`. React itself enforces this, not this framework.
 
 packages/devtools/eslint-plugin-custom/enforce-use-client (config in packages/devtools/eslint/config-enforce-use-client.ts) auto-adds `'use client'` the moment a file imports one of the real hooks above, or references a browser-only global (`window`, `document`, ...). Async framework hooks are deliberately absent from that list, since they are meant to work in the `rsc` boundary as-is, and get stripped to sync automatically for `ssr`/`browser`.
 
-The tradeoff: if a single file both `await use...()`s a framework hook _and_ calls `useState`/`useEffect`, the eslint rule forces `'use client'` on the whole file. It still works correctly (see above - both its `ssr` and `browser` compiles are valid), but that file can now never be picked up by the `rsc` boundary - the framework-hook resolution rides along into `ssr`/`browser` with the stateful logic, even though it did not need to. It also means the two concerns cannot be reused or tested independently of each other.
+The tradeoff: if a single file both `await use...()`s a framework hook and calls `useState`/`useEffect`, the eslint rule forces `'use client'` on the whole file. It still works correctly (see above - both its `ssr` and `browser` compiles are valid), but that file can now never be picked up by the `rsc` boundary - the framework-hook resolution rides along into `ssr`/`browser` with the stateful logic, even though it did not need to. It also means the two concerns cannot be reused or tested independently of each other.
 
 ## Splitting a component: the Button example
 
@@ -178,7 +178,7 @@ export const Button = async (props: ButtonProps) => {
 
 That single function is not actually valid as written: its `ssr` compile keeps a real `await useIsRtl()`, and React never allows a real hook (`useState`, `useEffect`, ...) inside an async function component - only Server Components may be async, and Server Components can never call client hooks. Left alone, this throws the moment `ssr` renders it.
 
-**This split is now done automatically.** packages/devtools/babel-plugin-async-hook detects the mix (a leading run of `await use...()` framework-hook declarations followed by a real hook call) and rewrites it, for the `rsc`/`ssr` compile only, into an async wrapper that keeps the `await` plus a synchronous inner component that keeps the real hook - the same shape this doc used to tell you to hand-write:
+This split is now done automatically. packages/devtools/babel-plugin-async-hook detects the mix (a leading run of `await use...()` framework-hook declarations followed by a real hook call) and rewrites it, for the `rsc`/`ssr` compile only, into an async wrapper that keeps the `await` plus a synchronous inner component that keeps the real hook - the same shape this doc used to tell you to hand-write:
 
 ```tsx
 // generated for rsc/ssr - browser/rn instead strip the wrapper's own await,
@@ -198,7 +198,7 @@ See packages/devtools/babel-plugin-async-hook/index.test.ts for the exact rules 
 
 Two shapes can't be split automatically, and the plugin fails the build rather than silently leave them as invalid async-plus-real-hook code:
 
-**Ordering relative to the function's own first `await` is what makes a real hook safe or unsafe - not what any later `await` depends on.** Confirmed empirically against `react-dom`'s `renderToPipeableStream`: React's hook dispatcher survives up to a function's first `await` and no further. A real hook called _before_ that point is safe no matter what happens after; one called _after_ it is broken no matter how deeply it's nested or what produced the value it needs:
+Ordering relative to the function's own first `await` is what makes a real hook safe or unsafe - not what any later `await` depends on. Confirmed empirically against `react-dom`'s `renderToPipeableStream`: React's hook dispatcher survives up to a function's first `await` and no further. A real hook called before that point is safe no matter what happens after; one called after it is broken no matter how deeply it's nested or what produced the value it needs:
 
 ```tsx
 // safe, compiles unchanged - useState runs before this function's first
@@ -250,7 +250,7 @@ const useDarkModeState = async () => {
 }
 ```
 
-**A plain statement sitting between two `await use...()` decls also blocks the split**, even when the two awaits have no dependency on each other at all - the leading run has to be contiguous from the very first statement, so anything not shaped like `const x = await use...()` ends the run right there, and any further await-hook call is then stuck in the (non-async) inner component:
+A plain statement sitting between two `await use...()` decls also blocks the split, even when the two awaits have no dependency on each other at all - the leading run has to be contiguous from the very first statement, so anything not shaped like `const x = await use...()` ends the run right there, and any further await-hook call is then stuck in the (non-async) inner component:
 
 ```tsx
 // throws - `getAvailableThemes()` between the two awaits stops the leading run
@@ -302,7 +302,7 @@ const Foo = () => {
 }
 ```
 
-**What the automatic split does _not_ do** is move `Button` back into the `rsc` boundary - the whole file is still `rsc: false` because of `'use client'`, and the generated wrapper still re-runs `useIsRtl` on every `ssr`/`browser` pass together with the stateful logic, not just once in `rsc`. That is fine for a small leaf component like this one. If a component's `rsc`-resolvable work (direction, translations, ...) is expensive or reused enough to be worth keeping out of `ssr`/`browser` entirely, splitting the real-hook logic into its own _file_ is still a manual, deliberate choice:
+What the automatic split does not do is move `Button` back into the `rsc` boundary - the whole file is still `rsc: false` because of `'use client'`, and the generated wrapper still re-runs `useIsRtl` on every `ssr`/`browser` pass together with the stateful logic, not just once in `rsc`. That is fine for a small leaf component like this one. If a component's `rsc`-resolvable work (direction, translations, ...) is expensive or reused enough to be worth keeping out of `ssr`/`browser` entirely, splitting the real-hook logic into its own file is still a manual, deliberate choice:
 
 ```tsx
 // button-client.tsx - 'use client', only real hooks, no i18n awareness at all
@@ -333,20 +333,20 @@ Reach for the file split when a component's `rsc`-resolvable work is worth keepi
 
 ## FAQ
 
-**Does `'use client'` mean this file only runs in the browser?**
+Does `'use client'` mean this file only runs in the browser?
 No. It means `rsc: false` - not a Server Component. It still runs on the server once, during `ssr`, to produce the initial HTML, before it ever reaches a browser. "Client" describes which rendering model applies (a hydratable Client Component vs. a one-shot Server Component), not which machine executes the code.
 
-**Why do so many people (and AI) get this wrong?**
+Why do so many people (and AI) get this wrong?
 Mostly the name itself - "client" reads as "browser" in everyday dev vocabulary, and pre-RSC React/Next.js only ever had that binary (server renders once, client is the browser), so there was never a third bucket to learn. Most getting-started guides teach "add `'use client'` when you need `useState`/`onClick`" and stop there, since the `ssr` pass "just works" silently with no error forcing anyone to notice it exists. AI models trained on that same body of docs/blogs inherit the same gap.
 
-**So can a `'use client'` component really use `async`/`await` then?**
+So can a `'use client'` component really use `async`/`await` then?
 Only through this framework's own hook convention (`await use...()`), and only because babel-plugin-async-hook strips it to a plain call for the `browser` (and `rn`) compile. A literal `async function` Client Component is not something React itself supports rendering in the browser - real `async` is only valid in `rsc`, and, for the one `await use...()`/`await Promise.all([...])` shape this plugin recognizes, in `ssr` too.
 
-**Is `'use server'` the Server Component equivalent of `'use client'`?**
+Is `'use server'` the Server Component equivalent of `'use client'`?
 No - that is a different, easily-confused directive for marking a Server Action (a function callable from the client that runs on the server), not a Server Component. Server Components need no directive at all; they are the default for any file without `'use client'`.
 
-**Is it safe to mix a real hook (`useState`) and an async framework hook (`await useIsRtl()`) in the same `'use client'` file?**
+Is it safe to mix a real hook (`useState`) and an async framework hook (`await useIsRtl()`) in the same `'use client'` file?
 Yes, it runs correctly - see "Splitting a component" above. The only cost is architectural: that file can never be picked up by the `rsc` boundary anymore, since `'use client'` forces the whole file, hooks and all, into `ssr`/`browser`.
 
-**If `browser` can support real async components via Suspense, why does this framework strip it anyway?**
+If `browser` can support real async components via Suspense, why does this framework strip it anyway?
 Because `rn` cannot support it at all, and the framework wants exactly one hook shape everywhere. Rather than give `browser` its own third code path, it is deliberately held to the same "no real async" rule as `rn`, so the exact same compiled call works on both.

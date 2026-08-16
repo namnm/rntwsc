@@ -11,7 +11,7 @@
 
 # Theme
 
-10 built-in themes, each with a dark mode variant. Works across server, browser, and native. See dark-mode.md for the separate dark, light, and system toggle that switches between a theme's two variants.
+10 built-in themes, each with a dark mode variant. Works across server, browser, native, and web (Vite SPA). See dark-mode.md for the separate dark, light, and system toggle that switches between a theme's two variants.
 
 Built-in themes: ruby, phoenix, sunny, forest, ocean, corporate, blossom, mystic, coffee, stone.
 
@@ -41,7 +41,7 @@ const theme = useTheme()
 const setTheme = useSetTheme()
 ```
 
-Theme is persisted in a cookie named theme so it survives SSR hydration without a flash.
+Theme is persisted in a cookie named theme so it survives SSR hydration without a flash. There is no index.web.tsx - a Vite SPA resolves straight to index.browser.tsx instead (see web-variant.md), since a cookie works the same way in any real browser.
 
 ## Switching theme
 

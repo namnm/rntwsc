@@ -15,7 +15,8 @@ type Props = {
 }
 export const FetchClient = async ({ label, refetch }: Props) => {
   const r = await useFetch<HelloData>({
-    url: playgroundFetchUrl + '?client=true',
+    url: playgroundFetchUrl,
+    keySalt: 'client',
   })
   return (
     <View className='gap-2'>

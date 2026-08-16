@@ -1,18 +1,15 @@
 import { Span } from 'rntwsc/components/text'
-import { useFetchGraphQL } from 'rntwsc/graphql'
 import { View } from 'rntwsc/tw/components/view'
 
-import type { HelloData } from '@/pages/graphql/config'
-import { HELLO_QUERY, playgroundGraphQLUrl } from '@/pages/graphql/config'
+import { useFetchHello } from '@/codegen/graphql.min'
 import { GraphQLUi } from '@/pages/graphql/graphql-ui'
 
 type Props = {
   label: string
 }
 export const GraphQLServer = async ({ label }: Props) => {
-  const r = await useFetchGraphQL<HelloData>({
-    url: playgroundGraphQLUrl,
-    query: HELLO_QUERY,
+  const r = await useFetchHello({
+    select: p => p.message.timestamp,
   })
   return (
     <View className='gap-2'>

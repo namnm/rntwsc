@@ -4,14 +4,18 @@ import { useSyncExternalStore } from 'react'
 import type { EdgeInsets } from 'react-native-safe-area-context'
 
 import type { ClassName } from '#/core/tw/class-name'
+import { globalStore } from '#/core/utils/global-store'
 
-let initialized = false
-let cache: ReturnType<typeof getInsets> = undefined
+const initializedG = globalStore('__rntwscSafeAreaInitialized', () => false)
+const cacheG = globalStore<ReturnType<typeof getInsets>>(
+  '__rntwscSafeAreaCache',
+  () => undefined,
+)
 
 const subscribe = (cb: () => void) => {
   const fn = () => {
-    initialized = false
-    cache = undefined
+    initializedG.set(false)
+    cacheG.set(undefined)
     cb()
   }
   if (window.visualViewport) {
@@ -29,11 +33,11 @@ const subscribe = (cb: () => void) => {
 }
 
 const getSnapshot = () => {
-  if (!initialized) {
-    initialized = true
-    cache = getInsets()
+  if (!initializedG.get()) {
+    initializedG.set(true)
+    cacheG.set(getInsets())
   }
-  return cache
+  return cacheG.get()
 }
 // server has no method to get safe area
 // the value is not available on hydrate

@@ -1,4 +1,6 @@
-import type { labels } from '@/i18n/labels'
+import type {
+ labels 
+} from '@/i18n/labels'
 
 // we can install an iso npm package
 // but keep this simple and small bundle for now

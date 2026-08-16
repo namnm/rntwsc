@@ -2,6 +2,9 @@
 
 import { buildDistCli } from '#/cli/build-cli'
 import { buildDist } from '#/cli/build-dist'
+import { checkI18nLabels } from '#/cli/check-i18n-labels'
+import { e2eCreateRntwscApp } from '#/cli/e2e-create-rntwsc-app'
+import { extractTwClassNames } from '#/cli/extract-tw-class-names'
 import { syncCreateRntwscAppTemplates } from '#/cli/sync-create-rntwsc-app-templates'
 import { cssExtractVariables } from '#/devtools/css-extract-variables'
 import { doctoc } from '#/devtools/doctoc'
@@ -22,9 +25,13 @@ const fns = {
   tsc,
   'type-coverage': typeCoverage,
   'css-extract-variables': cssExtractVariables,
+  'extract-tw-class-names': extractTwClassNames,
+  'check-i18n-labels': checkI18nLabels,
   'build-dist': buildDist,
   'build-cli': buildDistCli,
   'sync-create-rntwsc-app-templates': syncCreateRntwscAppTemplates,
+  // slow, real pnpm install + build - not part of pnpm fmt, run on demand
+  'e2e-create-rntwsc-app': e2eCreateRntwscApp,
 }
 type Pkg = keyof typeof fns
 const supported = Object.keys(fns) as Pkg[]
@@ -69,16 +76,19 @@ export const run = async (o: Options) => {
     await Promise.all(fmtPromises)
   }
 
-  await r('prettier', o)
+  checkAndPush(promises, 'prettier', o)
 
   checkAndPush(promises, 'tsc', o)
   checkAndPush(promises, 'type-coverage', o)
+  checkAndPush(promises, 'check-i18n-labels', o)
 
   checkAndPush(promises, 'css-extract-variables', o)
+  checkAndPush(promises, 'extract-tw-class-names', o)
 
   checkAndPush(promises, 'build-dist', o)
   checkAndPush(promises, 'build-cli', o)
   checkAndPush(promises, 'sync-create-rntwsc-app-templates', o)
+  checkAndPush(promises, 'e2e-create-rntwsc-app', o)
 
   await Promise.all(promises).catch((err: Error) => log.stack(err, 'fatal'))
 }

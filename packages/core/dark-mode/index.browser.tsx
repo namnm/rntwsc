@@ -11,23 +11,30 @@ import {
   darkModeToBolean,
 } from '#/core/dark-mode/config'
 import { darkClassName, lightClassName } from '#/core/tw/styles'
+import { globalStore } from '#/core/utils/global-store'
 
-let initialized = false
-let currentDarkMode: boolean | undefined = undefined
-const listeners = new Set<() => void>()
-const notify = () => listeners.forEach(cb => cb())
+const initializedG = globalStore('__rntwscDarkModeInitialized', () => false)
+const darkModeG = globalStore<boolean | undefined>(
+  '__rntwscDarkMode',
+  () => undefined,
+)
+const listenersG = globalStore<Set<() => void>>(
+  '__rntwscDarkModeListeners',
+  () => new Set(),
+)
+const notify = () => listenersG.get().forEach(cb => cb())
 
 const subscribe = (cb: () => void) => {
-  listeners.add(cb)
-  return () => listeners.delete(cb)
+  listenersG.get().add(cb)
+  return () => listenersG.get().delete(cb)
 }
 
 const getSnapshot = () => {
-  if (!initialized) {
-    initialized = true
-    currentDarkMode = darkModeToBolean(BrowserCookies.get(darkModeCookieKey))
+  if (!initializedG.get()) {
+    initializedG.set(true)
+    darkModeG.set(darkModeToBolean(BrowserCookies.get(darkModeCookieKey)))
   }
-  return currentDarkMode
+  return darkModeG.get()
 }
 // the value is resolved using cookie on initial hydrate
 const getSnapshotServer = getSnapshot
@@ -54,6 +61,6 @@ export const useSetDarkMode = () => (v: boolean | undefined) => {
     BrowserCookies.remove(darkModeCookieKey)
   }
 
-  currentDarkMode = v
+  darkModeG.set(v)
   notify()
 }

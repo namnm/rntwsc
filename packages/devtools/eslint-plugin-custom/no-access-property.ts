@@ -57,9 +57,7 @@ export const noAccessProperty: TSESLint.RuleModule<
           check(n, n.property.value)
         }
       },
-      // { prop } = object
-      // { prop: something } = object
-      // { ['prop']: something } = object
+      // Destructuring: { prop }, { prop: x }, { ['prop']: x }
       Property: n => {
         if (n.parent.type === 'ObjectPattern' && n.key.type === 'Identifier') {
           check(n, n.key.name)

@@ -3,14 +3,14 @@ import type { TSESLint, TSESTree } from '@typescript-eslint/utils'
 import { fs } from '#/devtools/fs'
 import { stripInDir } from '#/devtools/path'
 
-const variants = ['native', 'ios', 'android', 'browser'] as const
+const variants = ['native', 'ios', 'android', 'browser', 'web'] as const
 
 type Options = {
   repoRoot: string
 }
 
 export const noImportInvalidVariant: TSESLint.RuleModule<
-  'noImportInvalidVariant' | 'missingBaseFile' | 'missingNativeFile',
+  'noImportInvalidVariant' | 'missingBaseFile',
   [Options]
 > = {
   meta: {
@@ -24,8 +24,6 @@ export const noImportInvalidVariant: TSESLint.RuleModule<
         "Import '{{importPath}}' has variant '.{{variant}}' but this file does not",
       missingBaseFile:
         "File '{{file}}' requires a base file '{{base}}' to exist",
-      missingNativeFile:
-        "File '{{file}}' requires a native variant '{{native}}' to exist",
     },
     schema: [
       {
@@ -67,7 +65,11 @@ export const noImportInvalidVariant: TSESLint.RuleModule<
 
     return {
       Program: n => {
-        if (fileVariant === 'native' || fileVariant === 'browser') {
+        if (
+          fileVariant === 'native' ||
+          fileVariant === 'browser' ||
+          fileVariant === 'web'
+        ) {
           const base = getSiblingPath(c.filename, fileVariant, '')
           if (base && !fs.existsSync(base)) {
             c.report({
@@ -76,19 +78,6 @@ export const noImportInvalidVariant: TSESLint.RuleModule<
               data: {
                 file: stripInDir(repoRoot, c.filename),
                 base: stripInDir(repoRoot, base),
-              },
-            })
-          }
-        }
-        if (fileVariant === 'browser') {
-          const native = getSiblingPath(c.filename, fileVariant, '.native')
-          if (native && !fs.existsSync(native)) {
-            c.report({
-              node: n,
-              messageId: 'missingNativeFile',
-              data: {
-                file: stripInDir(repoRoot, c.filename),
-                native: stripInDir(repoRoot, native),
               },
             })
           }

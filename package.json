@@ -5,7 +5,7 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "fmt": "node ./devtools css-extract-variables,sync-create-rntwsc-app-templates,normalize,doctoc,eslint,stylelint,prettier",
+    "fmt": "node ./devtools css-extract-variables,extract-tw-class-names,sync-create-rntwsc-app-templates,normalize,doctoc,eslint,stylelint,prettier",
     "normalize": "node ./devtools normalize",
     "doctoc": "node ./devtools doctoc",
     "eslint": "node ./devtools eslint",
@@ -16,26 +16,44 @@
     "type-coverage": "node ./devtools type-coverage",
     "test": "vitest run",
     "testw": "vitest",
+    "e2e": "playwright test",
     "dist": "node ./devtools build-dist",
     "cli": "node ./devtools build-cli",
-    "extract": "node ./devtools css-extract-variables",
-    "sync": "node ./devtools sync-create-rntwsc-app-templates"
+    "extract": "node ./devtools css-extract-variables,extract-tw-class-names",
+    "check-i18n-labels": "node ./devtools check-i18n-labels",
+    "sync": "node ./devtools sync-create-rntwsc-app-templates",
+    "e2e:create-rntwsc-app": "node ./devtools e2e-create-rntwsc-app"
   },
   "engines": {
     "node": ">=24.11",
     "pnpm": ">=11"
   },
   "dependencies": {
-    "rntwsc": "github:namnm/rntwsc#d903c25701062e5f393d5d8e3c4a1e56e2b418b9"
+    "rntwsc": "github:namnm/rntwsc#3c08c0a0fc53626b7c0d890836159b962d726f3d"
   },
   "devDependencies": {
-    "@types/node": "26.1.1",
+    "@babel/core": "7.29.7",
+    "@babel/plugin-syntax-typescript": "7.29.7",
+    "@babel/preset-react": "7.29.7",
+    "@babel/preset-typescript": "7.29.7",
+    "@playwright/test": "1.62.1",
+    "@testing-library/jest-dom": "7.0.1",
+    "@testing-library/react": "16.3.2",
+    "@types/babel__core": "7.20.5",
+    "@types/node": "26.1.2",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "jsdom": "30.0.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native-svg-web": "1.0.9",
+    "react-native-web": "0.21.2",
     "tailwindcss": "4.3.3",
     "tsx": "4.23.1",
     "typescript": "6.0.3",
     "vitest": "4.1.10"
   },
   "dist": {
-    "version": "0.0.10"
+    "version": "0.0.29"
   }
 }

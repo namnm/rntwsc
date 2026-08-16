@@ -10,25 +10,32 @@ import {
   themeCookieMaxAge,
   toValidTheme,
 } from '#/core/theme/config'
+import { globalStore } from '#/core/utils/global-store'
 
-let initialized = false
+const initializedG = globalStore('__rntwscThemeInitialized', () => false)
 // toValidTheme is only correct after initTheme is called
 // so we set it undefined here and let useTheme handle it after initTheme is called
-let currentTheme: string | undefined = undefined
-const listeners = new Set<() => void>()
-const notify = () => listeners.forEach(cb => cb())
+const currentThemeG = globalStore<string | undefined>(
+  '__rntwscCurrentTheme',
+  () => undefined,
+)
+const listenersG = globalStore<Set<() => void>>(
+  '__rntwscThemeListeners',
+  () => new Set(),
+)
+const notify = () => listenersG.get().forEach(cb => cb())
 
 const subscribe = (cb: () => void) => {
-  listeners.add(cb)
-  return () => listeners.delete(cb)
+  listenersG.get().add(cb)
+  return () => listenersG.get().delete(cb)
 }
 
 const getSnapshot = () => {
-  if (!initialized) {
-    initialized = true
-    currentTheme = toValidTheme(BrowserCookies.get(themeCookieKey))
+  if (!initializedG.get()) {
+    initializedG.set(true)
+    currentThemeG.set(toValidTheme(BrowserCookies.get(themeCookieKey)))
   }
-  return currentTheme
+  return currentThemeG.get()
 }
 // the value is resolved using cookie on initial hydrate
 const getSnapshotServer = getSnapshot
@@ -55,6 +62,6 @@ export const useSetTheme = () => (v: string | undefined) => {
     BrowserCookies.remove(themeCookieKey)
   }
 
-  currentTheme = v
+  currentThemeG.set(v)
   notify()
 }

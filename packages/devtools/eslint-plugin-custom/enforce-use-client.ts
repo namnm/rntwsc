@@ -159,7 +159,7 @@ export const enforceUseClient: TSESLint.RuleModule<MessageId, [Options]> = {
         ) {
           return
         }
-        // Skip TypeScript type-only positions (not runtime value references)
+        // Skip TypeScript type-only positions
         if (
           (p.type === 'TSPropertySignature' ||
             p.type === 'TSMethodSignature') &&

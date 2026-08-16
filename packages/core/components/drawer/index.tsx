@@ -42,8 +42,8 @@ export type DrawerProps = Omit<Variant<typeof drawerCva>, 'side'> &
   PropsWithChildren<{
     open: boolean
     onClose: () => void
-    // 'start'/'end' follow reading direction (left/right mirrored in rtl);
-    // 'left'/'right' pin to a physical screen edge regardless of direction
+    // 'start'/'end' follow reading direction and mirror under rtl.
+    // 'left'/'right' pin to a physical edge. See i18n.md#direction-rtl.
     side?: 'bottom' | 'left' | 'right' | 'start' | 'end'
     className?: ClassName
     contentClassName?: ClassName

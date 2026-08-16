@@ -3,6 +3,9 @@
 - [Async components implementation](#async-components-implementation)
   - [The four boundaries, and where isServer comes from](#the-four-boundaries-and-where-isserver-comes-from)
   - [babel-plugin-async-hook](#babel-plugin-async-hook)
+    - [injectDehydrateJsx](#injectdehydratejsx)
+    - [createUniqIdent](#createuniqident)
+    - [Implementation notes](#implementation-notes)
   - [enforce-use-client](#enforce-use-client)
   - [Why browser is grouped with rn instead of ssr](#why-browser-is-grouped-with-rn-instead-of-ssr)
 
@@ -42,15 +45,35 @@ It does not touch the function body otherwise - any `useState`, `useEffect`, etc
 
 For `isServer: true` (`rsc` and `ssr`), `trySplitServerComponent` runs the following, in order:
 
-1. `mergeAdjacentIndependentAwaits` finds runs of 2+ adjacent `const x = await use...()` declarations (`getAwaitHookDecl`) that are mutually independent (`isIndependentDecl` - true when a declaration's own init references no name bound by an _earlier declaration in the same run_; a name from outside the run, e.g. a prop or module-scope value, never counts against independence) and rewrites each run into one `const [pat1, pat2, ...] = await Promise.all([init1, init2, ...])` (`mergeIntoPromiseAll`). It re-scans the whole body from scratch after every merge, since indices shift - O(n^2) in the pathological case, fine for the small function bodies this applies to.
+1. `mergeAdjacentIndependentAwaits` finds runs of 2+ adjacent `const x = await use...()` declarations (`getAwaitHookDecl`) that are mutually independent (`isIndependentDecl` - true when a declaration's own init references no name bound by an earlier declaration in the same run; a name from outside the run, e.g. a prop or module-scope value, never counts against independence) and rewrites each run into one `const [pat1, pat2, ...] = await Promise.all([init1, init2, ...])` (`mergeIntoPromiseAll`). It re-scans the whole body from scratch after every merge, since indices shift - O(n^2) in the pathological case, fine for the small function bodies this applies to.
 2. `checkForWaterfall` then scans every remaining awaited-hook declaration in declaration order; a second "root" (independent of everything declared so far) after the first one throws, since fixing it would require moving code across whatever sits between them - something the compiler won't do silently.
 3. `findOwnAwaitedHookCall` locates the function's own first awaited-hook statement (`firstAwaitIdx`) - unlike the leading-run scan in step 6, this matches a bare `await use...()` with no assignment too. No match at all means this candidate is a no-op.
-4. `findOwnHookCall` is mapped over every statement after `firstAwaitIdx` (skipping nested functions and any already-awaited hook call) to find a real, un-awaited `use...()` call - `unsafeRealHook`. Its absence leaves the function exactly as written; only its _position_ relative to `firstAwaitIdx` is checked, never what any later await depends on.
+4. `findOwnHookCall` is mapped over every statement after `firstAwaitIdx` (skipping nested functions and any already-awaited hook call) to find a real, un-awaited `use...()` call - `unsafeRealHook`. Its absence leaves the function exactly as written; only its position relative to `firstAwaitIdx` is checked, never what any later await depends on.
 5. If the candidate's own name matches the hook regex (`isHookHost`), a present `unsafeRealHook` always throws right here - a hook has no JSX tree to split into, so there is no automatic fix.
 6. Otherwise (a component), the leading-run scan builds `dataDecls`: starting strictly at statement index 0, each statement must be exactly `const <pattern> = await use...()` (single declarator, `const` kind, `AwaitExpression` init whose callee matches the hook regex or is a merged `Promise.all(...)`) or the scan stops right there. Every statement past that point (`restPaths`) is checked via `findOwnAwaitedHookCall` for any further awaited-hook call that didn't make it into the leading run; a match throws immediately. In practice this is what fires for most "leading run couldn't even start" cases too (`dataDecls` empty, scan stopped at index 0) - `restPaths` then covers the entire body, including whatever statement `firstAwaitIdx` found in step 3, so the `findOwnAwaitedHookCall` check here catches it before the dedicated `dataDecls.length === 0` fallback throw below it ever gets a chance to.
 7. The actual split (param handling via `createUniqIdent`/`resolveWrapper`, generating the wrapper + inner function pair) is unchanged in shape from before - see async-components.md's "Splitting a component" walkthrough, and index.test.ts for the exact param-pattern and naming rules as executable examples.
 
 One direct consequence: a `'use client'` component's own `ssr` compile and `browser` compile are genuinely different artifacts. The `ssr` one keeps a real `await use...()` (split into a wrapper, if a real hook forced it); the `browser` one has the exact same line reduced to a plain `use...()` call, with no split needed since the whole function is already synchronous. Both resolve to the same value (the underlying `use...` hook's server vs. browser vs. native variant is chosen by import path - see browser-variant.md - independently of this plugin), so the difference is invisible to anything that isn't reading the compiled output directly.
+
+### injectDehydrateJsx
+
+Before either isServer branch runs, injectDehydrateJsx handles `useFetch...` results for every candidate, on both boundaries alike. For each top-level `const x = await useFetch...()` declaration in a component's body, every `return` in that function gets `{x.dehydrateJsx}` appended into a JSX fragment - see hydration.md for what that marker does at render time. Only the shape of what gets returned changes here; it runs before, and independently of, whether the await itself ends up stripped to sync (`stripToSync`) or split into a wrapper (`trySplitServerComponent`).
+
+A destructured LHS (`const { data, error } = await useFetch...()`) is rewritten to bind the whole result to a temp identifier first, then re-destructure the original pattern from it in a follow-up statement, so there is still a single identifier to hang `.dehydrateJsx` off of. getTransparentAliasNames recognizes exactly this follow-up statement later on: it is not a new async dependency, so it does not break adjacency for mergeAdjacentIndependentAwaits or checkForWaterfall, but the names it binds still have to count as resolved for anything checked after it - otherwise a real dependency on one of those names would go undetected and could get merged into a parallel Promise.all incorrectly.
+
+Only components are handled - a hook host has no JSX tree to inject a marker into, so `await useFetch...()` inside a hook is left untouched until that case is designed.
+
+### createUniqIdent
+
+Every fresh identifier the split introduces - the wrapper's temp props variable, the inner component's name, its per-value prop names - goes through the plugin's `createUniqIdent` option rather than being generated inline. The default implementation just forwards to babel's own `scope.generateUidIdentifier`, which avoids collisions but produces non-deterministic, not-very-readable suffixes. Overriding it, as the test suite does, makes the generated output stable and human-readable, so transform tests can assert against fixed names instead of pattern-matching generated ones.
+
+### Implementation notes
+
+isAwaitedHookCall recognizes both a plain `await use...()` and an already-merged `await Promise.all([...])`. The latter only ever appears as this transform's own generated output, since checkNoExplicitPromiseAll bans writing it by hand, but still has to be recognized read-only so a function that already went through one merge pass keeps working correctly on a later one. getAwaitHookDecl's extracted `init` can itself be an existing `Promise.all([...])` when this happens - nesting one merge inside a later one is fine, since an array nested one level deeper is still fully parallel, just not flattened.
+
+findOwnHookCall relies on one invariant: this framework always awaits its own async hooks, so an un-awaited `use...()` found while scanning a candidate's body is necessarily a real React/DOM hook, never a mis-detected framework one. A statement can still legitimately contain a further `await use...()` of its own, once the leading run has already stopped for an unrelated reason - those are skipped rather than miscounted as real hooks.
+
+resolveWrapper only recognizes two shapes for the original function - a named `function Xxx(){}` declaration, or `const Xxx = async () => {}` / `const Xxx = async function () {}` - so the original binding keeps pointing at the wrapper untouched after the split. Anything else makes trySplitServerComponent bail out with no changes rather than guess where to insert the generated inner function.
 
 ## enforce-use-client
 

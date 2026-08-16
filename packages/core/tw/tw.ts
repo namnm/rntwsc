@@ -5,6 +5,6 @@ type FnTaggedTemplateLiteral = (
   ...values: never[]
 ) => ClassNameSingle
 
-// only for typing
-// this should never get called as it is transpiled and striped out by the babel plugin
-export const tw = undefined as any as FnTaggedTemplateLiteral
+// Only runs when babel-plugin-tw's build-time transform is skipped, e.g.
+// unit tests - see tailwind.md Core usage
+export const tw: FnTaggedTemplateLiteral = strings => strings.join('')

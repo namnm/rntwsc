@@ -32,9 +32,8 @@ const I18nSwitcherLink = async ({
 }: I18nSwitcherLinkProps) => {
   const { pathname: currentPath, query } = await useRoute()
 
-  // when switching lang, always render link with locale explicitly
-  // to set cookie in proxy
-  // currentPath is already locale-stripped by useRoute
+  // Always render with an explicit locale segment so the proxy can set the
+  // cookie; currentPath is already locale-stripped by useRoute.
   const locale = getLocaleUntyped(lang)
   const pathname = normalizePathname(`/${locale}${currentPath}`)
   const q = query && qsStableStringify(query)

@@ -9,27 +9,37 @@ import type { GraphQLResponse } from '#/core/graphql/config'
 import { hk } from '#/core/graphql/config'
 import { drainHydration, subscribeHydration } from '#/core/hydration/store'
 import { isBrowser } from '#/core/platform'
+import { globalStore } from '#/core/utils/global-store'
 import type { StrMap } from '#/libs/utility-types'
 
-// Apollo cache cannot store errors (writeQuery only accepts data).
-// We keep a parallel error store keyed by hydration key so the browser hook
-// can surface HTTP errors and GraphQL errors without refetching.
+// Apollo cache only stores data, not errors, so we keep a parallel error
+// store keyed by hydration key for HTTP/GraphQL errors without refetching.
 export type HydrationErr = {
   error?: string
   errors?: unknown[]
 }
-const errStore: StrMap<HydrationErr> = {}
-const errListeners = new Set<() => void>()
-const notifyErr = () => errListeners.forEach(cb => cb())
+const errStoreG = globalStore<StrMap<HydrationErr>>(
+  '__rntwscErrStore',
+  () => ({}),
+)
+const errListenersG = globalStore<Set<() => void>>(
+  '__rntwscErrListeners',
+  () => new Set(),
+)
+const notifyErr = () => errListenersG.get().forEach(cb => cb())
 const subscribeErr = (cb: () => void) => {
-  errListeners.add(cb)
-  return () => errListeners.delete(cb)
+  errListenersG.get().add(cb)
+  return () => errListenersG.get().delete(cb)
 }
 export const useHydrationErr = (k: string) => {
-  const fn = useCallback(() => errStore[k] as HydrationErr | undefined, [k])
+  const fn = useCallback(
+    () => errStoreG.get()[k] as HydrationErr | undefined,
+    [k],
+  )
   return useSyncExternalStore(subscribeErr, fn, fn)
 }
 export const clearHydrationErr = (k: string) => {
+  const errStore = errStoreG.get()
   if (!(k in errStore)) {
     return
   }
@@ -37,13 +47,19 @@ export const clearHydrationErr = (k: string) => {
   notifyErr()
 }
 
-const store: StrMap<ApolloClient> = {}
-const listeners = new Set<() => void>()
-const notify = () => listeners.forEach(cb => cb())
+const apolloStoreG = globalStore<StrMap<ApolloClient>>(
+  '__rntwscApolloStore',
+  () => ({}),
+)
+const listenersG = globalStore<Set<() => void>>(
+  '__rntwscApolloListeners',
+  () => new Set(),
+)
+const notify = () => listenersG.get().forEach(cb => cb())
 
 const subscribe = (cb: () => void) => {
-  listeners.add(cb)
-  return () => listeners.delete(cb)
+  listenersG.get().add(cb)
+  return () => listenersG.get().delete(cb)
 }
 
 export const useApolloClient = (url: string) => {
@@ -52,6 +68,7 @@ export const useApolloClient = (url: string) => {
 }
 
 export const getApolloClient = (url: string) => {
+  const store = apolloStoreG.get()
   let c = store[url]
   if (!c) {
     c = new ApolloClient({
@@ -68,6 +85,7 @@ export const getApolloClient = (url: string) => {
 }
 
 export const clearApolloClient = (url: string, { silent = false } = {}) => {
+  const store = apolloStoreG.get()
   if (!(url in store)) {
     return
   }
@@ -78,6 +96,7 @@ export const clearApolloClient = (url: string, { silent = false } = {}) => {
 }
 
 export const clearAllApolloClient = ({ silent = false } = {}) => {
+  const store = apolloStoreG.get()
   const keys = Object.keys(store)
   if (!keys.length) {
     return
@@ -93,6 +112,7 @@ export const clearAllApolloClient = ({ silent = false } = {}) => {
 const syncFromHydration = ({ silent = false } = {}) => {
   let found = false
   let foundErr = false
+  const errStore = errStoreG.get()
   drainHydration(hk, (k, d, v) => {
     const { url, query, variables } = d
     const hydrationErr: HydrationErr = {}

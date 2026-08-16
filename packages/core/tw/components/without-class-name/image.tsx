@@ -1,10 +1,8 @@
 import type { ImageStyle } from 'react-native'
 
 export type ImagePropsWocn = {
-  // only support some basic props
-  // resize mode should be supported using class name in native
-  // other nextjs features such as image optimization or ratio
-  // should be done in api backend
+  // Only basic props; resize mode goes through class names in native.
+  // Optimization and ratio, unlike Next.js Image, belong in the api backend.
   src: string
   style?: ImageStyle
 }

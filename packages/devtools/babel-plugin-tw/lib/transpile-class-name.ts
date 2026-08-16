@@ -15,9 +15,8 @@ type Options = {
 }
 const space = /\s+/g
 
-// on web it will return string
-// on react native it will convert to js objects or closure function for
-// selectors such as responsive, theme, events active focus..
+// Returns a string on web; on native it converts to style objects or a
+// closure for selectors like responsive, theme, and active/focus events.
 export const transpileClassName = (options: Options): ClassName | Node => {
   const {
     className,

@@ -324,10 +324,8 @@ const markersTypeSafe: Record<ClassNameMarker, undefined> = {
 export const markers = Object.keys(markersTypeSafe) as ClassNameMarker[]
 export const emptyMarkerKey = ''
 const emptyMarkerStyle = {
-  // to keep from omit empty style
-  // will be removed in create class name component on selector traverse
-  // empty -> marker provider
-  // not empty -> marker selector
+  // Keeps the style non-empty so omitEmptyClassName doesn't drop it. Empty
+  // key means marker provider, non-empty key means marker selector.
   [emptyMarkerKey]: true,
 }
 extraTwrnc.push(options => {

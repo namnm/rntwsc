@@ -5,5 +5,5 @@
       "#/*": ["./packages/*"]
     }
   },
-  "include": ["./*", "./packages/**/*"]
+  "include": ["./*", "./packages/**/*", "tests/**/*"]
 }

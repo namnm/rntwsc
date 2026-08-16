@@ -6,6 +6,8 @@ import { useSafeAreaPadding } from 'rntwsc/responsive/use-safe-area'
 import { ScrollView } from 'rntwsc/tw/components/scroll-view'
 import { View } from 'rntwsc/tw/components/view'
 
+import { SettingsButton } from '@/components/settings-button'
+
 export const HomePage = async () => {
   const t = await useTranslationUntyped('common')
   const padding = useSafeAreaPadding()
@@ -16,6 +18,9 @@ export const HomePage = async () => {
       className='bg-primary-50 flex-1 transition dark:bg-gray-700'
       contentContainerClassName={padding}
     >
+      <View className='flex-row justify-end px-4 py-3'>
+        <SettingsButton />
+      </View>
       <View className='bg-primary-100 dark:bg-primary-950 flex-1 items-center justify-center px-6 py-16 transition'>
         <H1 className='text-foreground text-center text-4xl font-bold transition md:text-5xl lg:text-6xl'>
           {t('tagline')}

@@ -85,9 +85,8 @@ const mergeRanges = (ranges: [number, number][]): [number, number][] => {
 
 // -- search matching --
 
-// Tries to match each char of token against the first char of a distinct word.
-// Modifies usedWords in-place only on success.
-// "usa" on "United States of America" -> [[0,1],[7,8],[17,18]]
+// Matches each char of token to the first letter of a distinct word;
+// mutates usedWords only on success, e.g. "usa" on "United States of America"
 const tryAcronym = (
   label: string,
   words: [number, number][],
@@ -126,11 +125,8 @@ const DEFAULT_STRATEGIES: SearchStrategy[] = [
   'value',
 ]
 
-// Per token: tries enabled strategies in priority order (word-prefix > acronym > contains).
-// All tokens must match. Ranges from all strategies are merged.
-// "a b"  on "United States"           -> word-prefix [[0,1],[7,8]]
-// "usa"  on "United States of America" -> acronym [[0,1],[7,8],[17,18]]
-// "an b" on "Apple Banana"            -> "an" contains [[7,9]], "b" word-prefix [[6,7]] -> [[6,9]]
+// Tries enabled strategies per token, in order: word-prefix, then acronym,
+// then contains. All tokens must match; matched ranges are merged.
 const matchLabel = (
   label: string,
   query: string,
@@ -261,6 +257,7 @@ export const Select = ({
   defaultValue,
   onChange,
   className,
+  ...rest
 }: SelectProps) => {
   // -- open state --
 
@@ -475,6 +472,7 @@ export const Select = ({
   return (
     <>
       <Pressable
+        {...rest}
         ref={setRef}
         disabled={disabled}
         onPress={handleOpen}

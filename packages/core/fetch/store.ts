@@ -6,31 +6,39 @@ import { hk } from '#/core/fetch/config'
 import type { HydrationData } from '#/core/hydration/config'
 import { drainHydration, subscribeHydration } from '#/core/hydration/store'
 import { isBrowser } from '#/core/platform'
+import { globalStore } from '#/core/utils/global-store'
 import type { StrMap } from '#/libs/utility-types'
 
-const store: StrMap<HydrationData> = {}
-const listeners = new Set<() => void>()
-const notify = () => listeners.forEach(cb => cb())
+const storeG = globalStore<StrMap<HydrationData>>(
+  '__rntwscFetchStore',
+  () => ({}),
+)
+const listenersG = globalStore<Set<() => void>>(
+  '__rntwscFetchListeners',
+  () => new Set(),
+)
+const notify = () => listenersG.get().forEach(cb => cb())
 
 const subscribe = (cb: () => void) => {
-  listeners.add(cb)
-  return () => listeners.delete(cb)
+  listenersG.get().add(cb)
+  return () => listenersG.get().delete(cb)
 }
 
 export const useFetchData = <T>(k: string) => {
-  const fn = useCallback(() => store[k], [k])
+  const fn = useCallback(() => storeG.get()[k], [k])
   return useSyncExternalStore(subscribe, fn, fn) as HydrationData<T> | undefined
 }
 // to use when we dont need hook
 // eg: to merge in action function..
 export const getFetchData = <T>(k: string) =>
-  store[k] as HydrationData<T> | undefined
+  storeG.get()[k] as HydrationData<T> | undefined
 
 export const setFetchData = (
   k: string,
   v: HydrationData,
   { silent = false } = {},
 ) => {
+  const store = storeG.get()
   if (store[k] === v) {
     return
   }
@@ -41,6 +49,7 @@ export const setFetchData = (
 }
 
 export const clearFetchData = (k: string, { silent = false } = {}) => {
+  const store = storeG.get()
   if (!(k in store)) {
     return
   }
@@ -50,6 +59,7 @@ export const clearFetchData = (k: string, { silent = false } = {}) => {
   }
 }
 export const clearAllFetchData = ({ silent = false } = {}) => {
+  const store = storeG.get()
   const keys = Object.keys(store)
   if (!keys.length) {
     return
@@ -64,6 +74,7 @@ export const clearAllFetchData = ({ silent = false } = {}) => {
 
 const syncFromHydration = ({ silent = false } = {}) => {
   let found = false
+  const store = storeG.get()
   drainHydration(hk, (k, d, v) => {
     if (store[k] !== v) {
       store[k] = v

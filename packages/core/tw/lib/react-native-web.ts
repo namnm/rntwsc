@@ -10,13 +10,11 @@ type Common = {
 }
 type Text = Common &
   Partial<{
-    // hasTextAncestor is disabled to make sure server variant will render the same markup
-    // we will need to handle writingDirection manually
-    // it will be passed as undefined
+    // Disabled so SSR markup matches the client; writingDirection is handled
+    // manually instead. Passed as undefined.
     hasTextAncestor: boolean
-    // numberOfLines should be transpiled using class name `line-clamp-<number>`
-    // on web we should handle max width, wrap, overflow, ellipsis
-    // it will be passed as undefined
+    // numberOfLines is set via `line-clamp-<number>`; on web, wrap/overflow/
+    // ellipsis are handled by CSS classes instead, so it stays undefined.
     numberOfLines: number
     // selectable should be transpiled using class name `select-text` or `select-none`
     // it will be passed as undefined

@@ -1,0 +1,14 @@
+{
+  "name": "@rntwsc/devtools-graphql-codegen-plugin",
+  "version": "0.0.0-locked",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=24.11",
+    "pnpm": ">=11"
+  },
+  "devDependencies": {
+    "graphql": "17.0.2",
+    "tsx": "4.23.1"
+  }
+}
