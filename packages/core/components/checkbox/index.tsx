@@ -10,6 +10,7 @@ import { Pressable } from '#/core/tw/components/pressable'
 import type { Variant } from '#/core/tw/cva'
 import { cva } from '#/core/tw/cva'
 import { useControllableState, useSafeContext } from '#/libs/hooks'
+import type { ValueProps } from '#/libs/utility-types'
 
 // ---------------------------------------------
 // context
@@ -65,6 +66,11 @@ const checkboxCva = cva({
     disabled: {
       true: {
         container: 'cursor-not-allowed opacity-50',
+      },
+    },
+    invalid: {
+      true: {
+        container: 'border-error',
       },
     },
   },
@@ -134,39 +140,42 @@ const checkboxCva = cva({
 // ---------------------------------------------
 
 export type CheckboxProps = Omit<PressableProps, 'onPress'> &
-  Variant<typeof checkboxCva> & {
-    defaultChecked?: boolean
-    onChange?: (checked: boolean) => void
-  }
+  Variant<typeof checkboxCva> &
+  ValueProps<boolean>
 
 const Root = ({
   type = 'primary',
   size = 'md',
   disabled,
+  invalid,
   className,
-  checked,
-  defaultChecked,
+  value,
+  defaultValue,
   onChange,
   children,
   ...props
 }: CheckboxProps) => {
-  const [value, setValue] = useControllableState({
-    value: checked,
-    defaultValue: defaultChecked,
+  const [checked, setChecked] = useControllableState({
+    value,
+    defaultValue,
     onChange,
   })
 
   const cn = checkboxCva({
     type,
     size,
-    checked: value,
+    checked,
     disabled,
+    invalid,
   })
 
   return (
     <Pressable
       {...props}
-      onPress={disabled ? undefined : () => setValue(v => !v)}
+      disabled={disabled}
+      onPress={disabled ? undefined : () => setChecked(v => !v)}
+      role='checkbox'
+      aria-checked={checked}
       className={[cn.container, className]}
       renderToHardwareTextureAndroid={disabled}
       shouldRasterizeIOS={disabled}
@@ -174,7 +183,7 @@ const Root = ({
       <CheckboxIndicatorContext.Provider
         value={{
           cn,
-          checked: value,
+          checked,
         }}
       >
         {children || <Indicator />}

@@ -49,6 +49,11 @@ const radioCva = cva({
         container: 'cursor-not-allowed opacity-50',
       },
     },
+    invalid: {
+      true: {
+        container: 'border-error',
+      },
+    },
   },
   compoundVariants: [
     {
@@ -120,6 +125,7 @@ export const Radio = ({
   type = 'primary',
   size = 'md',
   disabled,
+  invalid,
   value,
   defaultValue = false,
   onChange,
@@ -137,6 +143,7 @@ export const Radio = ({
     size,
     checked,
     disabled,
+    invalid,
   })
 
   return (
@@ -144,6 +151,8 @@ export const Radio = ({
       {...props}
       disabled={disabled}
       onPress={() => setChecked(v => !v)}
+      role='radio'
+      aria-checked={checked}
       className={[cn.container, className]}
       renderToHardwareTextureAndroid={disabled}
       shouldRasterizeIOS={disabled}

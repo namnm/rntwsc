@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { getCalendarGrid } from '#/core/components/date-picker/get-calendar-grid'
 import { Drawer } from '#/core/components/drawer'
@@ -14,6 +14,7 @@ import { ChevronLeft } from '#/core/icons/chevron-left'
 import { ChevronRight } from '#/core/icons/chevron-right'
 import { useWindowDimensions } from '#/core/responsive/use-window-dimensions'
 import type { ClassName } from '#/core/tw/class-name'
+import type { PressableProps } from '#/core/tw/components/pressable'
 import { Pressable } from '#/core/tw/components/pressable'
 import { View } from '#/core/tw/components/view'
 import { cva } from '#/core/tw/cva'
@@ -209,6 +210,7 @@ const Calendar = async ({ value, onSelect }: CalendarProps) => {
 }
 
 export type DatePickerProps = Omit<InputCva, 'active'> &
+  Omit<PressableProps, 'className' | 'disabled' | 'onPress' | 'children'> &
   ValueProps<Date> & {
     placeholder?: string
     className?: ClassName
@@ -225,6 +227,7 @@ export const DatePicker = ({
   defaultValue,
   onChange,
   className,
+  ...rest
 }: DatePickerProps) => {
   const [open, setOpen] = useState(false)
   const [referenceEl, setReferenceEl] = useState<any>(null)
@@ -234,6 +237,12 @@ export const DatePicker = ({
     defaultValue,
     onChange: v => v && onChange?.(v),
   })
+
+  useEffect(() => {
+    if (disabled) {
+      setOpen(false)
+    }
+  }, [disabled])
 
   const dimensions = useWindowDimensions()
   const useDropdown = dimensions && dimensions.width >= 640
@@ -258,6 +267,7 @@ export const DatePicker = ({
   return (
     <>
       <Pressable
+        {...rest}
         ref={setRef}
         disabled={disabled}
         onPress={() => setOpen(true)}
@@ -277,19 +287,20 @@ export const DatePicker = ({
         <ChevronBottom className={fieldCn.chevron} />
       </Pressable>
 
-      {useDropdown ? (
-        <Dropdown
-          open={open}
-          onClose={() => setOpen(false)}
-          reference={referenceEl}
-        >
-          <Calendar value={selected} onSelect={handleSelect} />
-        </Dropdown>
-      ) : (
-        <Drawer open={open} onClose={() => setOpen(false)}>
-          <Calendar value={selected} onSelect={handleSelect} />
-        </Drawer>
-      )}
+      {!disabled &&
+        (useDropdown ? (
+          <Dropdown
+            open={open}
+            onClose={() => setOpen(false)}
+            reference={referenceEl}
+          >
+            <Calendar value={selected} onSelect={handleSelect} />
+          </Dropdown>
+        ) : (
+          <Drawer open={open} onClose={() => setOpen(false)}>
+            <Calendar value={selected} onSelect={handleSelect} />
+          </Drawer>
+        ))}
     </>
   )
 }

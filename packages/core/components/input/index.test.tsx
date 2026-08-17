@@ -84,4 +84,34 @@ describe('TextInput', () => {
     const input = container.querySelector('input') as HTMLInputElement
     expect(input.className).toContain('border-error')
   })
+
+  it('shares the same filled/ghost focus border color as inputCva (Select/DatePicker/Combobox)', () => {
+    const { container: filled } = render(
+      (
+        <TextInput
+          testID='ti'
+          value=''
+          onChangeText={() => {}}
+          appearance='filled'
+        />
+      ) as any,
+    )
+    expect(
+      (filled.querySelector('input') as HTMLInputElement).className,
+    ).toContain('focus:border-black')
+
+    const { container: ghost } = render(
+      (
+        <TextInput
+          testID='ti'
+          value=''
+          onChangeText={() => {}}
+          appearance='ghost'
+        />
+      ) as any,
+    )
+    expect(
+      (ghost.querySelector('input') as HTMLInputElement).className,
+    ).toContain('focus:border-black')
+  })
 })

@@ -151,6 +151,8 @@ const Trigger = ({
       {...props}
       disabled={disabled}
       onPress={() => onSelect(value)}
+      role='tab'
+      aria-selected={active}
       className={[cn.trigger, className]}
       renderToHardwareTextureAndroid={disabled}
       shouldRasterizeIOS={disabled}

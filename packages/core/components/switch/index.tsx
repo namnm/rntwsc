@@ -55,6 +55,11 @@ const switchCva = cva({
         track: 'cursor-not-allowed opacity-50',
       },
     },
+    invalid: {
+      true: {
+        track: 'ring-error ring-2',
+      },
+    },
   },
   compoundVariants: [
     {
@@ -110,6 +115,7 @@ export const Switch = async ({
   type = 'primary',
   size = 'md',
   disabled,
+  invalid,
   value,
   defaultValue = false,
   onChange,
@@ -127,6 +133,7 @@ export const Switch = async ({
     type,
     size,
     disabled,
+    invalid,
   })
 
   // translate-x doesn't mirror under rtl; move the thumb toward the end side
@@ -138,6 +145,8 @@ export const Switch = async ({
       {...props}
       disabled={disabled}
       onPress={() => setChecked(v => !v)}
+      role='switch'
+      aria-checked={checked}
       className={[cn.track, checked ? cn.trackOn : cn.trackOff, className]}
       // rasterize to fix opacity
       renderToHardwareTextureAndroid={disabled}

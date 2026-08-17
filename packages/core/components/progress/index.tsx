@@ -71,7 +71,8 @@ export const Progress = ({
   className,
   ...props
 }: ProgressProps) => {
-  const pct = Math.min(100, Math.max(0, (value / max) * 100))
+  const now = Math.min(max, Math.max(0, value))
+  const pct = max > 0 ? (now / max) * 100 : 0
   const cn = progressCva({
     size,
     shape,
@@ -81,12 +82,10 @@ export const Progress = ({
   return (
     <View
       {...props}
-      accessibilityRole='progressbar'
-      accessibilityValue={{
-        min: 0,
-        max,
-        now: value,
-      }}
+      role='progressbar'
+      aria-valuemin={0}
+      aria-valuemax={max}
+      aria-valuenow={now}
       className={[cn.track, className]}
     >
       <View

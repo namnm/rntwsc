@@ -26,10 +26,19 @@ const listenersStore = globalStore<Set<() => void>>(
   '__rntwscToastListeners',
   () => new Set(),
 )
-const timeoutsStore = globalStore<Map<string, ReturnType<typeof setTimeout>>>(
-  '__rntwscToastTimeouts',
+
+// tracks each toast's auto-dismiss timer so it can be paused (e.g. while the
+// user hovers to read it) and resumed with only the remaining time left
+type Timer = {
+  timeout?: ReturnType<typeof setTimeout>
+  remaining: number
+  startedAt: number
+}
+const timersStore = globalStore<Map<string, Timer>>(
+  '__rntwscToastTimers',
   () => new Map(),
 )
+
 const notify = () => listenersStore.get().forEach(cb => cb())
 
 const subscribe = (cb: () => void) => {
@@ -44,12 +53,21 @@ const getSnapshotServer = getSnapshot
 export const useToastItems = () =>
   useSyncExternalStore(subscribe, getSnapshot, getSnapshotServer)
 
+const scheduleTimer = (id: string, remaining: number) => {
+  const timeout = setTimeout(() => removeToast(id), remaining)
+  timersStore.get().set(id, {
+    timeout,
+    remaining,
+    startedAt: Date.now(),
+  })
+}
+
 export const removeToast = (id: string) => {
-  const timeout = timeoutsStore.get().get(id)
-  if (timeout) {
-    clearTimeout(timeout)
-    timeoutsStore.get().delete(id)
+  const timer = timersStore.get().get(id)
+  if (timer?.timeout) {
+    clearTimeout(timer.timeout)
   }
+  timersStore.get().delete(id)
 
   const items = itemsStore.get()
   const next = items.filter(e => e.id !== id)
@@ -57,6 +75,29 @@ export const removeToast = (id: string) => {
     itemsStore.set(next)
     notify()
   }
+}
+
+// stops the countdown without losing the remaining time - call resumeToast
+// to reschedule it, e.g. while the user is hovering/reading the toast
+export const pauseToast = (id: string) => {
+  const timer = timersStore.get().get(id)
+  if (!timer?.timeout) {
+    return
+  }
+  clearTimeout(timer.timeout)
+  const elapsed = Date.now() - timer.startedAt
+  timersStore.get().set(id, {
+    remaining: Math.max(0, timer.remaining - elapsed),
+    startedAt: Date.now(),
+  })
+}
+
+export const resumeToast = (id: string) => {
+  const timer = timersStore.get().get(id)
+  if (!timer || timer.timeout) {
+    return
+  }
+  scheduleTimer(id, timer.remaining)
 }
 
 export const toast = ({
@@ -76,8 +117,7 @@ export const toast = ({
   ])
   notify()
 
-  const timeout = setTimeout(() => removeToast(id), duration)
-  timeoutsStore.get().set(id, timeout)
+  scheduleTimer(id, duration)
 
   return id
 }

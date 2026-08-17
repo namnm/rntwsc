@@ -35,4 +35,15 @@ describe('Progress', () => {
     const indicator = container.querySelector('[style*="width"]') as HTMLElement
     expect(indicator.className).toContain('bg-success')
   })
+
+  it('clamps accessibilityValue.now to max, never reporting an out-of-range value', () => {
+    const { container } = render(<Progress value={999} max={100} />)
+    expect(container.firstChild).toHaveAttribute('aria-valuenow', '100')
+  })
+
+  it('does not produce NaN width when max is 0', () => {
+    const { container } = render(<Progress value={5} max={0} />)
+    const indicator = container.querySelector('[style*="width"]') as HTMLElement
+    expect(indicator.style.width).toBe('0%')
+  })
 })

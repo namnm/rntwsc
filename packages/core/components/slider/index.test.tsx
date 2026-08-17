@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-import { render } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { fireEvent, render } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import { computeSliderValue, Slider } from '#/core/components/slider'
 
@@ -80,5 +80,48 @@ describe('Slider', () => {
     expect((container.firstChild as HTMLElement).className).toContain(
       'opacity-50',
     )
+  })
+
+  it('applies the invalid ring class', () => {
+    const { container } = render(<Slider value={0} invalid />)
+    expect((container.firstChild as HTMLElement).className).toContain(
+      'ring-error',
+    )
+  })
+
+  it('is keyboard focusable and steps with arrow keys', () => {
+    const onChange = vi.fn()
+    const { container } = render(
+      <Slider value={50} step={10} onChange={onChange} />,
+    )
+    const el = container.firstChild as HTMLElement
+    expect(el.getAttribute('tabindex')).toBe('0')
+
+    fireEvent.keyDown(el, {
+      key: 'ArrowRight',
+    })
+    expect(onChange).toHaveBeenCalledWith(60)
+
+    fireEvent.keyDown(el, {
+      key: 'ArrowLeft',
+    })
+    expect(onChange).toHaveBeenCalledWith(40)
+
+    fireEvent.keyDown(el, {
+      key: 'Home',
+    })
+    expect(onChange).toHaveBeenCalledWith(0)
+
+    fireEvent.keyDown(el, {
+      key: 'End',
+    })
+    expect(onChange).toHaveBeenCalledWith(100)
+  })
+
+  it('is not keyboard focusable when disabled', () => {
+    const { container } = render(<Slider value={0} disabled />)
+    expect(
+      (container.firstChild as HTMLElement).getAttribute('tabindex'),
+    ).not.toBe('0')
   })
 })

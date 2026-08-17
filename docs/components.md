@@ -28,28 +28,35 @@ Most components share a standard attribute set: appearance, size, shape, disable
 
 ## Available components
 
-| Component            | What it is                                                   |
-| -------------------- | ------------------------------------------------------------ |
-| Accordion            | Single or multiple expand and collapse sections              |
-| Alert                | Inline message box with appearance variants                  |
-| Badge                | Small status or count label                                  |
-| Button               | Full featured pressable: cva variants, ripple, elevation     |
-| ButtonGroup          | Groups multiple buttons together, segmented look             |
-| ToggleGroup          | Single or multiple selectable toggle buttons                 |
-| Checkbox             | Boolean toggle checkbox                                      |
-| DatePicker           | Trigger opens a drawer to pick a date                        |
-| Drawer               | Bottom sheet primitive, also used by Select and DatePicker   |
-| Dropdown             | Contextual popover menu                                      |
-| Form, FormField      | react-hook-form integration wrapper                          |
-| Modal                | Centered dialog overlay                                      |
-| Portal               | Renders children into a root container elsewhere in the tree |
-| Radio, RadioGroup    | Single choice selection                                      |
-| Select               | Trigger opens a drawer, single or multiple selection         |
-| Separator            | Simple dividing line                                         |
-| Skeleton             | Loading placeholder block                                    |
-| Spinner              | Loading spinner indicator                                    |
-| Switch               | Boolean toggle switch                                        |
-| Text, H1 to H6, Span | Text and heading components                                  |
+| Component            | What it is                                                                              |
+| -------------------- | --------------------------------------------------------------------------------------- |
+| Accordion            | Single or multiple expand and collapse sections                                         |
+| Alert                | Inline message box with appearance variants                                             |
+| Avatar               | Image with fallback initials or icon                                                    |
+| Badge                | Small status or count label                                                             |
+| Button               | Full featured pressable: cva variants, ripple, elevation                                |
+| ButtonGroup          | Groups multiple buttons together, segmented look                                        |
+| ToggleGroup          | Single or multiple selectable toggle buttons                                            |
+| Checkbox             | Boolean toggle checkbox                                                                 |
+| Combobox             | Free-text filtering, single selection, items can be static or an async fetcher function |
+| DatePicker           | Trigger opens a drawer to pick a date                                                   |
+| Drawer               | Bottom sheet primitive, also used by Select and DatePicker                              |
+| Dropdown             | Contextual popover menu                                                                 |
+| Form, FormField      | react-hook-form integration wrapper                                                     |
+| Modal                | Centered dialog overlay                                                                 |
+| Portal               | Renders children into a root container elsewhere in the tree                            |
+| Progress             | Determinate progress bar                                                                |
+| Radio, RadioGroup    | Single choice selection                                                                 |
+| Select               | Trigger opens a drawer, single or multiple selection                                    |
+| Separator            | Simple dividing line                                                                    |
+| Skeleton             | Loading placeholder block                                                               |
+| Slider               | Draggable range input                                                                   |
+| Spinner              | Loading spinner indicator                                                               |
+| Switch               | Boolean toggle switch                                                                   |
+| Tabs                 | Segmented content switching                                                             |
+| Text, H1 to H6, Span | Text and heading components                                                             |
+| Toast                | Imperative, auto-dismissing notification                                                |
+| Tooltip              | Hover or focus contextual text, long press on native                                    |
 
 A few building blocks are used internally by the components above rather than used directly: Icon's createSvgIcon (see assets.md for svg icons), Ripple's press ripple effect, Slot's polymorphic render-as-child utility, and Inset's inset shadow overlay.
 

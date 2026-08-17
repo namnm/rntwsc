@@ -3,7 +3,9 @@ import { fireEvent, render } from '@testing-library/react'
 import { useForm } from 'react-hook-form'
 import { describe, expect, it, vi } from 'vitest'
 
+import { Checkbox } from '#/core/components/checkbox'
 import { FormField } from '#/core/components/form/form-field'
+import { TextInput } from '#/core/components/input'
 
 type Values = { email: string }
 
@@ -172,6 +174,97 @@ describe('FormField', () => {
     fireEvent.click(getByText('Submit'))
     await vi.waitFor(() => {
       expect(getByTestId('input').getAttribute('data-invalid')).toBe('true')
+    })
+  })
+
+  it('composes with the real TextInput (onChangeText-only API) with no onChangePropName override', () => {
+    const RealTextInputHarness = () => {
+      const { control } = useForm<Values>({
+        defaultValues: {
+          email: 'a@b.com',
+        },
+      })
+      return (
+        <FormField name='email' control={control}>
+          <TextInput testID='real-input' />
+        </FormField>
+      )
+    }
+    const { container } = render((<RealTextInputHarness />) as any)
+    const input = container.querySelector('input') as HTMLInputElement
+    expect(input.value).toBe('a@b.com')
+
+    fireEvent.change(input, {
+      target: {
+        value: 'c@d.com',
+      },
+    })
+    expect(input.value).toBe('c@d.com')
+  })
+
+  it('composes with the real Checkbox (value/onChange API) - external form value drives the checked state', () => {
+    type CheckboxValues = { agree: boolean }
+    const RealCheckboxHarness = () => {
+      const { control, setValue } = useForm<CheckboxValues>({
+        defaultValues: {
+          agree: false,
+        },
+      })
+      return (
+        <>
+          <FormField name='agree' control={control}>
+            <Checkbox testID='real-checkbox' />
+          </FormField>
+          <button type='button' onClick={() => setValue('agree', true)}>
+            check externally
+          </button>
+        </>
+      )
+    }
+    const { getByTestId, getByText } = render((<RealCheckboxHarness />) as any)
+    expect(getByTestId('real-checkbox').getAttribute('aria-checked')).toBe(
+      'false',
+    )
+
+    fireEvent.click(getByText('check externally'))
+    expect(getByTestId('real-checkbox').getAttribute('aria-checked')).toBe(
+      'true',
+    )
+  })
+
+  it('wires aria-labelledby/aria-describedby to the label/error ids', async () => {
+    const AriaHarness = () => {
+      const { control, handleSubmit } = useForm<Values>({
+        defaultValues: {
+          email: '',
+        },
+      })
+      return (
+        <form onSubmit={handleSubmit(() => {})}>
+          <FormField
+            name='email'
+            control={control}
+            label='Email'
+            rules={{
+              required: 'Email is required',
+            }}
+          >
+            <TestInput data-testid='input' />
+          </FormField>
+          <button type='submit'>Submit</button>
+        </form>
+      )
+    }
+    const { getByText, getByTestId } = render(<AriaHarness />)
+    expect(getByTestId('input').getAttribute('aria-labelledby')).toBe(
+      'email-label',
+    )
+
+    fireEvent.click(getByText('Submit'))
+    await vi.waitFor(() => {
+      expect(getByTestId('input').getAttribute('aria-describedby')).toBe(
+        'email-error',
+      )
     })
   })
 })

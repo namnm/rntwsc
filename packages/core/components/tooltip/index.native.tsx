@@ -1,3 +1,4 @@
+import type { Placement } from '@floating-ui/react-native'
 import { flip, offset, shift, useFloating } from '@floating-ui/react-native'
 import type { PropsWithChildren, ReactNode } from 'react'
 import { useState } from 'react'
@@ -11,17 +12,23 @@ import { View } from '#/core/tw/components/view'
 
 export type TooltipProps = PropsWithChildren<{
   content: ReactNode
+  placement?: Placement
   className?: ClassName
 }>
 
 // Hover doesn't exist on touchscreens, so the native trigger is a long
 // press instead - mirrors dropdown/index.native.tsx's backdrop-dismiss shape.
-export const Tooltip = ({ children, content, className }: TooltipProps) => {
+export const Tooltip = ({
+  children,
+  content,
+  placement = 'top',
+  className,
+}: TooltipProps) => {
   const [open, setOpen] = useState(false)
   const [reference, setReference] = useState<any>(null)
 
   const { refs, floatingStyles } = useFloating({
-    placement: 'top',
+    placement,
     elements: {
       reference,
     },

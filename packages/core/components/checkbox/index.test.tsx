@@ -11,8 +11,8 @@ describe('Checkbox', () => {
     expect(container.querySelector('svg')).toBeNull()
   })
 
-  it('renders checked when defaultChecked is true', () => {
-    const { container } = render(<Checkbox testID='cb' defaultChecked />)
+  it('renders checked when defaultValue is true', () => {
+    const { container } = render(<Checkbox testID='cb' defaultValue />)
     expect(container.querySelector('svg')).not.toBeNull()
   })
 
@@ -34,10 +34,10 @@ describe('Checkbox', () => {
     expect(onChange).toHaveBeenCalledWith(true)
   })
 
-  it('is controlled when checked prop is passed - press does not flip it locally', () => {
+  it('is controlled when value prop is passed - press does not flip it locally', () => {
     const onChange = vi.fn()
     const { container, getByTestId } = render(
-      <Checkbox testID='cb' checked={false} onChange={onChange} />,
+      <Checkbox testID='cb' value={false} onChange={onChange} />,
     )
     fireEvent.click(getByTestId('cb'))
     expect(onChange).toHaveBeenCalledWith(true)
@@ -54,9 +54,20 @@ describe('Checkbox', () => {
     expect(onChange).not.toHaveBeenCalled()
   })
 
+  it('exposes checkbox role and disabled accessibility state', () => {
+    const { getByTestId } = render(<Checkbox testID='cb' disabled />)
+    expect(getByTestId('cb').getAttribute('role')).toBe('checkbox')
+    expect(getByTestId('cb').getAttribute('aria-disabled')).toBe('true')
+  })
+
+  it('applies the invalid border class', () => {
+    const { getByTestId } = render(<Checkbox testID='cb' invalid />)
+    expect(getByTestId('cb').className).toContain('border-error')
+  })
+
   it('renders custom children instead of the default Indicator when provided', () => {
     const { getByText } = render(
-      <Checkbox testID='cb' defaultChecked>
+      <Checkbox testID='cb' defaultValue>
         <Checkbox.Indicator />
         custom-child
       </Checkbox>,

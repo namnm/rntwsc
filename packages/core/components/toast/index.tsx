@@ -3,7 +3,12 @@
 import { Portal } from '#/core/components/portal'
 import { Span } from '#/core/components/text'
 import type { ToastItem } from '#/core/components/toast/store'
-import { removeToast, useToastItems } from '#/core/components/toast/store'
+import {
+  pauseToast,
+  removeToast,
+  resumeToast,
+  useToastItems,
+} from '#/core/components/toast/store'
 import { Pressable } from '#/core/tw/components/pressable'
 import { TextStyleProvider } from '#/core/tw/components/text-style-context'
 import { View } from '#/core/tw/components/view'
@@ -70,6 +75,10 @@ const ToastItemView = ({ item }: { item: ToastItem }) => {
     <Pressable
       testID={`toast-${item.id}`}
       onPress={() => removeToast(item.id)}
+      onHoverIn={() => pauseToast(item.id)}
+      onHoverOut={() => resumeToast(item.id)}
+      role='status'
+      aria-live={item.type === 'error' ? 'assertive' : 'polite'}
       className={cn.container}
     >
       <TextStyleProvider className={cn.text}>

@@ -1,11 +1,14 @@
 'use client'
 
 import type { PropsWithChildren } from 'react'
+import { useEffect } from 'react'
 
 import { Portal } from '#/core/components/portal'
+import { isWeb } from '#/core/platform'
 import type { ClassName } from '#/core/tw/class-name'
 import { Pressable } from '#/core/tw/components/pressable'
 import { ScrollView } from '#/core/tw/components/scroll-view'
+import type { ViewProps } from '#/core/tw/components/view'
 import { View } from '#/core/tw/components/view'
 import type { Variant } from '#/core/tw/cva'
 import { cva } from '#/core/tw/cva'
@@ -40,6 +43,7 @@ const modalCva = cva({
 
 export type ModalProps = ValueProps<boolean> &
   Variant<typeof modalCva> &
+  Omit<ViewProps, 'className' | 'children'> &
   PropsWithChildren<{
     className?: ClassName
     contentClassName?: ClassName
@@ -55,12 +59,26 @@ export const Modal = ({
   contentClassName,
   contentContainerClassName,
   children,
+  ...rest
 }: ModalProps) => {
   const [open, setOpen] = useControllableState({
     value,
     defaultValue,
     onChange,
   })
+
+  useEffect(() => {
+    if (!open || !isWeb) {
+      return
+    }
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false)
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [open, setOpen])
 
   if (!open) {
     return null
@@ -74,7 +92,12 @@ export const Modal = ({
     <Portal disableBodyScroll>
       <View className={cn.container}>
         <Pressable className={cn.backdrop} onPress={() => setOpen(false)} />
-        <View className={[cn.panel, className]}>
+        <View
+          {...rest}
+          role='dialog'
+          aria-modal
+          className={[cn.panel, className]}
+        >
           <ScrollView
             className={[cn.content, contentClassName]}
             contentContainerClassName={contentContainerClassName}

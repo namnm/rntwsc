@@ -200,6 +200,7 @@ const Trigger = ({
       {...props}
       disabled={disabled}
       onPress={onPressComposed}
+      aria-expanded={open}
       className={[
         cn.trigger,
         !__first && cn.triggerBorder,
@@ -285,7 +286,13 @@ const Content = ({ className, children, ...props }: AccordionContentProps) => {
       }
     >
       <TextStyleProvider className={cn.contentText}>
-        <View onLayout={onLayout} className={[cn.contentMeasure, className]}>
+        <View
+          onLayout={onLayout}
+          aria-hidden
+          importantForAccessibility='no-hide-descendants'
+          accessibilityElementsHidden
+          className={[cn.contentMeasure, className]}
+        >
           {children}
         </View>
         <View {...props} className={[cn.contentInner, className]}>

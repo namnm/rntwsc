@@ -3,7 +3,9 @@ import { act, renderHook } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import {
+  pauseToast,
   removeToast,
+  resumeToast,
   toast,
   useToastItems,
 } from '#/core/components/toast/store'
@@ -81,6 +83,51 @@ describe('toast store', () => {
     // the cleared timeout must not fire and try to remove it again
     act(() => {
       vi.advanceTimersByTime(1000)
+    })
+    expect(result.current).toHaveLength(0)
+  })
+
+  it('pauseToast stops the countdown so the item survives past its duration', () => {
+    vi.useFakeTimers()
+    const { result } = renderHook(() => useToastItems())
+    let id = ''
+    act(() => {
+      id = toast({
+        message: 'Hi',
+        duration: 1000,
+      })
+    })
+    act(() => {
+      vi.advanceTimersByTime(500)
+      pauseToast(id)
+      vi.advanceTimersByTime(1000)
+    })
+    expect(result.current).toHaveLength(1)
+  })
+
+  it('resumeToast reschedules only the remaining time, not the full duration', () => {
+    vi.useFakeTimers()
+    const { result } = renderHook(() => useToastItems())
+    let id = ''
+    act(() => {
+      id = toast({
+        message: 'Hi',
+        duration: 1000,
+      })
+    })
+    act(() => {
+      // consume 800ms, pause with 200ms remaining, resume
+      vi.advanceTimersByTime(800)
+      pauseToast(id)
+      resumeToast(id)
+    })
+    act(() => {
+      vi.advanceTimersByTime(199)
+    })
+    expect(result.current).toHaveLength(1)
+
+    act(() => {
+      vi.advanceTimersByTime(1)
     })
     expect(result.current).toHaveLength(0)
   })

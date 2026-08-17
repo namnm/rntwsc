@@ -32,6 +32,9 @@
   - [29. Built-in common native functionality (push notifications first)](#29-built-in-common-native-functionality-push-notifications-first)
   - [30. create-rntwsc-app: flags to pick which features land in the generated project](#30-create-rntwsc-app-flags-to-pick-which-features-land-in-the-generated-project)
   - [31. Pre-built page/component sets for common app shapes (dashboard, storefront, blog)](#31-pre-built-pagecomponent-sets-for-common-app-shapes-dashboard-storefront-blog)
+  - [32. Component set gaps remaining after issue 26](#32-component-set-gaps-remaining-after-issue-26)
+  - [33. twStableProvider should accept an array of selector categories, not just a boolean](#33-twstableprovider-should-accept-an-array-of-selector-categories-not-just-a-boolean)
+  - [34. GraphQL-specific auto-loading layer for Combobox (operation name in, results out)](#34-graphql-specific-auto-loading-layer-for-combobox-operation-name-in-results-out)
 
 <!-- END doctoc -->
 
@@ -868,3 +871,175 @@ these is closer to a template/example app than a reusable primitive, and
 would need its own decision about where it lives (part of
 create-rntwsc-app's templates, or a separate example-apps package
 consumers copy from) before starting.
+
+## 32. Component set gaps remaining after issue 26
+
+STATUS: open. Re-audited packages/core/components after issue 26 landed
+(accordion, alert, avatar, badge, button, button-group,
+button-toggle-group, checkbox, combobox, date-picker, drawer, dropdown,
+form, icon, input, inset, modal, portal, progress, radio, ripple, select,
+separator, skeleton, slider, slot, spinner, switch, tabs, text, toast,
+tooltip - confirmed via a directory listing). Two kinds of gaps left:
+components that do not exist at all yet, and features scoped out of an
+existing component's first version.
+
+New components worth adding, roughly in order of how often a real app
+needs them:
+
+- Popover - Dropdown already does the positioning work (`open`/`onClose`/
+  `reference`, floating-ui on web, floating-ui/react-native on native,
+  documented in docs/components.md as "Contextual popover menu") but has
+  no self-managed trigger/open state of its own - every current consumer
+  (Select, DatePicker, Combobox) supplies that itself. Tooltip already
+  shows the pattern for wrapping an arbitrary single child as a trigger
+  via Slot; a Popover would be the click-triggered, arbitrary-content
+  equivalent (a form, a menu, anything), the general-purpose primitive
+  Dropdown was never quite exposed as directly. Confirmed no such export
+  exists anywhere in the repo today.
+- Table - no table/data-table component exists (issue 3 found the same
+  for the "suite" consumer's own DataGrid, out of scope there). React
+  Native has no native table element, so this needs building from
+  View rows from scratch, same as everything else here - worth having
+  as a plain, non-virtualized table (header row, sortable column
+  headers, striped/hover row states) for dashboards and admin panels,
+  which is a use case issue 27/31 both already point at.
+- ConfirmDialog / AlertDialog - Modal exists as a generic centered
+  overlay, but "confirm before a destructive action" (title, message,
+  confirm/cancel buttons, a danger appearance for delete-style actions)
+  is common enough to be its own thin wrapper around Modal + Button,
+  worth shipping so consumers stop rebuilding the same
+  title-body-two-buttons layout by hand.
+- Pagination - page-number/prev-next navigation for any list or table,
+  no existing primitive covers this.
+- Breadcrumb - path-style navigation trail, no existing primitive covers
+  this.
+- Chip/Tag - an interactive, dismissible label (an "x" to remove),
+  distinct from Badge (static, no interaction). Directly useful for a
+  multi-select input rendered as removable chips instead of Select's
+  current comma-joined text summary, and for a tag input pattern in
+  general.
+- AvatarGroup - overlapping/stacked avatars with a "+N" overflow count,
+  a near-universal pattern anywhere a list of users needs to fit in a
+  small space (assignees, team members, participants). Natural extension
+  of Avatar (issue 26), confirmed no such export exists on it today.
+- Standalone Calendar - date-picker/index.tsx has a `Calendar`
+  sub-component (packages/core/components/date-picker/index.tsx, uses
+  get-calendar-grid.ts for the month grid) but it is not exported -
+  confirmed via grep, it only exists inline, reachable only through
+  DatePicker's trigger+drawer/dropdown flow. An inline, always-visible
+  calendar (for a dashboard "today's events" widget, or a full
+  date-range picker built on top, see below) needs it exported as its
+  own component.
+- EmptyState - icon/illustration + heading + subtext + optional action
+  button, for empty lists, empty search results, empty inboxes. Select
+  and Combobox each have their own minimal text-only
+  emptyLabel/noResultsLabel today; a shared, richer component would be
+  more reusable across lists/tables/dashboards generally than
+  duplicating this per component.
+
+Feature gaps in components that already exist, each scoped out
+deliberately when the component was first built:
+
+- Combobox is single-select only (packages/core/components/combobox/index.tsx,
+  see issue 26's writeup) - a multi-select combobox (free-text filter
+  plus multiple chips, likely wanting the Chip component above) was
+  explicitly left out of the first version.
+- DatePicker has no range mode - confirmed no `range`/`Range` reference
+  anywhere in packages/core/components/date-picker/index.tsx, single
+  date only. A from/to range picker is a common ecommerce/booking/
+  analytics-dashboard need (see issue 31's dashboard/storefront shapes).
+- Slider is single-thumb only (packages/core/components/slider/index.tsx)
+  - a two-thumb range slider (min/max) was scoped out of the first
+    version, would need a second thumb, a filled-between-thumbs indicator,
+    and deciding how the two thumbs cannot cross each other.
+- Toast has no promise-based mode - `toast()` (packages/core/components/toast/store.ts)
+  only takes a fixed type/message/duration today. A `toast.promise(promise,
+{ loading, success, error })` helper that morphs one toast through
+  loading -> success/error states is a very commonly reached-for toast
+  library feature (sonner, react-hot-toast both have it) and fits
+  naturally on top of the existing store.
+- Tabs only supports a horizontal row (packages/core/components/tabs/index.tsx's
+  `List` slot is a fixed `flex-row`) - a vertical orientation (sidebar-
+  style tabs, common in settings pages) was not part of the first
+  version.
+
+## 33. twStableProvider should accept an array of selector categories, not just a boolean
+
+STATUS: open. This was originally written up as a TextStyleProvider issue -
+wrong target, corrected here. `twStableProvider` is a real, existing prop
+(`packages/core/tw/components/lib/common-props.ts`'s `CommonProps.
+twStableProvider?: boolean`), consumed only on native by
+`packages/core/tw/lib/create-class-name-component.native.tsx`'s
+`getInitialMetadata(stableProvider)`.
+
+Background: a native class-name component's first render inspects its
+className for selector prefixes (`dark:`, `sm:`, `active:`, `group-*`,
+`peer-*`, etc.) and builds a `ClassNameMetadata` (`responsive`, `darkMode`,
+`active`, `focus`, `group`, `peer` - see packages/core/tw/class-name.ts)
+that decides which state-subscribing HOCs wrap it (`withResponsive`,
+`withDarkMode`, `withActive`, `withFocus`, `withGroup`, `withPeer` in the
+same file). If a later render's className implies a _different_ set of
+categories, `shouldRerenderMetadata` logs "Expect class names with
+selector should be stable ... or use twStableProvider on this component
+to subscribe to all selectors" - `twStableProvider: true` is the escape
+hatch, but it is all-or-nothing: `getInitialMetadata` unconditionally
+turns on every category (`responsive: true, darkMode: true, active: true,
+focus: true, group: true, peer: true, groupProviders: ['-'], peerProviders:
+['-']`) the moment it is truthy, even if only one category is actually
+unstable across renders - paying for every HOC's subscription regardless.
+
+Suggestion: widen `twStableProvider`'s type from `boolean` to
+`boolean | Array<'responsive' | 'darkMode' | 'active' | 'focus' | 'group' | 'peer'>`,
+and have `getInitialMetadata` build the metadata object from just the
+named categories when given an array, keeping today's all-categories
+behavior when given `true` and no metadata when given `false`/omitted.
+`groupProviders`/`peerProviders` (string-keyed, not plain booleans) would
+need a decision on whether they ride along with `'group'`/`'peer'` in the
+array or need their own separate opt-in - worth resolving as part of the
+implementation, not guessing at here.
+
+## 34. GraphQL-specific auto-loading layer for Combobox (operation name in, results out)
+
+STATUS: open. Combobox now supports a generic async `items` fetcher
+(`(query: string) => ComboboxItem[] | Promise<ComboboxItem[]>`, see
+packages/core/components/combobox/index.tsx) - deliberately generic,
+zero GraphQL knowledge. ~/ws/suite (a real consumer) already has a
+GraphQL-specific async dropdown, `EntityDropdown`
+(packages/core/prelude/components/entity-dropdown/index.tsx), built before
+Combobox had any async support at all - it drives rntwsc's `Select` via
+external `onSearch`/array state instead of an items-as-function, hand-rolls
+its own debounce (no shared debounce hook existed anywhere - see the new
+`useDebouncedValue`, packages/libs/hooks/use-debounced-value.ts, which
+closes that specific gap), and overloads `emptyLabel` to also mean
+"loading" instead of using a real loading state.
+
+The ask this issue tracks: a thin GraphQL-specific wrapper that takes just
+an operation name (a runtime string, not a compile-time codegen'd hook -
+model/operation are often dynamic in a generic entity picker) and wires it
+straight into Combobox's new `items` fetcher automatically, so a consumer
+writes `<EntityCombobox model='Product' operation='productSearch' />`
+instead of hand-rolling `EntityDropdown`-style plumbing per app.
+
+The one already-generic, reusable piece worth building on directly:
+`buildOperationDocument(kind, operationName, variableDefs, selection)`
+(~/ws/suite's packages/core/db/dynamic-query.ts) - takes a runtime
+operation-name string plus explicit `OperationVariable[]`/selection
+declarations and assembles the `DocumentNode` via `gql()`, no compile-time
+codegen dependency. This is exactly the "runtime operation name, not a
+generated hook" mechanism the ask wants, already proven working in
+`EntityDropdown`.
+
+Two open decisions before building, not guessed at here:
+
+- Where this lives - a new `rntwsc/graphql`-facing package once there is
+  a natural home for GraphQL-aware UI helpers (rntwsc already ships
+  useFetchGraphQL, see docs/hydration.md), or stays app-specific in
+  suite/consumers if the `*Filter`/`Pagination` variable-naming convention
+  `dynamic-query.ts` assumes is too suite-specific to generalize as-is.
+- The "resolve an unseen value's label" gap - a controlled `value` whose
+  label was never part of a resolved search result (e.g. an edit form
+  loading an existing id before any search ran) has no label to show.
+  `EntityDropdown` solves this today with a separate imperative
+  `apolloClient().query()` side-fetch; the generic Combobox deliberately
+  does not attempt this (real complexity, not needed by every async
+  consumer) - this GraphQL-specific layer is exactly where it belongs.

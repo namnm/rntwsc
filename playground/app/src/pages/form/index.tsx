@@ -170,7 +170,7 @@ export const FormPage = () => {
             <FormField name='newsletter' label='Newsletter' control={control}>
               {({ value, onChange }) => (
                 <View className='flex-row items-center gap-3'>
-                  <Checkbox checked={value} onChange={onChange} />
+                  <Checkbox value={value} onChange={onChange} />
                   <Pressable onPress={() => onChange(!value)}>
                     <Span className='text-sm text-gray-700 transition dark:text-gray-300'>
                       Subscribe to newsletter

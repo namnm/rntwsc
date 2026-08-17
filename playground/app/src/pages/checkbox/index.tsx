@@ -46,7 +46,7 @@ export const CheckboxPage = () => {
             <View className='flex-row flex-wrap gap-4'>
               {types.map(type => (
                 <View key={type} className='items-center gap-1.5'>
-                  <Checkbox type={type} defaultChecked />
+                  <Checkbox type={type} defaultValue />
                   <Span className='text-foreground text-xs transition'>
                     {upperFirst(type)}
                   </Span>
@@ -62,7 +62,7 @@ export const CheckboxPage = () => {
             <View className='flex-row flex-wrap items-center gap-4'>
               {sizes.map(size => (
                 <View key={size} className='items-center gap-1.5'>
-                  <Checkbox size={size} defaultChecked />
+                  <Checkbox size={size} defaultValue />
                   <Span className='text-foreground text-xs transition'>
                     {upperFirst(size)}
                   </Span>
@@ -77,7 +77,7 @@ export const CheckboxPage = () => {
             </Span>
             <View className='flex-row gap-4'>
               <Checkbox disabled />
-              <Checkbox disabled defaultChecked />
+              <Checkbox disabled defaultValue />
             </View>
           </View>
           <View className='gap-3'>
@@ -85,12 +85,12 @@ export const CheckboxPage = () => {
               custom indicator
             </Span>
             <View className='flex-row gap-4'>
-              <Checkbox defaultChecked>
+              <Checkbox defaultValue>
                 <Checkbox.Indicator asChild>
                   <Minus />
                 </Checkbox.Indicator>
               </Checkbox>
-              <Checkbox defaultChecked>
+              <Checkbox defaultValue>
                 <Checkbox.Indicator asChild>
                   <Plus />
                 </Checkbox.Indicator>

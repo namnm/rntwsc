@@ -1,7 +1,12 @@
 'use client'
 
+import type { FC } from 'react'
 import { useState } from 'react'
-import type { GestureResponderEvent, LayoutChangeEvent } from 'react-native'
+import type {
+  AccessibilityActionEvent,
+  GestureResponderEvent,
+  LayoutChangeEvent,
+} from 'react-native'
 
 import type { ViewProps } from '#/core/tw/components/view'
 import { View } from '#/core/tw/components/view'
@@ -80,6 +85,11 @@ const sliderCva = cva({
         container: 'opacity-50',
       },
     },
+    invalid: {
+      true: {
+        container: 'ring-error rounded-full ring-2 ring-offset-2',
+      },
+    },
   },
 })
 
@@ -125,7 +135,16 @@ export type SliderProps = Omit<ViewProps, 'children' | 'onLayout'> &
     max?: number
     step?: number
     disabled?: boolean
+    invalid?: boolean
   }
+
+// tabIndex/onKeyDown are web-only, not part of react-native's own ViewProps -
+// widen the type locally instead of typing them onto the shared primitive.
+type ViewWithKeyboardProps = ViewProps & {
+  tabIndex?: number
+  onKeyDown?: (e: KeyboardEvent) => void
+}
+const ViewFocusable = View as FC<ViewWithKeyboardProps>
 
 export const Slider = ({
   size = 'md',
@@ -134,6 +153,7 @@ export const Slider = ({
   max = 100,
   step,
   disabled,
+  invalid,
   value,
   defaultValue,
   onChange,
@@ -151,9 +171,13 @@ export const Slider = ({
     size,
     type,
     disabled,
+    invalid,
   })
 
   const pct = Math.min(100, Math.max(0, ((state - min) / (max - min)) * 100))
+  // used by both keyboard arrow-key stepping and the increment/decrement
+  // accessibility actions when the caller has not set an explicit step
+  const stepFor = step || (max - min) / 10 || 1
 
   const onLayout = (e: LayoutChangeEvent) => {
     setTrackWidth(e.nativeEvent.layout.width)
@@ -174,8 +198,38 @@ export const Slider = ({
     )
   }
 
+  const onAccessibilityAction = (e: AccessibilityActionEvent) => {
+    if (disabled) {
+      return
+    }
+    if (e.nativeEvent.actionName === 'increment') {
+      setState(Math.min(max, state + stepFor))
+    } else if (e.nativeEvent.actionName === 'decrement') {
+      setState(Math.max(min, state - stepFor))
+    }
+  }
+
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (disabled) {
+      return
+    }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+      e.preventDefault()
+      setState(Math.min(max, state + stepFor))
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+      e.preventDefault()
+      setState(Math.max(min, state - stepFor))
+    } else if (e.key === 'Home') {
+      e.preventDefault()
+      setState(min)
+    } else if (e.key === 'End') {
+      e.preventDefault()
+      setState(max)
+    }
+  }
+
   return (
-    <View
+    <ViewFocusable
       {...props}
       onLayout={onLayout}
       onStartShouldSetResponder={disabled ? undefined : () => true}
@@ -185,12 +239,14 @@ export const Slider = ({
       onResponderMove={(e: GestureResponderEvent) =>
         updateFromLocationX(e.nativeEvent.locationX)
       }
-      accessibilityRole='adjustable'
-      accessibilityValue={{
-        min,
-        max,
-        now: state,
-      }}
+      onKeyDown={onKeyDown}
+      onAccessibilityAction={onAccessibilityAction}
+      tabIndex={disabled ? undefined : 0}
+      role='slider'
+      aria-disabled={disabled}
+      aria-valuemin={min}
+      aria-valuemax={max}
+      aria-valuenow={state}
       className={[cn.container, className]}
     >
       <View className={cn.track}>
@@ -207,6 +263,6 @@ export const Slider = ({
           left: `${pct}%`,
         }}
       />
-    </View>
+    </ViewFocusable>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import type { FC, PropsWithChildren } from 'react'
-import { createContext, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 
 import { Span } from '#/core/components/text'
 import type { ClassName } from '#/core/tw/class-name'
@@ -127,6 +127,12 @@ export type AvatarImageProps = ImageProps
 
 const AvatarImage = ({ className, ...props }: AvatarImageProps) => {
   const { cn, status, setStatus } = useAvatarContext()
+
+  // a previously-failed src must not permanently block a later, different
+  // src from ever being attempted again
+  useEffect(() => {
+    setStatus('idle')
+  }, [props.src, setStatus])
 
   if (status === 'error') {
     return null

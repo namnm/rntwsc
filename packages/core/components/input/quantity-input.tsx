@@ -30,7 +30,8 @@ export const QuantityInput = async ({
     onChange: onChangeText,
   })
 
-  const clamp = (val: number) => Math.max(min, Math.min(val, max)).toString()
+  const clamp = (val: number) =>
+    Math.max(min, Math.min(Number.isNaN(val) ? min : val, max)).toString()
 
   const onPress = (by: number) => {
     setState(prev => clamp(+prev + by))

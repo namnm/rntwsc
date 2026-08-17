@@ -51,14 +51,21 @@ export const FormField = <T extends FieldValues, K extends Path<T>>({
   label,
   requiredMask,
   valuePropName = 'value',
-  onChangePropName = 'onChange',
+  onChangePropName,
   children,
   ...props
 }: FormFieldProps<T, K>) => {
+  const fieldId = propId || name
+  const labelId = `${fieldId}-label`
+  const errId = `${fieldId}-error`
+
   const renderLabel = () =>
     label ? (
       <View className='flex-row gap-0.5'>
-        <Span className='text-sm font-medium text-gray-700 transition dark:text-gray-300'>
+        <Span
+          nativeID={labelId}
+          className='text-sm font-medium text-gray-700 transition dark:text-gray-300'
+        >
           {typeof label === 'function' ? label() : label}
         </Span>
         {requiredMask && <Span className='text-error text-sm'>*</Span>}
@@ -69,9 +76,11 @@ export const FormField = <T extends FieldValues, K extends Path<T>>({
     field: ControllerRenderProps<T, Path<T>>,
     fieldState: ControllerFieldState,
   ) => {
+    const invalid = !!fieldState.error
+
     if (typeof children === 'function') {
       return children({
-        invalid: !!fieldState.error,
+        invalid,
         value: field.value,
         onChange: field.onChange,
         onBlur: field.onBlur,
@@ -79,26 +88,47 @@ export const FormField = <T extends FieldValues, K extends Path<T>>({
     }
 
     if (isValidElement(children)) {
-      return cloneElement(children, {
-        invalid: !!fieldState.error,
+      // caller did not pick a specific prop name - wire both onChange and
+      // onChangeText to the same handler, since a real component only ever
+      // defines one of the two (TextInput-family: onChangeText only,
+      // ValueProps-based: onChange only), so there is no double-handling risk
+      const changePropName = onChangePropName || 'onChange'
+      const extraProps: StrMap = {
+        invalid,
+        'aria-invalid': invalid,
         [valuePropName]: field.value,
-        [onChangePropName]: (e: Parameters<typeof field.onChange>[0]) => {
+        [changePropName]: (e: Parameters<typeof field.onChange>[0]) => {
           field.onChange(e)
-          children.props?.[onChangePropName]?.(e)
+          children.props?.[changePropName]?.(e)
         },
         onBlur: () => {
           field.onBlur()
           children.props?.onBlur?.()
         },
-      })
+      }
+      if (!onChangePropName && changePropName !== 'onChangeText') {
+        extraProps.onChangeText = (e: Parameters<typeof field.onChange>[0]) => {
+          field.onChange(e)
+          children.props?.onChangeText?.(e)
+        }
+      }
+      if (label) {
+        extraProps['aria-labelledby'] = labelId
+      }
+      if (invalid) {
+        extraProps['aria-describedby'] = errId
+      }
+      return cloneElement(children, extraProps)
     }
 
     return null
   }
 
-  const renderErr = ({ error }: ControllerFieldState) =>
-    error?.message ? (
-      <Span className='text-error text-xs'>{error.message}</Span>
+  const renderErr = ({ error: fieldErr }: ControllerFieldState) =>
+    fieldErr?.message ? (
+      <Span nativeID={errId} className='text-error text-xs'>
+        {fieldErr.message}
+      </Span>
     ) : null
 
   return (

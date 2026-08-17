@@ -91,3 +91,17 @@ describe('Accordion - disabled', () => {
     expect(onChange).not.toHaveBeenCalled()
   })
 })
+
+describe('Accordion - accessibility', () => {
+  it('reflects the open state via aria-expanded', () => {
+    const { getByTestId } = render(<TwoItems defaultValue='a' />)
+    expect(getByTestId('trigger-a').getAttribute('aria-expanded')).toBe('true')
+    expect(getByTestId('trigger-b').getAttribute('aria-expanded')).toBe('false')
+  })
+
+  it('marks the invisible measurement clone of content as aria-hidden', () => {
+    const { container } = render(<TwoItems defaultValue='a' />)
+    const hidden = container.querySelectorAll('[aria-hidden="true"]')
+    expect(hidden.length).toBeGreaterThan(0)
+  })
+})

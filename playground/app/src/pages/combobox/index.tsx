@@ -41,6 +41,18 @@ const countries: ComboboxItem[] = [
   },
 ]
 
+// stands in for a real server-side search endpoint: artificial delay plus a
+// server-side (not client-side) substring filter, to demonstrate the async
+// items function - debounce, loading state, and result rendering all come
+// from Combobox itself, this fetcher only needs to return a Promise
+const fetchCountries = (query: string): Promise<ComboboxItem[]> =>
+  new Promise(resolve => {
+    setTimeout(() => {
+      const q = query.toLowerCase()
+      resolve(countries.filter(c => c.label.toLowerCase().includes(q)))
+    }, 600)
+  })
+
 export const ComboboxPage = () => {
   const padding = useSafeAreaPadding()
   const [controlled, setControlled] = useState('')
@@ -74,6 +86,21 @@ export const ComboboxPage = () => {
             <Span className='text-foreground text-xs transition'>
               Selected: {controlled || '-'}
             </Span>
+          </View>
+
+          <View className='gap-3'>
+            <Span className='text-foreground text-lg font-semibold transition'>
+              async (simulated server search)
+            </Span>
+            <Span className='text-foreground text-xs transition'>
+              debounced 300ms, then a simulated 600ms request - watch for the
+              loading state, try: "south"
+            </Span>
+            <Combobox
+              items={fetchCountries}
+              placeholder='Search a country..'
+              loadingLabel='Searching...'
+            />
           </View>
 
           <View className='gap-3'>

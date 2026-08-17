@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react'
 
+import { inputCva } from '#/core/components/input/input-cva'
 import { useIsRtl } from '#/core/i18n/use-is-rtl'
 import type { ClassName } from '#/core/tw/class-name'
 import { clsx } from '#/core/tw/clsx'
@@ -14,6 +15,11 @@ import { View } from '#/core/tw/components/view'
 import type { Variant } from '#/core/tw/cva'
 import { cva } from '#/core/tw/cva'
 
+// Border/background/shape/invalid colors come from the shared inputCva
+// (same one Select/DatePicker/Combobox's trigger uses) so they can't drift
+// out of sync again - this local cva only covers what's specific to a real
+// <input>: text sizing/padding, the icon/slot affix sizing, and the
+// prefix/suffix padding compounds.
 const classNames = cva({
   classNames: {
     input:
@@ -22,24 +28,6 @@ const classNames = cva({
     slot: '',
   },
   attributes: {
-    appearance: {
-      outlined: {
-        input:
-          'border border-gray-200 bg-white focus:border-black dark:border-gray-700 dark:bg-black dark:focus:border-white',
-      },
-      filled: {
-        input:
-          'border border-transparent bg-gray-100 focus:border-gray-300 dark:bg-gray-800 dark:focus:border-gray-600',
-      },
-      ghost: {
-        input:
-          'border border-transparent bg-transparent focus:border-gray-300 dark:focus:border-gray-600',
-      },
-      underlined: {
-        input:
-          'border border-transparent border-b-gray-200 bg-transparent focus:border-b-black dark:border-b-gray-700 dark:focus:border-b-white',
-      },
-    },
     size: {
       sm: {
         input: 'h-7 px-2 text-xs',
@@ -57,20 +45,6 @@ const classNames = cva({
         slot: 'w-8',
       },
     },
-    shape: {
-      none: {
-        input: 'rounded-none',
-      },
-      rounded: {
-        input: 'rounded-md',
-      },
-      pill: {
-        input: 'rounded-full',
-      },
-    },
-    invalid: {
-      true: {},
-    },
     prefix: {
       true: {},
     },
@@ -82,36 +56,6 @@ const classNames = cva({
     },
   },
   compoundVariants: [
-    // ========================================================================
-    // invalid
-    {
-      appearance: 'outlined',
-      invalid: true,
-      classNames: {
-        input: 'border-error focus:border-error',
-      },
-    },
-    {
-      appearance: 'filled',
-      invalid: true,
-      classNames: {
-        input: 'border-error focus:border-error',
-      },
-    },
-    {
-      appearance: 'ghost',
-      invalid: true,
-      classNames: {
-        input: 'border-error focus:border-error',
-      },
-    },
-    {
-      appearance: 'underlined',
-      invalid: true,
-      classNames: {
-        input: 'border-b-error focus:border-b-error',
-      },
-    },
     // ========================================================================
     // prefix / suffix padding
     // prefix sits at the reading-start side, suffix at the reading-end side
@@ -219,6 +163,7 @@ export type TextInputProps = Omit<
   Variant<typeof classNames>,
   'prefix' | 'suffix' | 'rtl'
 > &
+  Pick<Variant<typeof inputCva>, 'appearance' | 'shape' | 'invalid'> &
   InputProps & {
     prefix?: ((cn: ClassName) => ReactNode) | ReactNode
     suffix?: ((cn: ClassName) => ReactNode) | ReactNode
@@ -243,11 +188,14 @@ export const TextInput = async ({
 }: TextInputProps) => {
   const rtl = await useIsRtl()
 
-  const cn = classNames({
+  const fieldCn = inputCva({
     appearance,
     size,
     shape,
     invalid,
+  })
+  const cn = classNames({
+    size,
     prefix: !!prefix,
     suffix: !!suffix,
     rtl,
@@ -291,6 +239,7 @@ export const TextInput = async ({
         {...props}
         editable={disabled ? false : props.editable}
         className={[
+          fieldCn.container,
           cn.input,
           disabled && 'cursor-not-allowed',
           props.className,

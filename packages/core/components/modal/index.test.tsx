@@ -85,4 +85,32 @@ describe('Modal', () => {
     // still open/rendered since the controlled `value` prop hasn't changed
     expect(queryByText('modal content')).toBeTruthy()
   })
+
+  it('closes on Escape', () => {
+    const { queryByText } = render(
+      withPortalRoot(
+        <Modal defaultValue>
+          <Span>modal content</Span>
+        </Modal>,
+      ),
+    )
+    expect(queryByText('modal content')).toBeTruthy()
+    fireEvent.keyDown(window, {
+      key: 'Escape',
+    })
+    expect(queryByText('modal content')).toBeNull()
+  })
+
+  it('forwards testID to the panel and sets dialog role/aria-modal', () => {
+    const { getByTestId } = render(
+      withPortalRoot(
+        <Modal defaultValue testID='modal-panel'>
+          <Span>modal content</Span>
+        </Modal>,
+      ),
+    )
+    const panel = getByTestId('modal-panel')
+    expect(panel.getAttribute('role')).toBe('dialog')
+    expect(panel.getAttribute('aria-modal')).toBe('true')
+  })
 })

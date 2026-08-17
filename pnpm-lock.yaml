@@ -23,8 +23,8 @@ importers:
   .:
     dependencies:
       rntwsc:
-        specifier: github:namnm/rntwsc#3c08c0a0fc53626b7c0d890836159b962d726f3d
-        version: https://codeload.github.com/namnm/rntwsc/tar.gz/3c08c0a0fc53626b7c0d890836159b962d726f3d(0aa345777cba96b381aadc1f74260c1b)
+        specifier: github:namnm/rntwsc#3d63d285699db0e2c8d5a3af620e3fbc48cff4e2
+        version: https://codeload.github.com/namnm/rntwsc/tar.gz/3d63d285699db0e2c8d5a3af620e3fbc48cff4e2(0aa345777cba96b381aadc1f74260c1b)
     devDependencies:
       '@babel/core':
         specifier: 7.29.7
@@ -6781,9 +6781,9 @@ packages:
   rfdc@1.4.1:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
 
-  rntwsc@https://codeload.github.com/namnm/rntwsc/tar.gz/3c08c0a0fc53626b7c0d890836159b962d726f3d:
-    resolution: {gitHosted: true, integrity: sha512-m+c9rVCBOYqJCmNkMKsPMRC42yAPHkwBsKHsL9VoYHj1qmYtMTLOiFFQPmHtBcb+xI+Sg/vMMIWLvKSmam2Fug==, tarball: https://codeload.github.com/namnm/rntwsc/tar.gz/3c08c0a0fc53626b7c0d890836159b962d726f3d}
-    version: 0.0.29
+  rntwsc@https://codeload.github.com/namnm/rntwsc/tar.gz/3d63d285699db0e2c8d5a3af620e3fbc48cff4e2:
+    resolution: {gitHosted: true, integrity: sha512-D+XpTUE5T6JRpAuO6LPKdPOKTE62o3B+Ti1F9vbovtuRgyMC12u5txzMOOVFombX+CrhD0PWqpYTVJDJ42y/3Q==, tarball: https://codeload.github.com/namnm/rntwsc/tar.gz/3d63d285699db0e2c8d5a3af620e3fbc48cff4e2}
+    version: 0.0.31
     peerDependencies:
       '@floating-ui/react': '*'
       '@floating-ui/react-native': '*'
@@ -14067,7 +14067,7 @@ snapshots:
 
   rfdc@1.4.1: {}
 
-  rntwsc@https://codeload.github.com/namnm/rntwsc/tar.gz/3c08c0a0fc53626b7c0d890836159b962d726f3d(0aa345777cba96b381aadc1f74260c1b):
+  rntwsc@https://codeload.github.com/namnm/rntwsc/tar.gz/3d63d285699db0e2c8d5a3af620e3fbc48cff4e2(0aa345777cba96b381aadc1f74260c1b):
     dependencies:
       '@apollo/client': 4.2.8(graphql-ws@6.2.0(graphql@17.0.2)(ws@8.21.1))(graphql@17.0.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(rxjs@7.8.2)
       '@babel/code-frame': 7.29.7

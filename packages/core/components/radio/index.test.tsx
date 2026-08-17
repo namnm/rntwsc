@@ -22,6 +22,19 @@ describe('Radio (standalone)', () => {
     fireEvent.click(getByTestId('r'))
     expect(onChange).toHaveBeenCalledWith(true)
   })
+
+  it('exposes radio role and disabled accessibility state', () => {
+    const { getByTestId, rerender } = render(<Radio testID='r' />)
+    expect(getByTestId('r').getAttribute('role')).toBe('radio')
+
+    rerender(<Radio testID='r' defaultValue disabled />)
+    expect(getByTestId('r').getAttribute('aria-disabled')).toBe('true')
+  })
+
+  it('applies the invalid border class', () => {
+    const { getByTestId } = render(<Radio testID='r' invalid />)
+    expect(getByTestId('r').className).toContain('border-error')
+  })
 })
 
 describe('RadioGroup', () => {

@@ -9,6 +9,7 @@ import { isWeb } from '#/core/platform'
 import type { ClassName } from '#/core/tw/class-name'
 import { Pressable } from '#/core/tw/components/pressable'
 import { ScrollView } from '#/core/tw/components/scroll-view'
+import type { ViewProps } from '#/core/tw/components/view'
 import { View } from '#/core/tw/components/view'
 import type { Variant } from '#/core/tw/cva'
 import { cva } from '#/core/tw/cva'
@@ -39,6 +40,7 @@ const drawerCva = cva({
 })
 
 export type DrawerProps = Omit<Variant<typeof drawerCva>, 'side'> &
+  Omit<ViewProps, 'className' | 'children'> &
   PropsWithChildren<{
     open: boolean
     onClose: () => void
@@ -58,6 +60,7 @@ export const Drawer = async ({
   contentClassName,
   contentContainerClassName,
   children,
+  ...rest
 }: DrawerProps) => {
   const rtl = await useIsRtl()
 
@@ -97,7 +100,7 @@ export const Drawer = async ({
   return (
     <Portal disableBodyScroll>
       <Pressable className={cn.backdrop} onPress={onClose} />
-      <View className={[cn.panel, className]}>
+      <View {...rest} className={[cn.panel, className]}>
         {showHandle && (
           <View className={cn.handleZone}>
             <View className={cn.indicator} />

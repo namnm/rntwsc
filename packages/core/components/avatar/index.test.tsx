@@ -59,4 +59,28 @@ describe('Avatar', () => {
     fireEvent.error(img)
     expect(getByText('NN')).toBeTruthy()
   })
+
+  it('retries a new src after a previous one failed to load', () => {
+    const { getByText, container, rerender } = render(
+      <Avatar>
+        <Avatar.Image src='https://example.com/broken.png' />
+        <Avatar.Fallback>NN</Avatar.Fallback>
+      </Avatar>,
+    )
+    fireEvent.error(container.querySelector('img') as HTMLImageElement)
+    expect(getByText('NN')).toBeTruthy()
+
+    rerender(
+      <Avatar>
+        <Avatar.Image src='https://example.com/good.png' />
+        <Avatar.Fallback>NN</Avatar.Fallback>
+      </Avatar>,
+    )
+    // a fresh img for the new src must be attempted, not permanently
+    // suppressed by the earlier failure
+    const img = container.querySelector('img') as HTMLImageElement
+    expect(img).toBeTruthy()
+    fireEvent.load(img)
+    expect(() => getByText('NN')).toThrow()
+  })
 })

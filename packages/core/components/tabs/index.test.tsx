@@ -42,4 +42,14 @@ describe('Tabs', () => {
     expect(getByTestId('trigger-b').className).toContain('border-primary')
     expect(getByTestId('trigger-a').className).not.toContain('border-primary')
   })
+
+  it('exposes tab role and aria-selected reflecting the active trigger', () => {
+    const { getByTestId } = render(<Example />)
+    expect(getByTestId('trigger-a').getAttribute('role')).toBe('tab')
+    expect(getByTestId('trigger-a').getAttribute('aria-selected')).toBe('true')
+    expect(getByTestId('trigger-b').getAttribute('aria-selected')).toBe('false')
+
+    fireEvent.click(getByTestId('trigger-b'))
+    expect(getByTestId('trigger-b').getAttribute('aria-selected')).toBe('true')
+  })
 })
