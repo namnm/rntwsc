@@ -7,6 +7,7 @@
     - [Consumers of a published rntwsc package via node_modules](#consumers-of-a-published-rntwsc-package-via-node_modules)
     - [optimizeDeps: what's excluded, included, and deduped](#optimizedeps-whats-excluded-included-and-deduped)
     - [Resolving rntwsc's own third-party runtime deps without a consumer declaring them](#resolving-rntwscs-own-third-party-runtime-deps-without-a-consumer-declaring-them)
+  - [Consumer overrides via deep merge](#consumer-overrides-via-deep-merge)
   - [What playground/vite owns itself](#what-playgroundvite-owns-itself)
   - [Loading this file's own config from a raw-TypeScript published package](#loading-this-files-own-config-from-a-raw-typescript-published-package)
   - [.web.js resolution for third-party packages](#webjs-resolution-for-third-party-packages)
@@ -60,6 +61,26 @@ This only works for single-entry packages resolved by their bare name - a packag
 twrnc is a special case within this list: it ships a real ESM build (`exports["."].import`), but a plain `require.resolve('twrnc')` always honors the "require" exports condition, landing on the CJS build instead. That is fine for a normal `import` statement - Vite/esbuild interop CJS deps routinely - but rntwsc/libs/twrnc/index.ts does `export * from 'twrnc'`, a wildcard re-export of a CJS module, which rolldown cannot always detect needs interop ("Unable to interop `export * from "twrnc"`... this may lose module exports"), silently dropping named exports like `create`. `rntwscRuntimeDepAlias` resolves twrnc's `dist/esm/index.js` entry directly instead of going through the generic `require.resolve(name)` path, sidestepping the interop question entirely.
 
 `resolve.dedupe: ['i18next', 'react-i18next']` covers a separate, narrower duplicate-instance risk: i18next is reached both directly by app code (normal optimized import) and internally by rntwsc's own babel-transformed source, and nothing else guarantees those two resolutions share a module instance. When they don't, `i18next.init()` runs on a different instance than the one app code reads `i18next.language` from, and react-i18next logs "make sure there is only one instance of react-i18next" or `useTranslation` never sees a ready instance.
+
+## Consumer overrides via deep merge
+
+`config()`'s `Options` type intersects with Vite's own `UserConfig`, so a consumer can pass extra Vite options - `server`, `plugins`, `resolve`, `optimizeDeps`, anything `UserConfig` accepts - alongside the required `dir`/`repoRoot`/etc fields, flat in the same object:
+
+```ts
+config({
+  dir: __dirname,
+  repoRoot: path.join(__dirname, '../../'),
+  esmDirs: [__dirname],
+  server: {
+    strictPort: true,
+    allowedHosts: ['host.docker.internal'],
+  },
+})
+```
+
+`config()` destructures its own known fields off the options object first; everything left over is passed to Vite's `mergeConfig(base, viteConfigOverrides)` against the config it builds internally. `mergeConfig` deep-merges plain objects and concatenates arrays - `plugins` gets the consumer's plugins appended after vite-config's own, `resolve.alias` gets the consumer's entries prepended (so they win on a first-match-wins resolver), `server`/`optimizeDeps`/etc merge field by field rather than replacing the whole object. This means a consumer adding one `server` field, like playground/vite/vite.config.ts's `strictPort`, does not need to spread `base.server` back in manually the way manually overwriting would require.
+
+A consumer that needs to replace something outright instead of merging it - dropping one of vite-config's own plugins, for instance - awaits `config()` and edits the returned object directly, the same as before this option existed.
 
 ## What playground/vite owns itself
 

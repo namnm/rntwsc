@@ -15,8 +15,7 @@
     "next": "16.2.12",
     "react-dom": "19.2.3",
     "react-native-svg-web": "1.0.9",
-    "react-native-web": "0.21.2",
-    "rntwsc": "__RNTWSC_VERSION__"
+    "react-native-web": "0.21.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.3",

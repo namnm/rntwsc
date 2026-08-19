@@ -1,5 +1,6 @@
 import type { PluginContext } from 'rolldown'
 import type { Alias, Plugin, UserConfig } from 'vite'
+import { mergeConfig } from 'vite'
 import svgr from 'vite-plugin-svgr'
 
 import { getAlias } from '#/devtools/babel-config/get-alias'
@@ -130,19 +131,34 @@ const autoSvgReactPlugin = (): Plugin => ({
   },
 })
 
-type Options = Omit<BabelLoaderOptions, 'isServer'> & {
-  repoRoot: string
-}
+// UserConfig fields here are deep-merged into vite-config's own output
+// (arrays included, e.g. plugins/resolve.alias get concatenated, not
+// replaced) - see contribution/vite.md. To overwrite instead of merge,
+// await config() and edit the returned object directly.
+type Options = Omit<BabelLoaderOptions, 'isServer'> &
+  UserConfig & {
+    repoRoot: string
+  }
 
 // no isServer split to thread through - a Vite SPA has no server target
 export const config = async (o: Options): Promise<UserConfig> => {
-  const alias = getAlias(o.dir)
+  const {
+    dir,
+    repoRoot,
+    esmDirs,
+    reactNativeVersion,
+    twrncConfig,
+    extractClassNameOutputPath,
+    ...viteConfigOverrides
+  } = o
+
+  const alias = getAlias(dir)
   const [browserFiles, webFiles] = await Promise.all([
     glob('**/*.browser.{ts,tsx}', {
-      cwd: o.repoRoot,
+      cwd: repoRoot,
     }),
     glob('**/*.web.{ts,tsx}', {
-      cwd: o.repoRoot,
+      cwd: repoRoot,
     }),
   ])
 
@@ -197,16 +213,16 @@ export const config = async (o: Options): Promise<UserConfig> => {
   ]
 
   const babelLoaderOptions: BabelLoaderOptions = {
-    dir: o.dir,
+    dir,
     // rntwsc's own source must stay ESM here too - see contribution/vite.md
-    esmDirs: [...o.esmDirs, rntwscRoot],
+    esmDirs: [...esmDirs, rntwscRoot],
     isServer: false,
-    reactNativeVersion: o.reactNativeVersion,
-    twrncConfig: o.twrncConfig,
-    extractClassNameOutputPath: o.extractClassNameOutputPath,
+    reactNativeVersion,
+    twrncConfig,
+    extractClassNameOutputPath,
   }
 
-  return {
+  const base: UserConfig = {
     resolve: {
       alias: resolveAlias,
       // avoids a duplicate i18next instance - see contribution/vite.md
@@ -270,6 +286,8 @@ export const config = async (o: Options): Promise<UserConfig> => {
       },
     },
   }
+
+  return mergeConfig(base, viteConfigOverrides) as UserConfig
 }
 
 const rolldownChecks = {
