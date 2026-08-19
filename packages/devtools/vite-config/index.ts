@@ -48,6 +48,15 @@ const resolveEach = (m: StrMap<string>): StrMap<string> => {
 const resolveDir = (specifier: string): string =>
   path.dirname(require.resolve(`${specifier}/package.json`))
 
+// twrnc ships a real ESM build (exports["."].import), but a plain
+// require.resolve() always honors the "require" condition, landing on the
+// CJS build - rntwsc/libs/twrnc/index.ts's `export * from 'twrnc'` is a
+// wildcard re-export of that CJS module, which rolldown can't always
+// detect needs interop, silently dropping named exports like `create`.
+// Alias straight to the ESM entry instead. See contribution/vite.md.
+const resolveTwrncEsm = (): string =>
+  path.join(resolveDir('twrnc'), 'dist/esm/index.js')
+
 // Runtime deps rntwsc's own source imports that no consumer declares
 // directly - resolved from rntwsc's own install location, not the
 // consumer's, so Vite's optimizer can still find and dedupe them without
@@ -71,7 +80,7 @@ const rntwscRuntimeDepAlias = (): StrMap<string> => {
   const out: StrMap<string> = {}
   for (const name of rntwscRuntimeDeps) {
     try {
-      out[name] = require.resolve(name)
+      out[name] = name === 'twrnc' ? resolveTwrncEsm() : require.resolve(name)
     } catch {
       // not every consumer's build pulls in every one of these
     }
@@ -224,8 +233,16 @@ export const config = async (o: Options): Promise<UserConfig> => {
       // native-only, unloadable in a browser - see contribution/vite.md
       exclude: ['rntwsc', 'react-native-reanimated', 'react-native-worklets'],
       // react/react-dom need the same CJS interop as rntwsc's own source -
-      // see contribution/vite.md
-      include: ['react', 'react-dom', ...Object.keys(runtimeDepAlias)],
+      // see contribution/vite.md. use-sync-external-store is react-i18next's
+      // CJS shim, needed by rntwsc's own i18n - without prebundling it, the
+      // browser loads it as raw ESM and gets no named exports.
+      include: [
+        'react',
+        'react-dom',
+        'use-sync-external-store',
+        'use-sync-external-store/shim',
+        ...Object.keys(runtimeDepAlias),
+      ],
       rolldownOptions: {
         // the scanner has its own resolver - see contribution/vite.md
         resolve: {

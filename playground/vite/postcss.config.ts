@@ -1,6 +1,8 @@
 import minified from '../app/src/codegen/class-names.min.json'
 
-const map = minified as Record<string, string | undefined>
+const map = (
+  process.env.NEXT_PUBLIC_MINIFY_CLASS_NAMES ? minified : {}
+) as Record<string, string | undefined>
 
 export default {
   plugins: {
