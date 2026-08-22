@@ -49,27 +49,131 @@ const resolveEach = (m: StrMap<string>): StrMap<string> => {
 const resolveDir = (specifier: string): string =>
   path.dirname(require.resolve(`${specifier}/package.json`))
 
-// twrnc ships a real ESM build (exports["."].import), but a plain
-// require.resolve() always honors the "require" condition, landing on the
-// CJS build - rntwsc/libs/twrnc/index.ts's `export * from 'twrnc'` is a
-// wildcard re-export of that CJS module, which rolldown can't always
-// detect needs interop, silently dropping named exports like `create`.
-// Alias straight to the ESM entry instead. See contribution/vite.md.
-const resolveTwrncEsm = (): string =>
-  path.join(resolveDir('twrnc'), 'dist/esm/index.js')
+type PackageJson = {
+  name?: string
+  exports?: unknown
+}
+
+// A plain require.resolve(specifier) walks the package's "exports" map
+// with Node's own require conditions and always lands on a CJS build when
+// one exists, even though a browser bundle wants the ESM one. Most
+// packages expose "package.json" as an implicit subpath, so this is the
+// fast path; some restrict "exports" to just "." (e.g. bezier-easing,
+// color-rgba, tailwind-merge), which throws ERR_PACKAGE_PATH_NOT_EXPORTED
+// here - fall back to resolving the main entry and walking up to the
+// nearest package.json that actually names this package.
+const readPackageJson = (
+  specifier: string,
+): { dir: string; json: PackageJson } | undefined => {
+  try {
+    const p = require.resolve(`${specifier}/package.json`)
+    return {
+      dir: path.dirname(p),
+      json: require(p),
+    }
+  } catch {
+    // fall through to the main-entry walk-up below
+  }
+  try {
+    let dir = path.dirname(require.resolve(specifier))
+    for (let i = 0; i < 5; i++) {
+      const candidate = path.join(dir, 'package.json')
+      if (fs.existsSync(candidate)) {
+        const json = require(candidate) as PackageJson
+        if (json.name === specifier) {
+          return {
+            dir,
+            json,
+          }
+        }
+      }
+      const parent = path.dirname(dir)
+      if (parent === dir) {
+        break
+      }
+      dir = parent
+    }
+  } catch {
+    // package isn't resolvable at all - handled by the caller's try/catch
+  }
+  return undefined
+}
+
+// Walks an exports["."] conditions tree (which can nest, e.g. ulidx's
+// {node: {require, default}, default: {require, default}}) to find the
+// leaf matching a priority-ordered list of condition names, skipping
+// "types" (points at .d.ts, never a real module).
+const findConditionEntry = (
+  node: unknown,
+  priority: string[],
+): string | undefined => {
+  if (typeof node === 'string') {
+    return node
+  }
+  if (node && typeof node === 'object') {
+    const obj = node as StrMap<unknown>
+    for (const cond of priority) {
+      if (cond in obj) {
+        const found = findConditionEntry(obj[cond], priority)
+        if (found) {
+          return found
+        }
+      }
+    }
+  }
+  return undefined
+}
+
+// A browser bundle wants "browser" over "import" over the conditionless
+// "default" fallback; require.resolve()'s own choice (mirrored here to
+// compare against) prefers "node" over "require" over "default".
+const findEsmEntry = (root: unknown): string | undefined =>
+  findConditionEntry(root, ['browser', 'import', 'default'])
+const findCjsEntry = (root: unknown): string | undefined =>
+  findConditionEntry(root, ['node', 'require', 'default'])
+
+// Only packages with a real conditional exports map (import and require
+// resolving to two different files) are at risk - most of
+// rntwscRuntimeDeps either have no "exports" field at all (require.resolve
+// already lands on their one real file) or ship a single unconditional
+// build. See contribution/vite.md.
+const autoEsmEntry = (json: PackageJson): string | undefined => {
+  const exportsField = json.exports as StrMap<unknown> | string | undefined
+  if (!exportsField || typeof exportsField === 'string') {
+    return undefined
+  }
+  const root = '.' in exportsField ? exportsField['.'] : exportsField
+  if (!root || typeof root === 'string') {
+    return undefined
+  }
+  const esmEntry = findEsmEntry(root)
+  const cjsEntry = findCjsEntry(root)
+  return esmEntry && esmEntry !== cjsEntry ? esmEntry : undefined
+}
 
 // Runtime deps rntwsc's own source imports that no consumer declares
 // directly - resolved from rntwsc's own install location, not the
 // consumer's, so Vite's optimizer can still find and dedupe them without
-// every playground repeating this list. See contribution/vite.md.
+// every playground repeating this list. Not auto-derived from rntwsc's
+// own published package.json "dependencies" - that field is a flat dump
+// of every dev/build-tooling dep too (eslint, typescript, stylelint, ...),
+// since the dist publish never splits dependencies from devDependencies -
+// so this stays a hand-picked subset of what's actually imported by
+// browser-facing source. See contribution/vite.md.
 const rntwscRuntimeDeps = [
+  '@apollo/client',
+  'accept-language',
   'bezier-easing',
   'color-rgba',
+  'graphql',
+  'i18next',
   'immer',
   'js-cookie',
   'json-stable-stringify',
   'json-stringify-safe',
   'lodash-es',
+  'qs',
+  'react-i18next',
   'react-native-css-animations',
   'tailwind-merge',
   'twrnc',
@@ -81,7 +185,12 @@ const rntwscRuntimeDepAlias = (): StrMap<string> => {
   const out: StrMap<string> = {}
   for (const name of rntwscRuntimeDeps) {
     try {
-      out[name] = name === 'twrnc' ? resolveTwrncEsm() : require.resolve(name)
+      const resolved = readPackageJson(name)
+      const esmEntry = resolved && autoEsmEntry(resolved.json)
+      out[name] =
+        resolved && esmEntry
+          ? path.join(resolved.dir, esmEntry)
+          : require.resolve(name)
     } catch {
       // not every consumer's build pulls in every one of these
     }
