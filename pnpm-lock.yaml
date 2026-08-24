@@ -23,8 +23,8 @@ importers:
   .:
     dependencies:
       rntwsc:
-        specifier: github:namnm/rntwsc#2127d5f85ae49d1484b9ab9b5010f2e5122438c2
-        version: https://codeload.github.com/namnm/rntwsc/tar.gz/2127d5f85ae49d1484b9ab9b5010f2e5122438c2(0aa345777cba96b381aadc1f74260c1b)
+        specifier: github:namnm/rntwsc#22c49b70e54f5dcf4d97a4851064bc914e9feffe
+        version: https://codeload.github.com/namnm/rntwsc/tar.gz/22c49b70e54f5dcf4d97a4851064bc914e9feffe(0aa345777cba96b381aadc1f74260c1b)
     devDependencies:
       '@babel/core':
         specifier: 7.29.7
@@ -956,7 +956,7 @@ importers:
         version: 10.5.4(postcss@8.5.24)
       baseline-browser-mapping:
         specifier: latest
-        version: 2.11.16
+        version: 2.11.18
       cross-env:
         specifier: 10.1.0
         version: 10.1.0
@@ -1032,7 +1032,7 @@ importers:
         version: 10.5.4(postcss@8.5.24)
       baseline-browser-mapping:
         specifier: latest
-        version: 2.11.16
+        version: 2.11.18
       cross-env:
         specifier: 10.1.0
         version: 10.1.0
@@ -1078,7 +1078,7 @@ importers:
         version: 10.5.4(postcss@8.5.24)
       baseline-browser-mapping:
         specifier: latest
-        version: 2.11.16
+        version: 2.11.18
       cross-env:
         specifier: 10.1.0
         version: 10.1.0
@@ -3937,13 +3937,13 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  baseline-browser-mapping@2.11.15:
-    resolution: {integrity: sha512-FwMjJJ7HnyZpWe+oWxegG0fezZyBZUagI5LZEoO3GCbtbKNwRfMH9Ue5d5v01PNePBy1QSfPSDTTeVL0Hb9EzA==}
+  baseline-browser-mapping@2.11.16:
+    resolution: {integrity: sha512-H/bNPUFHewJHyCTdjn1n3Pit5+2GmWT6mmeHImPX+8MA9NA6b67jO4gYmi4jTbCJb2otq34KMZnovndDPqJwhQ==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
-  baseline-browser-mapping@2.11.16:
-    resolution: {integrity: sha512-H/bNPUFHewJHyCTdjn1n3Pit5+2GmWT6mmeHImPX+8MA9NA6b67jO4gYmi4jTbCJb2otq34KMZnovndDPqJwhQ==}
+  baseline-browser-mapping@2.11.18:
+    resolution: {integrity: sha512-1iEmLEYSiE1SeBoAfPo/Mnx3PzfzHUkDK61ASkCpuk3YXugYLH5DYK1SzqV55F8FMI6s0F+/tCP7Polz1QRjxw==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -6786,8 +6786,8 @@ packages:
   rfdc@1.4.1:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
 
-  rntwsc@https://codeload.github.com/namnm/rntwsc/tar.gz/2127d5f85ae49d1484b9ab9b5010f2e5122438c2:
-    resolution: {gitHosted: true, integrity: sha512-gX1IIOpg3Y/jV0CJAbNh8I7fOtas+LdR9lMwLsTKk3x69aqvd2ASRDZGVFKFtUPma+upgx6qTHJpnVEKurxIPA==, tarball: https://codeload.github.com/namnm/rntwsc/tar.gz/2127d5f85ae49d1484b9ab9b5010f2e5122438c2}
+  rntwsc@https://codeload.github.com/namnm/rntwsc/tar.gz/22c49b70e54f5dcf4d97a4851064bc914e9feffe:
+    resolution: {gitHosted: true, integrity: sha512-OO+Xt5OtqETLHfv9u1vQg6WQxVAeH2oSNC+ud4eoJjuHj58W39BdXQPYTYhWBfcyQoiMcCBnmf5P91YkOC5+pw==, tarball: https://codeload.github.com/namnm/rntwsc/tar.gz/22c49b70e54f5dcf4d97a4851064bc914e9feffe}
     version: 0.0.31
     peerDependencies:
       '@floating-ui/react': '*'
@@ -10966,9 +10966,9 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  baseline-browser-mapping@2.11.15: {}
-
   baseline-browser-mapping@2.11.16: {}
+
+  baseline-browser-mapping@2.11.18: {}
 
   bcp47@1.1.2: {}
 
@@ -11023,7 +11023,7 @@ snapshots:
 
   browserslist@4.28.6:
     dependencies:
-      baseline-browser-mapping: 2.11.15
+      baseline-browser-mapping: 2.11.16
       caniuse-lite: 1.0.30001806
       electron-to-chromium: 1.5.389
       node-releases: 2.0.51
@@ -13273,7 +13273,7 @@ snapshots:
     dependencies:
       '@next/env': 16.2.12
       '@swc/helpers': 0.5.15
-      baseline-browser-mapping: 2.11.15
+      baseline-browser-mapping: 2.11.16
       caniuse-lite: 1.0.30001806
       postcss: 8.4.31
       react: 19.2.3
@@ -14074,7 +14074,7 @@ snapshots:
 
   rfdc@1.4.1: {}
 
-  rntwsc@https://codeload.github.com/namnm/rntwsc/tar.gz/2127d5f85ae49d1484b9ab9b5010f2e5122438c2(0aa345777cba96b381aadc1f74260c1b):
+  rntwsc@https://codeload.github.com/namnm/rntwsc/tar.gz/22c49b70e54f5dcf4d97a4851064bc914e9feffe(0aa345777cba96b381aadc1f74260c1b):
     dependencies:
       '@apollo/client': 4.2.8(graphql-ws@6.2.0(graphql@17.0.2)(ws@8.21.1))(graphql@17.0.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(rxjs@7.8.2)
       '@babel/code-frame': 7.29.7
