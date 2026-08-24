@@ -61,4 +61,22 @@ describe('Slot', () => {
     expect(span.getAttribute('data-extra')).toBe('y')
     expect(span.textContent).toBe('real child')
   })
+
+  it('unwraps a Slottable child passed as a lazy RSC reference (Server Component child crossing into a client Slot)', () => {
+    const realChild = <span>real child</span>
+    const lazyChild = {
+      _payload: {
+        status: 'fulfilled',
+        value: realChild,
+      },
+    } as unknown as typeof realChild
+    const { container } = render(
+      <Slot data-extra='z'>
+        <Slottable>{lazyChild}</Slottable>
+      </Slot>,
+    )
+    const span = container.querySelector('span')!
+    expect(span.getAttribute('data-extra')).toBe('z')
+    expect(span.textContent).toBe('real child')
+  })
 })

@@ -35,6 +35,15 @@ type SlotProps = {
   [key: string]: any
 }
 
+// A child authored in a Server Component and passed into a 'use client'
+// Slot/Slottable arrives as a lazy RSC reference, not a plain element -
+// unwrap before touching .props.
+const resolveLazyElement = (node: unknown): unknown => {
+  const payload = (node as { _payload?: { status?: string; value?: unknown } })
+    ?._payload
+  return payload?.status === 'fulfilled' ? payload.value : node
+}
+
 const Slot = ({ ref, children, ...slotProps }: SlotProps) => {
   // -- Case 1: children contains a <Slottable> --------------------------
   const childrenArray = Children.toArray(children)
@@ -45,7 +54,9 @@ const Slot = ({ ref, children, ...slotProps }: SlotProps) => {
       children: ReactNode
     }>
     // The "real" child lives inside <Slottable>
-    const newSlottableChild = slottable.props.children
+    const newSlottableChild = resolveLazyElement(
+      slottable.props.children,
+    ) as ReactNode
 
     // Build the final children: replace Slottable with the real child's children
     const newChildren = [
