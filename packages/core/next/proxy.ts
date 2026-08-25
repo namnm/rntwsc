@@ -29,7 +29,8 @@ export const createProxy =
     const headers = new Headers(reqHeaders)
     headers.set(urlHeaderKey, url)
 
-    if (pathname.startsWith('/_next/') || pathname === '/favicon.ico') {
+    const isStaticAsset = /\.[a-zA-Z0-9]+$/.test(pathname)
+    if (pathname.startsWith('/_next/') || isStaticAsset) {
       return Response.next({
         headers,
       })
