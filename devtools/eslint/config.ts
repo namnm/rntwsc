@@ -1,0 +1,404 @@
+import type { ConfigWithExtends } from '@eslint/config-helpers'
+import { defineConfig, includeIgnoreFile } from '@eslint/config-helpers'
+import tsPlugin from '@typescript-eslint/eslint-plugin'
+import * as tsParser from '@typescript-eslint/parser'
+import type { ESLint } from 'eslint'
+import * as importPlugin from 'eslint-plugin-import'
+import reactPlugin from 'eslint-plugin-react'
+import reactHooksPlugin from 'eslint-plugin-react-hooks'
+import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort'
+import globals from 'globals'
+
+import {
+  enforceUseClientGlobal,
+  enforceUseClientImports,
+} from 'rntwsc/devtools/eslint/config-enforce-use-client'
+import { ignoreExtraneous } from 'rntwsc/devtools/eslint/config-ignore-extraneous'
+import { restrictedImports } from 'rntwsc/devtools/eslint/config-restricted-imports'
+import { customPlugin } from 'rntwsc/devtools/eslint-plugin-custom'
+import { fs, readJson5Sync } from 'rntwsc/devtools/fs'
+import { getGitignorePath } from 'rntwsc/devtools/gitignore'
+import { globSync } from 'rntwsc/devtools/glob'
+import { pnpmWorkspaceSync } from 'rntwsc/devtools/normalize/pnpm-workspace'
+import { path } from 'rntwsc/devtools/path'
+import type { StrMap } from 'rntwsc/libs/utility-types'
+
+const off = 0
+const warn = 1
+
+const tsExts = '{ts,tsx}'
+const jsExts = '{js,jsx,cjs,mjs}'
+const allExts = `{${[tsExts, jsExts].map(s => s.slice(1, -1)).join(',')}}`
+
+type IgnoresOptions = {
+  dirs: string
+  exts?: string
+}
+const ignores = ({ dirs, exts = dirs }: IgnoresOptions) => [
+  // dirs
+  `**/${dirs}/**/*.${allExts}`,
+  // sub exts
+  `**/*.${exts}.${allExts}`,
+]
+
+type Alias = {
+  absPath: string
+  alias: string
+}
+type Options = {
+  dir: string
+  repoRoot: string
+  plugins?: StrMap<string>
+  rules?: StrMap
+  alias?: boolean
+  ignoreShadowed?: boolean
+  tsProjectService?: boolean
+}
+
+let tsconfig: string[] | undefined
+
+export const config = ({
+  dir,
+  repoRoot,
+  alias = false,
+  ignoreShadowed = false,
+  tsProjectService = false,
+  plugins: extraPlugins,
+  rules: overriddenRules,
+}: Options) => {
+  const gitignore = includeIgnoreFile(getGitignorePath(repoRoot))
+
+  const jsShadowed: string[] = []
+  if (ignoreShadowed) {
+    jsShadowed.push(
+      ...globSync(`**/*.${jsExts}`, {
+        cwd: dir,
+        relative: true,
+      }).filter(p =>
+        tsExts
+          .split(',')
+          .some(e => fs.existsSync(p.replace(/\.\w+$/, `.${e}`))),
+      ),
+    )
+  }
+  const baseIgnores = [
+    // match with prettier ignore and tsconfig exclude
+    ...ignores({
+      dirs: '{min,.templates}',
+      exts: '{min,template}',
+    }),
+    ...jsShadowed,
+  ]
+
+  const ignoresNonFixable = [
+    ...baseIgnores,
+    ...ignores({
+      dirs: '{codegen,3rd-party}',
+    }),
+  ]
+  const ignoreDefaultExport = [
+    ...ignoresNonFixable,
+    ...ignores({
+      dirs: '{src/app,.storybook}',
+      exts: '{config,stories}',
+    }),
+  ]
+
+  const alreadyMergedRules: StrMap<boolean> = {}
+  const mergeRules = (rules?: StrMap) => {
+    if (!overriddenRules) {
+      return rules
+    }
+    for (const k in rules) {
+      if (k in overriddenRules) {
+        rules[k] = overriddenRules[k]
+        alreadyMergedRules[k] = true
+      }
+    }
+    return rules
+  }
+
+  const base: ConfigWithExtends = {
+    files: [`**/*.${allExts}`],
+    ignores: baseIgnores,
+    languageOptions: {
+      parser: tsParser,
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+    settings: {
+      react: {
+        version: pnpmWorkspaceSync(repoRoot).overrides?.['react'] || '19',
+      },
+    },
+    linterOptions: {
+      reportUnusedDisableDirectives: true,
+    },
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+      react: reactPlugin,
+      'react-hooks': reactHooksPlugin as ESLint.Plugin,
+      import: importPlugin,
+      'simple-import-sort': simpleImportSortPlugin,
+      custom: customPlugin,
+      ...extraPlugins,
+    },
+    rules: mergeRules({
+      curly: [warn, 'all'],
+      quotes: [
+        warn,
+        'single',
+        {
+          avoidEscape: true,
+        },
+      ],
+      'react/jsx-curly-brace-presence': warn,
+      semi: [warn, 'never'],
+      'arrow-body-style': [warn, 'as-needed'],
+      'no-useless-rename': warn,
+      'object-shorthand': [warn, 'always'],
+      'one-var': [warn, 'never'],
+      'prefer-const': warn,
+      'spaced-comment': [
+        warn,
+        'always',
+        {
+          markers: ['/'],
+        },
+      ],
+      'react/jsx-no-useless-fragment': warn,
+      'react/self-closing-comp': warn,
+
+      'import/first': warn,
+      'import/newline-after-import': warn,
+      'import/no-duplicates': warn,
+
+      'simple-import-sort/imports': [
+        warn,
+        {
+          groups: [
+            ['^\\u0000'],
+            ['^@?\\w'],
+            ['\\.(s?css|svg|png|jpe?g|gif)$'],
+            ['^#', '^@', '^[^.]', '^\\.'],
+          ],
+        },
+      ],
+      'simple-import-sort/exports': warn,
+
+      'import/consistent-type-specifier-style': [warn, 'prefer-top-level'],
+      '@typescript-eslint/consistent-type-imports': warn,
+      '@typescript-eslint/no-import-type-side-effects': warn,
+
+      'import/no-useless-path-segments': [
+        warn,
+        {
+          noUselessIndex: true,
+        },
+      ],
+      'import/enforce-node-protocol-usage': [warn, 'always'],
+
+      'object-curly-newline': [warn, 'always'],
+      'object-property-newline': [
+        warn,
+        {
+          allowAllPropertiesOnSameLine: false,
+        },
+      ],
+
+      'custom/concat-classname-strings': warn,
+      'custom/enforce-arrow-function': warn,
+      'custom/enforce-use-client': [
+        warn,
+        {
+          imports: enforceUseClientImports,
+          global: enforceUseClientGlobal,
+        },
+      ],
+      'custom/no-interface': warn,
+      'custom/no-single-item-array-prop': [warn, ['style', 'className']],
+      'custom/no-unicode-chars': warn,
+    }),
+  }
+
+  const nonFixable: ConfigWithExtends = {
+    ...base,
+    ignores: ignoresNonFixable,
+    rules: mergeRules({
+      eqeqeq: [warn, 'always'],
+      'no-return-assign': warn,
+      'no-func-assign': warn,
+      'no-class-assign': warn,
+      '@typescript-eslint/no-unused-vars': [
+        warn,
+        {
+          args: 'none',
+        },
+      ],
+      '@typescript-eslint/no-shadow': warn,
+
+      'no-restricted-imports': [
+        warn,
+        {
+          paths: restrictedImports,
+        },
+      ],
+
+      'import/no-mutable-exports': warn,
+      'import/no-extraneous-dependencies': [
+        warn,
+        {
+          ignore: ignoreExtraneous,
+          includeTypes: true,
+        },
+      ],
+
+      'react/destructuring-assignment': [
+        warn,
+        'always',
+        {
+          destructureInSignature: 'always',
+        },
+      ],
+
+      'react-hooks/exhaustive-deps': warn,
+
+      'prefer-arrow-callback': [
+        warn,
+        {
+          allowNamedFunctions: true,
+        },
+      ],
+
+      'custom/err-name': warn,
+      'custom/kebab-case-import-paths': warn,
+      'custom/no-missing-export': warn,
+      'custom/no-access-property': off,
+      'custom/no-forward-ref': warn,
+      'custom/no-import-default': [warn, ['react']],
+      'custom/no-import-invalid-variant': [
+        warn,
+        {
+          repoRoot,
+        },
+      ],
+      'custom/no-import-outside': off,
+      'custom/no-json-stringify': warn,
+      'custom/no-nullish-coalescing': off,
+      'custom/no-unicode-chars-non-fixable': warn,
+      'custom/no-use-state': off,
+      'custom/no-void-union': off,
+    }),
+  }
+
+  const aliases: Alias[] = []
+  if (alias) {
+    tsconfig =
+      tsconfig ||
+      globSync('**/tsconfig.json', {
+        cwd: repoRoot,
+      })
+    tsconfig.forEach(t => {
+      const ts = readJson5Sync(t)
+      if (!ts.compilerOptions?.paths) {
+        return
+      }
+      Object.entries(ts.compilerOptions.paths).forEach(([k, v]) => {
+        if (
+          !Array.isArray(v) ||
+          typeof v[0] !== 'string' ||
+          !k.endsWith('/*') ||
+          !v[0].endsWith('/*')
+        ) {
+          return
+        }
+        const re = /\/\*$/
+        const a = k.replace(re, '')
+        const d = v[0].replace(re, '')
+        aliases.push({
+          absPath: path.join(path.dirname(t), d),
+          alias: a,
+        })
+      })
+    })
+  }
+
+  const noRelativeImport: ConfigWithExtends[] = aliases.map(d => ({
+    ...base,
+    files: base.files?.map(f => `${path.relative(dir, d.absPath)}/${f}`),
+    rules: mergeRules({
+      'custom/no-relative-import-paths': [warn, d],
+    }),
+  }))
+  const noRelativeExport: ConfigWithExtends[] = aliases.map(d => ({
+    ...base,
+    files: base.files?.map(f => `${path.relative(dir, d.absPath)}/${f}`),
+    rules: mergeRules({
+      'custom/no-relative-export-paths': [warn, d],
+    }),
+  }))
+
+  const noDefaultExport: ConfigWithExtends = {
+    ...nonFixable,
+    ignores: ignoreDefaultExport,
+    rules: mergeRules({
+      'import/no-default-export': warn,
+    }),
+  }
+
+  let tsBase: ConfigWithExtends[] = []
+  let tsNonFixable: ConfigWithExtends[] = []
+
+  if (tsProjectService) {
+    tsconfig =
+      tsconfig ||
+      globSync('**/tsconfig.json', {
+        cwd: repoRoot,
+      })
+    tsBase = tsconfig.map(p => ({
+      ...base,
+      languageOptions: {
+        ...base.languageOptions,
+        parserOptions: {
+          projectService: true,
+          tsconfigRootDir: p,
+        },
+      },
+      // no rule yet
+      rules: mergeRules(),
+    }))
+    tsNonFixable = tsBase.map(b => ({
+      ...b,
+      ignores: ignoresNonFixable,
+      rules: mergeRules({
+        '@typescript-eslint/no-unnecessary-condition': warn,
+      }),
+    }))
+  }
+
+  if (overriddenRules) {
+    const unusedKeys = Object.keys(overriddenRules).filter(
+      k => !alreadyMergedRules[k],
+    )
+    if (unusedKeys.length) {
+      nonFixable.rules = {
+        ...nonFixable.rules,
+        ...unusedKeys.reduce<StrMap>((m, k) => {
+          m[k] = overriddenRules[k]
+          return m
+        }, {}),
+      }
+    }
+  }
+
+  return defineConfig(
+    gitignore,
+    base,
+    nonFixable,
+    noRelativeImport,
+    noRelativeExport,
+    noDefaultExport,
+    tsBase,
+    tsNonFixable,
+  )
+}

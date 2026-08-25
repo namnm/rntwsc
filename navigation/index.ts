@@ -1,0 +1,37 @@
+import { headers } from 'next-unchecked/headers'
+
+import { serverCache } from 'rntwsc/cache'
+import { useCurrentLocaleUntyped } from 'rntwsc/i18n'
+import { sck, urlHeaderKey } from 'rntwsc/navigation/config'
+import { normalizePathname } from 'rntwsc/navigation/normalize-pathname'
+import type { ParsedQs } from 'rntwsc/libs/qs'
+import { qsParse } from 'rntwsc/libs/qs'
+
+export const useRoute = () => {
+  const useServerCache = async () => {
+    const h = await headers()
+    const locale = await useCurrentLocaleUntyped()
+    const u = h.get(urlHeaderKey)
+    if (!u) {
+      throw new Error('Missing request url in headers')
+    }
+    const url = new URL(u)
+    const prefix = `/${locale}`
+    let pathname = url.pathname
+    if (pathname.startsWith(prefix)) {
+      pathname = normalizePathname(pathname.replace(prefix, ''))
+    }
+    let query: ParsedQs | undefined = undefined
+    const search = url.search.slice(1)
+    if (search) {
+      query = qsParse(search)
+    }
+    return {
+      pathname,
+      query,
+    }
+  }
+  return serverCache(sck.route, useServerCache)
+}
+
+export const useIsRouteFocused = () => true

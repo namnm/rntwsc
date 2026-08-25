@@ -1,0 +1,244 @@
+import colors from 'colors/safe'
+import type { StackFrame } from 'stack-trace'
+import * as stacktrace from 'stack-trace'
+
+import { killSelfChildren } from 'rntwsc/devtools/kill'
+import { path, stripInDir } from 'rntwsc/devtools/path'
+import { jsonSafe } from 'rntwsc/libs/json-safe'
+import { get } from 'rntwsc/libs/lodash'
+import type { Falsish, Nullish } from 'rntwsc/libs/utility-types'
+
+type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'fatal'
+
+const levelLabelMap = {
+  debug: '[DEBUG]',
+  info: ' [INFO]',
+  warn: ' [WARN]',
+  error: '[ERROR]',
+  fatal: '[FATAL]',
+}
+const levelColorFnMap = {
+  debug: (v: string) => v,
+  info: colors.cyan,
+  warn: colors.yellow,
+  error: colors.red,
+  fatal: colors.magenta,
+}
+const levelPriorityMap = {
+  debug: 0,
+  info: 1,
+  warn: 2,
+  error: 3,
+  fatal: 4,
+}
+
+export class Log {
+  level: LogLevel = 'debug'
+
+  // set once by entrypoint's bootstrap after it locates the repo root
+  // used only to shorten paths in log output/error messages, not required
+  repoRoot: string = ''
+
+  displayNodeModulesPath: boolean = true
+  minimal: boolean = true
+
+  stack = ((err: unknown, lv: LogLevel = 'error') => {
+    if (!err) {
+      return
+    }
+    lv = this.getLabel(lv) ? lv : 'error'
+    const [msg, stack] = this.readError(err as Error)
+    return this.println(lv, msg, stack)
+  }) as <
+    // add support for fatal return type: never
+    T extends LogLevel = 'error',
+  >(
+    err: unknown,
+    lv?: T,
+  ) => T extends 'fatal' ? never : void
+
+  private readError = (err: Error | Nullish) => {
+    // common errors such as from sequelize, axios, graphql
+    const keys = [
+      'original',
+      'originalError',
+      'parent',
+      'errors.0',
+      'graphqlErrors.0',
+    ]
+    const withMsg = (m: Error | Nullish): Error | Nullish => {
+      if (m?.message) {
+        return m
+      }
+      const arr: (Error | Nullish)[] = keys.map(k => get(m, k))
+      if (!arr.some(e => e)) {
+        return
+      }
+      return arr.find(e => e?.message) || arr.map(withMsg).find(e => e?.message)
+    }
+    const errWithMsg = withMsg(err) || err
+    const msg =
+      (this.repoRoot
+        ? errWithMsg?.message.replaceAll(this.repoRoot, '')
+        : errWithMsg?.message) || '<UNKNOWN ERROR> ' + jsonSafe(err)
+    return [msg, this.cleanupErrorStack(err)]
+  }
+
+  private createLogFn =
+    (lv: LogLevel) =>
+    (msg: string, condition: unknown = true) => {
+      if (!condition || this.getPriority(lv) < this.getPriority()) {
+        return
+      }
+      this.println(lv, msg, condition)
+    }
+
+  debug = this.createLogFn('debug')
+  info = this.createLogFn('info')
+  warn = this.createLogFn('warn')
+  error = this.createLogFn('error')
+
+  // add support for fatal return type: never
+  fatal = (msg: string, condition: unknown = true): never => {
+    if (condition && this.getPriority('fatal') >= this.getPriority()) {
+      this.println('fatal', msg, condition)
+    }
+    throw new Error('unreachable')
+  }
+
+  private println = (lv: LogLevel, msg: string, condition: unknown) => {
+    const color = this.getColorFn(lv)
+    msg = this.colorize(msg, colors.bold)
+    msg = this.colorize(msg, color)
+    const parts: string[] = []
+    if (!this.minimal) {
+      const timestamp = this.getTimestamp()
+      const level = this.getLabel(lv)
+      parts.push(this.colorize(`${timestamp} ${level} `, color))
+      const frame = stacktrace.get()[2]
+      const location = frame ? this.getLocation(frame) : '<unknown>'
+      parts.push(this.colorize(`${location} `, colors.gray))
+    }
+    parts.push(msg)
+    msg = parts.filter(m => m).join('')
+
+    if (typeof condition === 'string') {
+      const extra = condition.trim()
+      condition = extra && this.colorize(extra, colors.gray)
+    } else if (condition instanceof Error) {
+      condition = this.readError(condition).join('\n')
+    } else if (typeof condition !== 'boolean') {
+      condition = jsonSafe(condition)
+    }
+    if (typeof condition === 'string' && condition) {
+      msg = msg + '\n' + condition
+    }
+
+    if (lv === 'error' || lv === 'fatal') {
+      console.error(msg)
+    } else {
+      console.log(msg)
+    }
+
+    if (lv === 'fatal') {
+      killSelfChildren()
+      process.exit(1)
+    }
+  }
+
+  color = true
+  private colorize = (msg: string, fn: (v: string) => string) =>
+    this.color ? fn(msg) : msg
+
+  timezone = new Date().getTimezoneOffset() / -60
+  private getTimestamp = () => {
+    let date = new Date()
+    const d = this.timezone * 60 + date.getTimezoneOffset()
+    date = new Date(date.getTime() + d * 60 * 1000)
+    return [
+      date.getFullYear(),
+      date.getMonth() + 1,
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes(),
+      date.getSeconds(),
+    ]
+      .map((n, i) => {
+        let s = ''
+        if (n < 10) {
+          s += '0'
+        }
+        s += n
+        if (i < 2) {
+          s += '/'
+        } else if (i === 2) {
+          s += ' '
+        } else if (i < 5) {
+          s += ':'
+        }
+        return s
+      })
+      .join('')
+  }
+
+  private getLocation = (frame: StackFrame) => {
+    let fileName = frame.getFileName()?.trim()
+    if (!fileName) {
+      return ''
+    }
+    fileName = fileName.replace(/^async /, '')
+    const relative = (dir: string, p: string) =>
+      path.relative(dir, p).replace(/^[\\/]*/, '')
+    const shorten = (p: string) =>
+      p.replace(/([\\/]).+([\\/][^\\/]+[\\/])/, '$1...$2')
+    if (fileName.startsWith('node:')) {
+      fileName = shorten(fileName.replace('node', ''))
+    } else if (fileName.indexOf('node_modules') >= 0) {
+      if (!this.displayNodeModulesPath) {
+        return ''
+      }
+      const nm = fileName.substring(
+        0,
+        fileName.lastIndexOf('node_modules') + 12,
+      )
+      fileName = '~' + shorten(relative(nm, fileName))
+    } else if (this.repoRoot) {
+      fileName = stripInDir(this.repoRoot, fileName)
+    } else {
+      return ''
+    }
+    return `${fileName}:${frame.getLineNumber()}`
+  }
+  private cleanupErrorStack = (err: Error | Falsish) => {
+    let maxFuncLength = 0
+    type Stack = {
+      fn: string
+      location: string
+    }
+    const stacks: Stack[] = []
+    const frames = err instanceof Error ? stacktrace.parse(err) : []
+    frames.forEach(f => {
+      const location = this.getLocation(f)
+      if (!location) {
+        return
+      }
+      let fn = f.getFunctionName() || f.getMethodName()
+      fn = fn ? fn.replace(/\S+\./g, '') : '<anonymous>'
+      stacks.push({
+        fn,
+        location,
+      })
+      if (fn.length > maxFuncLength) {
+        maxFuncLength = fn.length
+      }
+    })
+    return stacks
+      .map(s => `at ${s.fn.padEnd(maxFuncLength, ' ')} ${s.location}`)
+      .join('\n')
+  }
+  private getLabel = (lv = this.level) => levelLabelMap[lv]
+  private getColorFn = (lv = this.level) => levelColorFnMap[lv]
+  private getPriority = (lv = this.level) => levelPriorityMap[lv]
+}
+
+export const log = new Log()

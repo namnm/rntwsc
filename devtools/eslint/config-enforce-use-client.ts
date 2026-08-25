@@ -1,0 +1,60 @@
+export const enforceUseClientImports = [
+  // react
+  'useState',
+  'useEffect',
+  'useLayoutEffect',
+  'useInsertionEffect',
+  'useRef',
+  'createContext',
+  'useContext',
+  'useSyncExternalStore',
+  'useCallback',
+  'useMemo',
+  'useReducer',
+  'useTransition',
+  'useDeferredValue',
+  'useOptimistic',
+  'useFormStatus',
+  'useActionState',
+  // lib
+  'useImmer',
+  // custom hooks
+  'useClassState',
+  'useRefConstruct',
+  'useSafeContext',
+  'useIsMounted',
+  'useWindowDemensions',
+  'useResponsiveState',
+]
+export const enforceUseClientGlobal = [
+  'window',
+  'document',
+  'navigator',
+  'location',
+  'localStorage',
+  'sessionStorage',
+  'indexedDB',
+  'addEventListener',
+  'removeEventListener',
+  // DOM observation
+  'ResizeObserver',
+  'IntersectionObserver',
+  'MutationObserver',
+  // DOM rendering
+  'requestAnimationFrame',
+  'cancelAnimationFrame',
+  'requestIdleCallback',
+  'cancelIdleCallback',
+  'getComputedStyle',
+  'matchMedia',
+  // realtime / network
+  'WebSocket',
+  'EventSource',
+  'BroadcastChannel',
+  // misc browser-only
+  'history',
+  'screen',
+  'alert',
+  'confirm',
+  'prompt',
+]
