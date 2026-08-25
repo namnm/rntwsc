@@ -31,6 +31,22 @@ describe('Slot', () => {
     expect(span.className.length).toBeGreaterThan(0)
   })
 
+  it('flattens a ClassName array passed as slot className onto a child with no className of its own', () => {
+    const { container } = render(
+      <Slot className={['h-8', false && 'unused', 'h-11']}>
+        <span>hi</span>
+      </Slot>,
+    )
+    const span = container.querySelector('span')!
+    // regression: mergeProps used to only clsx-merge className when both
+    // slot and child defined it, so a slot-only array leaked through as a
+    // raw array and React stringified it via Array.prototype.toString(),
+    // e.g. "h-8,false,h-11" - a single malformed class token.
+    expect(span.className).not.toContain(',')
+    expect(span.className).not.toContain('false')
+    expect(span.classList.contains('h-11')).toBe(true)
+  })
+
   it('composes an onClick handler from both slot and child instead of overwriting it', () => {
     const slotClick = vi.fn()
     const childClick = vi.fn()

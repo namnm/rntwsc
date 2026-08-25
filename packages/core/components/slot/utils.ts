@@ -21,7 +21,22 @@ export const mergeProps = (
     ...slotProps,
   }
 
+  // className - always run through clsx, even when only one side defines
+  // it, since slotProps.className can be a ClassName array (e.g. Button's
+  // own [cn.button, pressing && cn.buttonActive, className]) that must be
+  // flattened/merged rather than passed straight to a DOM className prop.
+  if ('className' in slotProps || 'className' in childProps) {
+    merged.className = clsx(
+      slotProps.className as ClassName,
+      childProps.className as ClassName,
+    )
+  }
+
   for (const key of Object.keys(childProps)) {
+    if (key === 'className') {
+      continue
+    }
+
     const slotVal = slotProps[key]
     const childVal = childProps[key]
 
@@ -35,12 +50,6 @@ export const mergeProps = (
         childVal(...args)
         slotVal(...args)
       }
-      continue
-    }
-
-    // className - space-join
-    if (key === 'className') {
-      merged[key] = clsx(slotVal as ClassName, childVal as ClassName)
       continue
     }
 
