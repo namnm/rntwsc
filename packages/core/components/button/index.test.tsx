@@ -105,4 +105,22 @@ describe('Button', () => {
       'opacity-70',
     )
   })
+
+  it('makes an asChild target position:relative, so elevationBackdrop (an absolutely-positioned sibling) paints behind it instead of on top', () => {
+    // regression: the Pressable path gets position:relative for free
+    // from react-native-web's own base styles, but Slot clones onto a
+    // plain consumer-authored element (e.g. CtaLink's <a>) that never
+    // goes through that - CSS paints positioned siblings after static
+    // ones regardless of DOM order, so an unpositioned target rendered
+    // *behind* its own elevation backdrop instead of in front of it.
+    const { getByText } = render(
+      (
+        <Button asChild appearance='solid'>
+          <a href='/go'>Go</a>
+        </Button>
+      ) as any,
+    )
+    const anchor = getByText('Go').closest('a')!
+    expect(anchor.className).toContain('relative')
+  })
 })

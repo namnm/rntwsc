@@ -23,8 +23,17 @@ import { composeHandlers } from '#/core/utils/compose-handlers'
 const buttonCva = cva({
   classNames: {
     container: 'group',
+    // relative is load-bearing, not decorative: elevationBackdrop is an
+    // absolutely-positioned sibling, and CSS paints positioned siblings
+    // after static ones regardless of DOM order, so an unpositioned
+    // Comp would render *behind* it. The Pressable path gets position:
+    // relative for free from react-native-web's own base styles; the
+    // asChild/Slot path clones onto a plain consumer-authored element
+    // (e.g. CtaLink's <a>) that never goes through that, so this can't
+    // rely on an incidental default - border/inset below need it too,
+    // both being absolute insets scoped to this element.
     button:
-      'flex cursor-pointer flex-row items-center justify-center gap-2 overflow-hidden transition',
+      'relative flex cursor-pointer flex-row items-center justify-center gap-2 overflow-hidden transition',
     // fix active: selector and press in to work with
     // touch pad or any mouse up happens too quickly
     buttonActive: '',
