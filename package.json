@@ -29,7 +29,7 @@
     "pnpm": ">=11"
   },
   "dependencies": {
-    "rntwsc": "github:namnm/rntwsc#36fc7dc36692d92eee347bb0c2e93426b5e5de27"
+    "rntwsc": "github:namnm/rntwsc#8d5995b6716f02b480b4f5fcfb76a266df671ed8"
   },
   "devDependencies": {
     "@babel/core": "7.29.7",
