@@ -1,12 +1,16 @@
 import { binRequireResolve, cmd, exec } from '#/devtools/exec'
+import { fs } from '#/devtools/fs'
 import { glob } from '#/devtools/glob'
 
-export const doctocCmd = async (repoRoot: string) => {
-  const md = await glob('**/*.md', {
-    cwd: repoRoot,
-  })
+export const doctocCmd = async (repoRoot: string, target = repoRoot) => {
+  const md = target.endsWith('.md')
+    ? [target]
+    : await glob('**/*.md', {
+        cwd: target,
+      })
+  const files = await withoutFrontmatter(md)
 
-  const promises = md.map(async p =>
+  const promises = files.map(async p =>
     cmd({
       bin: await binRequireResolve('#/devtools/doctoc', undefined, repoRoot),
       args: [
@@ -24,5 +28,14 @@ export const doctocCmd = async (repoRoot: string) => {
   return Promise.all(promises)
 }
 
-export const doctoc = (repoRoot: string) =>
-  doctocCmd(repoRoot).then(cmds => Promise.all(cmds.map(c => exec(c))))
+// doctoc writes its block above YAML frontmatter, which stops the leading ---
+// being the first line and silently kills the frontmatter - see contribution/dev.md
+const withoutFrontmatter = async (paths: string[]) => {
+  const keep = await Promise.all(
+    paths.map(async p => !(await fs.readFile(p, 'utf-8')).startsWith('---')),
+  )
+  return paths.filter((_, i) => keep[i])
+}
+
+export const doctoc = (repoRoot: string, target = repoRoot) =>
+  doctocCmd(repoRoot, target).then(cmds => Promise.all(cmds.map(c => exec(c))))

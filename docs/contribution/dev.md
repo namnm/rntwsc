@@ -4,6 +4,7 @@
   - [Prerequisites](#prerequisites)
   - [Running the playground](#running-the-playground)
   - [Building packages](#building-packages)
+  - [Formatting and linting](#formatting-and-linting)
   - [Extracting theme CSS variables](#extracting-theme-css-variables)
   - [Extracting minified class names](#extracting-minified-class-names)
   - [Checking i18n labels](#checking-i18n-labels)
@@ -53,6 +54,26 @@ pnpm dist
 ```
 
 Copies the two modules, core and devtools, to dist/. See build.md for details.
+
+## Formatting and linting
+
+```bash
+pnpm fmt                              # whole repo
+node ./devtools eslint,prettier       # a subset of the tools, still whole repo
+node ./devtools prettier packages/core/tw   # scoped to one directory
+node ./devtools doctoc README.md      # scoped to one file
+```
+
+An optional file or directory as the second argument scopes the run. Only
+doctoc, eslint, stylelint and prettier take it; normalize, tsc,
+type-coverage and css-extract-variables always cover the whole repo and
+fail with a message rather than ignoring a path you passed.
+
+doctoc skips any file whose first line is `---`. Those files carry YAML
+frontmatter, for example a Claude Code skill's name and description or a
+rule's paths glob, and doctoc writes its block above it: the `---` stops
+being the first line, the frontmatter stops being parsed, and the file
+still renders as valid Markdown so nothing looks wrong.
 
 ## Extracting theme CSS variables
 

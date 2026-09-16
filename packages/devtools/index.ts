@@ -6,23 +6,33 @@ import { doctoc } from '#/devtools/doctoc'
 import { eslint } from '#/devtools/eslint'
 import { log } from '#/devtools/log'
 import { normalize } from '#/devtools/normalize'
+import { path } from '#/devtools/path'
 import { prettier } from '#/devtools/prettier'
 import { stylelint } from '#/devtools/stylelint'
 import { tsc } from '#/devtools/tsc'
 import { typeCoverage } from '#/devtools/type-coverage'
 
-const fns = {
+// take an optional file or directory as argv[3], see contribution/dev.md
+const targetableFns = {
   doctoc,
-  normalize,
   eslint,
   stylelint,
   prettier,
+}
+const wholeRepoFns = {
+  normalize,
   tsc,
   'type-coverage': typeCoverage,
   'css-extract-variables': cssExtractVariables,
 }
+const fns = {
+  ...targetableFns,
+  ...wholeRepoFns,
+}
 type Pkg = keyof typeof fns
+type TargetablePkg = keyof typeof targetableFns
 const supported = Object.keys(fns) as Pkg[]
+const targetable = Object.keys(targetableFns) as Pkg[]
 
 const argv = process.argv[2]?.split(',').filter(v => v)
 if (!argv?.length) {
@@ -34,11 +44,26 @@ argv.forEach(argvPkg => {
   }
 })
 
+const argvTarget = process.argv[3]
+if (argvTarget) {
+  const wholeRepoOnly = argv.filter(p => !targetable.some(v => v === p))
+  if (wholeRepoOnly.length) {
+    log.fatal(
+      `devtools ${wholeRepoOnly.join(',')} always runs on the whole repo, drop the path ${argvTarget}`,
+    )
+  }
+}
+const target = argvTarget ? path.resolve(argvTarget) : undefined
+
 type Options = {
   repoRoot: string
 }
 
 const r = async (p: Pkg, { repoRoot }: Options) => {
+  if (targetable.some(v => v === p)) {
+    await targetableFns[p as TargetablePkg](repoRoot, target ?? repoRoot)
+    return
+  }
   await fns[p](repoRoot)
 }
 

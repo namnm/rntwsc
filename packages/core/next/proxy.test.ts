@@ -20,7 +20,9 @@ const fakeRequest = (pathname: string) =>
 
 describe('createProxy', () => {
   it('passes public/ static asset requests through untouched, not rewritten to a locale prefix', () => {
-    const next = vi.fn(init => ({ init }))
+    const next = vi.fn(init => ({
+      init,
+    }))
     const Response = {
       next,
       redirect: vi.fn(),
@@ -43,7 +45,9 @@ describe('createProxy', () => {
   })
 
   it('still passes /_next/ requests through untouched', () => {
-    const next = vi.fn(init => ({ init }))
+    const next = vi.fn(init => ({
+      init,
+    }))
     const Response = {
       next,
       redirect: vi.fn(),

@@ -12,7 +12,10 @@ export const stylelintCmd = async (target: string, repoRoot: string) =>
       ['--fix'],
       //
     ],
-    target: path.join(target, './**/*.{css,scss,less}'),
+    // a directory needs the glob appended, a single file is already the target
+    target: /\.(css|scss|less)$/.test(target)
+      ? target
+      : path.join(target, './**/*.{css,scss,less}'),
   })
 
 export const stylelint = (repoRoot: string, target = repoRoot) =>
