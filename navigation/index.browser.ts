@@ -1,0 +1,35 @@
+/* eslint-disable no-restricted-imports */
+
+'use client'
+
+import { usePathname, useSearchParams } from 'next-unchecked/navigation'
+
+import { useCurrentLocaleUntyped } from 'rntwsc/i18n/index.browser'
+import { normalizePathname } from 'rntwsc/navigation/normalize-pathname'
+import type { ParsedQs } from 'rntwsc/libs/qs'
+import { qsParse } from 'rntwsc/libs/qs'
+
+export const useRoute = () => {
+  const currentPath = usePathname()
+  const searchParams = useSearchParams()
+  const currentLocale = useCurrentLocaleUntyped()
+
+  let pathWithoutLocale = currentPath
+  const prefix = `/${currentLocale}`
+  if (pathWithoutLocale.startsWith(prefix)) {
+    pathWithoutLocale = normalizePathname(pathWithoutLocale.replace(prefix, ''))
+  }
+
+  let query: ParsedQs | undefined = undefined
+  const search = searchParams.toString()
+  if (search) {
+    query = qsParse(search)
+  }
+
+  return {
+    pathname: pathWithoutLocale,
+    query,
+  }
+}
+
+export const useIsRouteFocused = () => true

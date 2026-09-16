@@ -1,0 +1,16 @@
+import type { StrMap } from 'rntwsc/libs/utility-types'
+
+export * from 'rntwsc/tw/lib/normalize-style-config-shared'
+
+export const transitionTimingFunctionMap: StrMap = {
+  // custom transtion timing function here
+}
+
+export const animationMap: StrMap = {
+  // built in tailwind animation
+  spin: undefined,
+  ping: undefined,
+  pulse: undefined,
+  bounce: undefined,
+  // custom animation here
+}

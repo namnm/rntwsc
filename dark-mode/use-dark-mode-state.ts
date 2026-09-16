@@ -1,0 +1,23 @@
+'use client'
+
+import { useColorScheme } from 'react-native'
+
+import { useDarkModeUser } from 'rntwsc/dark-mode'
+import {
+  darkModeCompose,
+  toClassNameDarkModeState,
+} from 'rntwsc/dark-mode/config'
+import { isWeb } from 'rntwsc/platform'
+import { useIsMounted } from 'rntwsc/libs/hooks'
+
+// this is only available in browser and native
+// !mounted to make sure the data is matched with ssr
+export const useDarkModeState = async () => {
+  const mounted = useIsMounted()
+  const user = await useDarkModeUser()
+  const os = useColorScheme()
+  if (isWeb && !mounted) {
+    return
+  }
+  return toClassNameDarkModeState(darkModeCompose(user, os))
+}
